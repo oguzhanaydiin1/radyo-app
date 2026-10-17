@@ -43,8 +43,10 @@ npm start
 
 Kurulu uygulamalar GitHub deposundaki `updates/latest.json` dosyasına bakar
 (`package.json` → `updateSource`; sol menüde **Güncellemeler**). Yeni sürüm aynı Electron
-sürümünü kullanıyorsa yalnızca `updates/app-<sürüm>.asar` (1 MB'tan küçük) indirilir,
-SHA-256 ile doğrulanır ve uygulama yeniden başlarken (ya da kapanırken) yerine konur.
+sürümünü kullanıyorsa yalnızca `updates/app-<sürüm>.asar` (1 MB'tan küçük) kullanıcı
+klasörüne (`%APPDATA%\Radyo\guncelleme`) indirilir ve SHA-256 ile doğrulanır. Uygulama
+`boot.js` ile başlar: orada kurulu sürümden yeni bir sürüm varsa onu yükler. Kurulu
+dosyalara dokunulmaz; yeni bir tam paket kurulursa eski indirme kendiliğinden silinir.
 
 Yeni sürüm yayınlamak için:
 
@@ -60,6 +62,7 @@ GitHub sayfasını açar (tam paket elle kurulmalı).
 ## Dosyalar
 
 ```
+boot.js                Başlatıcı (indirilmiş güncellemeyi yükler)
 main.js                Pencereler, sistem tepsisi, mini oynatıcı, bağlantılar
 preload.js             Arayüzle ana süreç arasındaki güvenli köprü
 src/radio.js           Radio Browser bağlantısı

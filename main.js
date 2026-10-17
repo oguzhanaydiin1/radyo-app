@@ -17,6 +17,7 @@ const updater = require('./src/updater');
 // Chromium'un terminale yazdığı "handshake failed" satırlarını gizle.
 app.commandLine.appendSwitch('log-level', '3');
 
+const APP_VERSION = require('./package.json').version;
 const ICON = path.join(__dirname, 'assets', 'icon.png');
 const TRAY_ICON = path.join(__dirname, 'assets', 'tray.png');
 const startHidden = process.argv.includes('--hidden');
@@ -266,12 +267,12 @@ function registerIpc() {
   });
 
   // Ayarlar, eşitleme, yedek.
-  ipcMain.handle('settings:get', () => ({ ...settings.get(), version: app.getVersion(), packaged: app.isPackaged }));
+  ipcMain.handle('settings:get', () => ({ ...settings.get(), version: APP_VERSION, packaged: app.isPackaged }));
   ipcMain.handle('settings:set', async (_e, patch) => {
     const allowed = {};
     for (const k of ['closeToTray', 'openAtLogin']) if (patch && k in patch) allowed[k] = patch[k];
     await settings.set(allowed);
-    return { ...settings.get(), version: app.getVersion(), packaged: app.isPackaged };
+    return { ...settings.get(), version: APP_VERSION, packaged: app.isPackaged };
   });
   ipcMain.handle('sync:choose', async () => {
     const r = await dialog.showOpenDialog(mainWindow, {
@@ -317,7 +318,7 @@ function registerIpc() {
     return true;
   });
   ipcMain.handle('app:about', () => ({
-    version: app.getVersion(),
+    version: APP_VERSION,
     electron: process.versions.electron,
     chrome: process.versions.chrome,
     os: `${require('node:os').type()} ${require('node:os').release()}`,

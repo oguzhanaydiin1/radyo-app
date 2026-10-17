@@ -1,12 +1,12 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "electron": "44.9.0",
-  "date": "2026-10-17T23:36:49.986Z",
-  "notes": "• Destek sekmesinde unvan “Yazılım Geliştirici” olarak güncellendi",
+  "date": "2026-10-17T23:44:21.447Z",
+  "notes": "• “Yeniden başlat ve güncelle” düğmesi artık uygulamayı güvenilir şekilde yeni sürümle yeniden açıyor\n• Güncellemeler artık kullanıcı klasörüne indiriliyor; uygulama klasörüne yazma izni gerekmiyor",
   "asar": {
-    "file": "app-0.5.1.asar",
-    "size": 859543,
-    "sha256": "c46a2e4033902397d6311c8b102f6617615f6315ba8806266e2fa761d9854698"
+    "file": "app-0.5.2.asar",
+    "size": 860854,
+    "sha256": "87b303bed21122e4e34de5f878e5cc0a2eff33155381270ede6e21927400e3bf"
   },
   "full": ""
 }
