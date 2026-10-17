@@ -41,20 +41,21 @@ npm start
 
 ## Uygulama içi güncelleme
 
-Uygulama, `package.json` içindeki `updateSource` ile belirtilen GitHub deposunun son
-"release"ine bakar (sol menüde **Güncellemeler**). Yeni sürüm aynı Electron sürümünü
-kullanıyorsa yalnızca `app.asar` (1 MB'tan küçük) indirilir, SHA-256 ile doğrulanır ve
-uygulama yeniden başlarken (ya da kapanırken) yerine konur.
+Kurulu uygulamalar GitHub deposundaki `updates/latest.json` dosyasına bakar
+(`package.json` → `updateSource`; sol menüde **Güncellemeler**). Yeni sürüm aynı Electron
+sürümünü kullanıyorsa yalnızca `updates/app-<sürüm>.asar` (1 MB'tan küçük) indirilir,
+SHA-256 ile doğrulanır ve uygulama yeniden başlarken (ya da kapanırken) yerine konur.
 
 Yeni sürüm yayınlamak için:
 
 1. `package.json` içinde `version` değerini artır (örn. 0.5.0 → 0.5.1).
-2. `npm run pack` → paket oluşur.
-3. `npm run release` → `dist/release` içinde `app.asar`, `update.json` ve tam zip hazırlanır.
-4. GitHub'da `v<sürüm>` etiketiyle yeni bir release aç ve bu üç dosyayı yükle.
+2. `release-notes.md` dosyasına bu sürümdeki yenilikleri yaz.
+3. `npm run pack` ve ardından `npm run release` → `updates/` klasörü hazırlanır.
+4. `git add -A && git commit -m "Sürüm 0.5.1" && git push` → birkaç dakika içinde
+   kurulu uygulamalar yeni sürümü görür.
 
-Electron sürümü değiştiyse (`npm install electron@...`) kurulu uygulamalar kendini
-güncelleyemez; Güncellemeler sayfası tam paketin indirileceği sayfayı açar.
+Electron sürümü değiştiyse kurulu uygulamalar kendini güncelleyemez; Güncellemeler sayfası
+GitHub sayfasını açar (tam paket elle kurulmalı).
 
 ## Dosyalar
 
@@ -68,7 +69,9 @@ src/icy.js             Yayın içindeki şarkı bilgisini çözme
 src/scheduler.js       Zamanlanmış kayıt ve alarmlar
 src/settings.js        Ayarlar ve eşitleme klasörü
 src/updater.js         Uygulama içi güncelleme
-scripts/release.js     Yeni sürüm dosyalarını hazırlar
+scripts/release.js     Yeni sürüm dosyalarını hazırlar (updates/)
+updates/               Kurulu uygulamaların indirdiği güncelleme
+release-notes.md       Son sürümün notları
 renderer/vendor/       Ses kütüphanesi (hls.js)
 renderer/index.html    Ana ekranın iskeleti
 renderer/info.js       Geliştirici ve destek bilgileri

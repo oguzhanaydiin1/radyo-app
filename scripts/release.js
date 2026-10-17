@@ -2,10 +2,11 @@
 
 /*
  * Yeni sürüm dosyalarını hazırlar (önce "npm run pack" çalıştırılmış olmalı):
- *   dist/release/app.asar
- *   dist/release/update.json
- *   dist/release/Radyo-<sürüm>-win.zip
- * Bu üç dosya GitHub'da "v<sürüm>" etiketli bir release'e yüklenir.
+ *   updates/latest.json         — kurulu uygulamaların baktığı sürüm bilgisi
+ *   updates/app-<sürüm>.asar    — uygulamanın kendisi
+ * Sürüm notları "release-notes.md" dosyasından alınır.
+ * Ardından bu klasör GitHub'a gönderilir (git add updates && git commit && git push);
+ * kurulu uygulamalar birkaç dakika içinde yeni sürümü görür.
  */
 
 const fs = require('node:fs');
@@ -15,24 +16,29 @@ const crypto = require('node:crypto');
 const root = path.join(__dirname, '..');
 const pkg = require(path.join(root, 'package.json'));
 const electronVersion = require(path.join(root, 'node_modules', 'electron', 'package.json')).version;
-const dist = path.join(root, 'dist');
-const asarSrc = path.join(dist, 'win-unpacked', 'resources', 'app.asar');
-const zipSrc = path.join(dist, `Radyo-${pkg.version}-win.zip`);
-const out = path.join(dist, 'release');
+const asarSrc = path.join(root, 'dist', 'win-unpacked', 'resources', 'app.asar');
+const outDir = path.join(root, 'updates');
 
 if (!fs.existsSync(asarSrc)) {
   console.error('Önce "npm run pack" çalıştır: dist/win-unpacked bulunamadı.');
   process.exit(1);
 }
-fs.mkdirSync(out, { recursive: true });
+fs.mkdirSync(outDir, { recursive: true });
+// Eski sürüm dosyalarını kaldır (yalnızca son sürüm tutulur).
+for (const f of fs.readdirSync(outDir)) if (/^app-.*\.asar$/i.test(f)) fs.unlinkSync(path.join(outDir, f));
+
 const asar = fs.readFileSync(asarSrc);
-fs.writeFileSync(path.join(out, 'app.asar'), asar);
+const file = `app-${pkg.version}.asar`;
+fs.writeFileSync(path.join(outDir, file), asar);
+const notesFile = path.join(root, 'release-notes.md');
+const notes = fs.existsSync(notesFile) ? fs.readFileSync(notesFile, 'utf8').trim() : '';
 const manifest = {
   version: pkg.version,
   electron: electronVersion,
-  asar: { name: 'app.asar', size: asar.length, sha256: crypto.createHash('sha256').update(asar).digest('hex') },
+  date: new Date().toISOString(),
+  notes,
+  asar: { file, size: asar.length, sha256: crypto.createHash('sha256').update(asar).digest('hex') },
+  full: '',
 };
-fs.writeFileSync(path.join(out, 'update.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-if (fs.existsSync(zipSrc)) fs.copyFileSync(zipSrc, path.join(out, path.basename(zipSrc)));
-console.log(`Hazır: dist/release (sürüm ${pkg.version}, Electron ${electronVersion})`);
-console.log(JSON.stringify(manifest, null, 2));
+fs.writeFileSync(path.join(outDir, 'latest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+console.log(`Hazır: updates/ (sürüm ${pkg.version}, Electron ${electronVersion}, ${(asar.length / 1024).toFixed(0)} KB)`);

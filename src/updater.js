@@ -1,14 +1,14 @@
 'use strict';
 
 /*
- * Uygulama içi güncelleme (GitHub Releases).
+ * Uygulama içi güncelleme (GitHub deposundaki "updates" klasörü).
  *
- * Her sürümde GitHub'a iki küçük dosya konur:
- *   update.json  — { version, electron, asar: { name, size, sha256 } }
- *   app.asar     — uygulamanın kendisi (birkaç yüz KB)
- * Uygulama son sürüme bakar; Electron sürümü aynıysa yalnızca app.asar'ı indirir,
- * doğrular ve yeniden başlarken eski dosyanın yerine koyar. Electron değiştiyse
- * (nadiren) tam paketin indirileceği sayfayı açar.
+ * Her sürümde depoya iki dosya konur:
+ *   updates/latest.json        — { version, electron, notes, asar: { file, size, sha256 }, full }
+ *   updates/app-<sürüm>.asar   — uygulamanın kendisi (1 MB'tan küçük)
+ * Uygulama latest.json'a bakar; Electron sürümü aynıysa yalnızca .asar dosyasını indirir,
+ * SHA-256 ile doğrular ve yeniden başlarken eski dosyanın yerine koyar. Electron
+ * değiştiyse (nadiren) tam paketin indirileceği sayfayı açar.
  */
 
 const { app, net, shell } = require('electron');
@@ -20,7 +20,10 @@ const { spawn } = require('node:child_process');
 
 const pkg = require('../package.json');
 const SOURCE = pkg.updateSource || {};
-const UA = { 'User-Agent': `RadyoApp/${pkg.version}`, Accept: 'application/vnd.github+json' };
+const UA = { 'User-Agent': `RadyoApp/${pkg.version}`, 'Cache-Control': 'no-cache' };
+// Yalnızca test için değiştirilebilir.
+const BASE = () => process.env.RADYO_UPDATE_BASE
+  || `https://raw.githubusercontent.com/${SOURCE.owner}/${SOURCE.repo}/${SOURCE.branch || 'main'}/updates`;
 
 let notify = () => {};
 let latest = null;    // son denetimde bulunan sürüm bilgisi
@@ -61,42 +64,29 @@ async function check() {
   if (!app.isPackaged) return { status: 'dev', current: app.getVersion() };
   if (!configured()) return { status: 'unconfigured', current: app.getVersion() };
   if (ready) return { status: 'ready', current: app.getVersion(), version: ready.version, notes: ready.notes };
-  let rel;
-  try {
-    const api = process.env.RADYO_UPDATE_API || 'https://api.github.com'; // yalnızca test için değiştirilebilir
-    rel = await getJSON(`${api}/repos/${encodeURIComponent(SOURCE.owner)}/${encodeURIComponent(SOURCE.repo)}/releases/latest`);
-  } catch (err) {
-    return { status: 'error', current: app.getVersion(), message: 'Güncelleme sunucusuna ulaşılamadı. İnternet bağlantını kontrol et.' };
-  }
-  if (!rel || !rel.tag_name) return { status: 'latest', current: app.getVersion() };
-  const version = String(rel.tag_name).replace(/^v/i, '');
-  if (cmpVersion(version, app.getVersion()) <= 0) return { status: 'latest', current: app.getVersion() };
-
-  const assets = Array.isArray(rel.assets) ? rel.assets : [];
-  const manifestAsset = assets.find((a) => a.name === 'update.json');
-  const fullAsset = assets.find((a) => /\.zip$/i.test(a.name));
-  const notes = String(rel.body || '').slice(0, 4000);
-  const page = String(rel.html_url || '');
-  const fullUrl = fullAsset ? fullAsset.browser_download_url : page;
-  if (!manifestAsset) {
-    latest = { version, notes, full: true, fullUrl, page };
-    return { status: 'full', current: app.getVersion(), version, notes };
-  }
   let manifest;
   try {
-    manifest = await getJSON(manifestAsset.browser_download_url);
+    manifest = await getJSON(`${BASE()}/latest.json?t=${Date.now()}`);
   } catch {
-    return { status: 'error', current: app.getVersion(), message: 'Güncelleme bilgisi okunamadı.' };
+    return { status: 'error', current: app.getVersion(), message: 'Güncelleme sunucusuna ulaşılamadı. İnternet bağlantını kontrol et.' };
   }
-  const asarAsset = manifest && manifest.asar && assets.find((a) => a.name === manifest.asar.name);
-  const sameRuntime = manifest && major(manifest.electron) === major(process.versions.electron);
-  if (!asarAsset || !sameRuntime || !/^[0-9a-f]{64}$/i.test(String(manifest.asar.sha256 || ''))) {
+  if (!manifest || !manifest.version) return { status: 'latest', current: app.getVersion() };
+  const version = String(manifest.version).replace(/^v/i, '');
+  if (cmpVersion(version, app.getVersion()) <= 0) return { status: 'latest', current: app.getVersion() };
+
+  const notes = String(manifest.notes || '').slice(0, 4000);
+  const page = `https://github.com/${SOURCE.owner}/${SOURCE.repo}`;
+  const fullUrl = /^https:\/\//i.test(String(manifest.full || '')) ? manifest.full : page;
+  const asar = manifest.asar || {};
+  const sameRuntime = major(manifest.electron) === major(process.versions.electron);
+  const validFile = /^[\w.-]+\.asar$/i.test(String(asar.file || ''));
+  if (!sameRuntime || !validFile || !/^[0-9a-f]{64}$/i.test(String(asar.sha256 || ''))) {
     latest = { version, notes, full: true, fullUrl, page };
     return { status: 'full', current: app.getVersion(), version, notes };
   }
   latest = {
     version, notes, full: false, fullUrl, page,
-    url: asarAsset.browser_download_url, sha256: manifest.asar.sha256.toLowerCase(), size: Number(manifest.asar.size) || asarAsset.size || 0,
+    url: `${BASE()}/${encodeURIComponent(asar.file)}`, sha256: asar.sha256.toLowerCase(), size: Number(asar.size) || 0,
   };
   return { status: 'available', current: app.getVersion(), version, notes, size: latest.size };
 }
