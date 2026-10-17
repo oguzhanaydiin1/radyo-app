@@ -1,0 +1,58 @@
+{
+  "name": "radyo",
+  "productName": "Radyo",
+  "version": "0.5.0",
+  "description": "Canlı radyo dinleme uygulaması",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64 --publish never",
+    "check": "node --check main.js && node --check preload.js && node --check renderer/app.js",
+    "pack": "electron-builder --win zip --x64 --publish never",
+    "release": "node scripts/release.js",
+    "vendor": "node -e \"require('fs').copyFileSync('node_modules/hls.js/dist/hls.min.js','renderer/vendor/hls.min.js')\""
+  },
+  "devDependencies": {
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
+    "hls.js": "^1.7.3"
+  },
+  "build": {
+    "appId": "com.radyo.app",
+    "productName": "Radyo",
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Radyo",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "Radyo-tasinabilir-${version}.exe"
+    }
+  },
+  "updateSource": {
+    "owner": "oguzhanaydiin1",
+    "repo": "radyo-app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oguzhanaydiin1/radyo-app.git"
+  }
+}

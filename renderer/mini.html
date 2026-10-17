@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src * data:;">
+  <title>Radyo — mini</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap">
+  <style>
+    :root { --bg: #1A1C25; --text: #F2EFE8; --muted: #B4B6C2; --faint: #9A9CAB; --high: #262833; --accent: #F2A541; color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif; font-size: 13px;
+      border: 1px solid #2A2C38; border-radius: 0;
+      display: flex; align-items: center; gap: 10px; padding: 0 8px 0 12px;
+      -webkit-app-region: drag; user-select: none;
+    }
+    button { -webkit-app-region: no-drag; font: inherit; color: inherit; cursor: pointer; }
+    button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    svg { display: block; }
+    .logo { width: 56px; height: 56px; flex: none; border-radius: 10px; overflow: hidden; position: relative; background: var(--high); }
+    .logo img, .logo span { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .logo img { object-fit: cover; }
+    .logo span { display: flex; align-items: center; justify-content: center; color: #12131A; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px; }
+    .text { flex: 1; min-width: 0; }
+    .name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song { margin-top: 3px; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .controls { display: flex; align-items: center; gap: 2px; }
+    .ib { width: 34px; height: 34px; border: none; border-radius: 17px; background: transparent; display: flex; align-items: center; justify-content: center; }
+    .ib:hover { background: var(--high); }
+    .ib svg { width: 18px; height: 18px; }
+    .play { width: 40px; height: 40px; border-radius: 20px; background: var(--text); color: #12131A; }
+    .play:hover { background: #fff; }
+    .side { display: flex; flex-direction: column; gap: 2px; margin-left: 2px; }
+    .side .ib { width: 26px; height: 26px; color: var(--faint); }
+    .side .ib svg { width: 14px; height: 14px; }
+  </style>
+</head>
+<body>
+  <div class="logo" id="logo"><span id="ini">R</span></div>
+  <div class="text">
+    <div class="name" id="name">Radyo</div>
+    <div class="song" id="song">Bir istasyon seç</div>
+  </div>
+  <div class="controls">
+    <button class="ib" id="prev" type="button" aria-label="Önceki istasyon" title="Önceki istasyon">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 6.5v11a1 1 0 0 1-1.55.83L9 13.2v4.3H6.5v-11H9v4.3l7.45-5.13A1 1 0 0 1 18 6.5z"/></svg>
+    </button>
+    <button class="ib play" id="play" type="button" aria-label="Çal"></button>
+    <button class="ib" id="next" type="button" aria-label="Sonraki istasyon" title="Sonraki istasyon">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6.5v11a1 1 0 0 0 1.55.83L15 13.2v4.3h2.5v-11H15v4.3L7.55 5.67A1 1 0 0 0 6 6.5z"/></svg>
+    </button>
+  </div>
+  <div class="side">
+    <button class="ib" id="close" type="button" aria-label="Mini oynatıcıyı kapat" title="Kapat (radyo çalmaya devam eder)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <button class="ib" id="expand" type="button" aria-label="Büyük pencereyi aç" title="Büyük pencereyi aç">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>
+    </button>
+  </div>
+  <script src="mini.js"></script>
+</body>
+</html>

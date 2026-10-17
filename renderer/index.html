@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src * data: blob:; media-src * data: blob:; connect-src *;">
+  <title>Radyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-label="Radyo açılıyor">
+    <div class="splash-center">
+      <div class="splash-mark" aria-hidden="true">
+        <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
+        <div class="splash-icon"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <h1 class="splash-name">Radyo</h1>
+      <div class="splash-stats">
+        <div class="stat"><span class="stat-num" id="splash-tr">—</span><span class="stat-label">Türk radyosu</span></div>
+        <div class="stat-sep" aria-hidden="true"></div>
+        <div class="stat"><span class="stat-num" id="splash-world">—</span><span class="stat-label">dünya genelinde istasyon</span></div>
+      </div>
+      <div class="splash-progress" aria-hidden="true"><span></span></div>
+      <p class="splash-status" id="splash-status">İstasyonlar hazırlanıyor…</p>
+    </div>
+    <div class="splash-foot">
+      <span>Geliştirici: <strong id="splash-dev">Oğuzhan Aydın</strong></span>
+      <span class="splash-ver" id="splash-ver"></span>
+    </div>
+  </div>
+  <header class="titlebar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4 12h1M8 8v8M12 5v14M16 8v8M20 12h-1"/></svg>
+      </span>
+      <span>Radyo</span>
+    </div>
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="sr-only">İstasyon ara</span>
+      <input id="search" type="search" placeholder="İstasyon ara   (Ctrl+F)" autocomplete="off" spellcheck="false">
+      <button id="search-clear" class="icon-btn tiny" type="button" aria-label="Aramayı temizle" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </label>
+    <div class="titlebar-rest"></div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" aria-label="Ana menü">
+      <button class="nav-item" type="button" data-action="section" data-section="discover">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+        <span>Türkiye</span>
+      </button>
+      <button class="nav-item" type="button" data-action="section" data-section="world">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        <span>Dünya</span>
+      </button>
+      <button class="nav-item" type="button" data-action="section" data-section="favorites">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+        <span>Favoriler</span>
+        <span class="nav-badge" id="fav-count"></span>
+      </button>
+      <button class="nav-item" type="button" data-action="section" data-section="recent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg>
+        <span>Son dinlenenler</span>
+      </button>
+      <button class="nav-item" type="button" data-action="section" data-section="recordings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5" fill="currentColor"/></svg>
+        <span>Kayıtlar</span>
+        <span class="nav-badge rec-live" id="rec-nav-dot"></span>
+      </button>
+      <button class="nav-item" type="button" data-action="section" data-section="alarms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M5 3L2 6M19 3l3 3"/></svg>
+        <span>Alarmlar</span>
+        <span class="nav-badge" id="alarm-count"></span>
+      </button>
+
+      <div class="side-block" id="side-default">
+        <div class="side-label">FAVORİ İSTASYONLAR</div>
+        <div class="side-favs" id="side-favs"></div>
+      </div>
+      <div class="side-block" id="side-world" hidden>
+        <div class="seg" role="tablist" aria-label="Listeleme">
+          <button type="button" role="tab" data-action="dunya-mode" data-mode="lang">Dile göre</button>
+          <button type="button" role="tab" data-action="dunya-mode" data-mode="country">Ülkeye göre</button>
+        </div>
+        <label class="side-filter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span class="sr-only">Listede ara</span>
+          <input id="world-filter" type="search" placeholder="Dil ara" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="side-favs world-list" id="world-list"></div>
+      </div>
+      <button class="nav-item settings-btn" type="button" data-action="section" data-section="updates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 4v5h-5"/><path d="M12 8v5l3 2"/></svg>
+        <span>Güncellemeler</span>
+        <span class="nav-badge update-dot" id="update-dot"></span>
+      </button>
+      <button class="nav-item" type="button" data-action="section" data-section="support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/></svg>
+        <span>Destek</span>
+      </button>
+      <button class="nav-item" type="button" data-action="settings-open">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        <span>Ayarlar</span>
+      </button>
+    </nav>
+
+    <main class="content" id="content" tabindex="-1"></main>
+  </div>
+
+  <footer class="player">
+    <div class="player-now">
+      <span id="p-logo"></span>
+      <div class="player-text">
+        <div class="player-name" id="p-name">Bir istasyon seç</div>
+        <div class="player-sub" id="p-sub">Listeden bir istasyona tıkla</div>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <button class="icon-btn" id="btn-prev" type="button" aria-label="Önceki istasyon" title="Önceki istasyon">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 6.5v11a1 1 0 0 1-1.55.83L9 13.2v4.3H6.5v-11H9v4.3l7.45-5.13A1 1 0 0 1 18 6.5z"/></svg>
+      </button>
+      <button class="play-btn" id="btn-play" type="button" aria-label="Çal"></button>
+      <button class="icon-btn" id="btn-next" type="button" aria-label="Sonraki istasyon" title="Sonraki istasyon">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6.5v11a1 1 0 0 0 1.55.83L15 13.2v4.3h2.5v-11H15v4.3L7.55 5.67A1 1 0 0 0 6 6.5z"/></svg>
+      </button>
+    </div>
+
+    <div class="player-extra">
+      <button class="rec-btn" id="btn-rec" type="button" aria-label="Kaydı başlat" title="Çalan yayını kaydet">
+        <span class="rec-dot" aria-hidden="true"></span><span class="rec-text" id="rec-text"></span>
+      </button>
+      <div class="menu-anchor">
+        <button class="icon-btn sleep-btn" id="btn-sleep" type="button" aria-haspopup="menu" aria-expanded="false" title="Uyku zamanlayıcı">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+          <span class="sleep-left" id="sleep-left"></span>
+        </button>
+        <div class="menu" id="sleep-menu" role="menu" hidden></div>
+      </div>
+      <button class="icon-btn" id="btn-mini" type="button" aria-label="Mini oynatıcı" title="Mini oynatıcı (hep üstte küçük pencere)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><rect x="11" y="12" width="7" height="5" rx="1" fill="currentColor"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-mute" type="button" aria-label="Sesi kapat"></button>
+      <label class="volume">
+        <span class="sr-only">Ses düzeyi</span>
+        <input id="volume" type="range" min="0" max="100" step="1">
+      </label>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span class="toast-text" id="toast-text"></span>
+    <button class="btn-ghost" type="button" id="toast-action" hidden></button>
+    <button class="icon-btn tiny" type="button" id="toast-close" aria-label="Kapat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <dialog class="dialog" id="add-dialog" aria-labelledby="add-title">
+    <form id="add-form" method="dialog" novalidate>
+      <h2 id="add-title">İstasyon ekle</h2>
+      <p class="dialog-note">Listede olmayan bir radyoyu yayın adresiyle ekleyebilirsin. Adresi genelde radyonun sitesindeki “canlı dinle” bağlantısında bulursun.</p>
+      <label class="field">
+        <span>İstasyon adı</span>
+        <input name="name" type="text" required maxlength="80" placeholder="Örn. Kent FM" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Yayın adresi</span>
+        <input name="url" type="url" required maxlength="500" placeholder="https://…/stream" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="field">
+        <span>Logo adresi <em>(isteğe bağlı)</em></span>
+        <input name="favicon" type="url" maxlength="500" placeholder="https://…/logo.png" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="field">
+        <span>Etiketler <em>(isteğe bağlı, virgülle)</em></span>
+        <input name="tags" type="text" maxlength="120" placeholder="pop, yerel" autocomplete="off">
+      </label>
+      <p class="dialog-error" id="add-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="btn-ghost" type="button" data-action="add-cancel">Vazgeç</button>
+        <button class="pill" type="submit"><span>Ekle ve dinle</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="vendor/hls.min.js"></script>
+  <dialog class="dialog" id="sched-dialog" aria-labelledby="sched-title">
+    <form id="sched-form" method="dialog" novalidate>
+      <h2 id="sched-title">Zamanlanmış kayıt</h2>
+      <p class="dialog-note" id="sched-note"></p>
+      <label class="field">
+        <span>İstasyon</span>
+        <select class="select field-select" name="station" required></select>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>Saat</span>
+          <input name="time" type="time" required>
+        </label>
+        <label class="field" id="sched-duration-field">
+          <span>Süre (dakika)</span>
+          <input name="duration" type="number" min="1" max="360" step="1" value="60">
+        </label>
+      </div>
+      <fieldset class="field repeat">
+        <legend>Tekrar</legend>
+        <div class="seg seg-inline" role="radiogroup" aria-label="Tekrar">
+          <label><input type="radio" name="repeat" value="once" checked><span>Bir kez</span></label>
+          <label><input type="radio" name="repeat" value="days"><span>Belirli günler</span></label>
+        </div>
+        <label class="field" id="sched-date-field">
+          <span class="sr-only">Tarih</span>
+          <input name="date" type="date">
+        </label>
+        <div class="days" id="sched-days" hidden>
+          <label><input type="checkbox" name="day" value="1"><span>Pzt</span></label>
+          <label><input type="checkbox" name="day" value="2"><span>Sal</span></label>
+          <label><input type="checkbox" name="day" value="3"><span>Çar</span></label>
+          <label><input type="checkbox" name="day" value="4"><span>Per</span></label>
+          <label><input type="checkbox" name="day" value="5"><span>Cum</span></label>
+          <label><input type="checkbox" name="day" value="6"><span>Cmt</span></label>
+          <label><input type="checkbox" name="day" value="0"><span>Paz</span></label>
+        </div>
+      </fieldset>
+      <p class="dialog-error" id="sched-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="btn-ghost" type="button" data-action="sched-cancel">Vazgeç</button>
+        <button class="pill" type="submit"><span>Kaydet</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="dialog dialog-wide" id="settings-dialog" aria-labelledby="settings-title">
+    <form method="dialog" id="settings-form">
+      <h2 id="settings-title">Ayarlar</h2>
+
+      <section class="set-group">
+        <h3>Pencere</h3>
+        <label class="switch-row">
+          <span><strong>Kapatınca arka planda çalmaya devam et</strong><em>Pencere kapanınca radyo saatin yanındaki simgede çalmaya devam eder.</em></span>
+          <input type="checkbox" class="switch" id="set-tray">
+        </label>
+        <label class="switch-row">
+          <span><strong>Windows açılınca başlat</strong><em>Arka planda başlar; zamanlanmış kayıtlar ve alarmlar için gerekli.</em></span>
+          <input type="checkbox" class="switch" id="set-login">
+        </label>
+      </section>
+
+      <section class="set-group">
+        <h3>Bilgisayarlar arası eşitleme</h3>
+        <p class="dialog-note">Favoriler, eklediğin istasyonlar ve son dinlenenler seçtiğin klasördeki bir dosyada tutulur. OneDrive, Google Drive ya da Dropbox içinde bir klasör seçersen diğer bilgisayarında da aynı klasörü seçtiğinde listeler eşitlenir.</p>
+        <div class="sync-row">
+          <span class="sync-path" id="sync-path">Eşitleme kapalı</span>
+          <button class="btn-ghost accent" type="button" data-action="sync-choose">Klasör seç</button>
+          <button class="btn-ghost" type="button" data-action="sync-clear" id="sync-clear" hidden>Kapat</button>
+        </div>
+        <p class="dialog-note" id="sync-status"></p>
+      </section>
+
+      <section class="set-group">
+        <h3>Yedek</h3>
+        <div class="sync-row">
+          <button class="btn-ghost" type="button" data-action="data-export">Yedeği dışa aktar</button>
+          <button class="btn-ghost" type="button" data-action="data-import">Yedekten içe aktar</button>
+        </div>
+      </section>
+
+      <section class="set-group">
+        <h3>Güncellemeler</h3>
+        <div class="sync-row">
+          <span class="sync-path" id="update-status">Sürüm</span>
+          <button class="btn-ghost accent" type="button" data-action="updates-open">Güncellemeleri denetle</button>
+        </div>
+      </section>
+
+      <div class="dialog-actions">
+        <button class="pill" type="submit"><span>Tamam</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="info.js"></script>
+  <script src="app.js"></script>
+  <script src="features.js"></script>
+</body>
+</html>
