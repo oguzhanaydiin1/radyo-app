@@ -6,7 +6,7 @@
  */
 const APP_INFO = {
   developer: 'Oğuzhan Aydın',
-  title: '',
+  title: 'Yazılım Geliştirici',
   email: 'oguzhanaydin1996@icloud.com',
   phone: '',       // örn. +90 5xx xxx xx xx  (WhatsApp bağlantısı da bundan oluşur)
   whatsapp: true,  // telefon numarası WhatsApp'ta da kullanılıyorsa true

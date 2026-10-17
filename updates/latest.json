@@ -1,12 +1,12 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
   "electron": "44.9.0",
-  "date": "2026-10-17T23:31:14.841Z",
-  "notes": "• Uygulama içi güncelleme: yeni sürümler kendiliğinden iner ve kurulur\n• Açılış ekranı: radyo sayıları ve geliştirici bilgisi\n• Destek sekmesi: iletişim ve e-postayla sorun bildirme\n• Şu an çalan şarkının adı\n• Sistem tepsisi ve mini oynatıcı\n• Zamanlanmış kayıt ve radyolu alarm\n• Bilgisayarlar arası eşitleme ve yedek\n• Benzer istasyonlar ve oy verme",
+  "date": "2026-10-17T23:36:49.986Z",
+  "notes": "• Destek sekmesinde unvan “Yazılım Geliştirici” olarak güncellendi",
   "asar": {
-    "file": "app-0.5.0.asar",
-    "size": 859521,
-    "sha256": "1c153f4665cde66b48fd688c4726577f94ed4c029ec4da533358ff9915fc4627"
+    "file": "app-0.5.1.asar",
+    "size": 859543,
+    "sha256": "c46a2e4033902397d6311c8b102f6617615f6315ba8806266e2fa761d9854698"
   },
   "full": ""
 }

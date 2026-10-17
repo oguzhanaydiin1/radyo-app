@@ -3,7 +3,7 @@
 /*
  * Yeni sürüm dosyalarını hazırlar (önce "npm run pack" çalıştırılmış olmalı):
  *   updates/latest.json         — kurulu uygulamaların baktığı sürüm bilgisi
- *   updates/app-<sürüm>.asar    — uygulamanın kendisi
+ *   updates/app-<sürüm>.asar    — uygulamanın kendisi (bir önceki sürümünki de tutulur)
  * Sürüm notları "release-notes.md" dosyasından alınır.
  * Ardından bu klasör GitHub'a gönderilir (git add updates && git commit && git push);
  * kurulu uygulamalar birkaç dakika içinde yeni sürümü görür.
@@ -24,8 +24,14 @@ if (!fs.existsSync(asarSrc)) {
   process.exit(1);
 }
 fs.mkdirSync(outDir, { recursive: true });
-// Eski sürüm dosyalarını kaldır (yalnızca son sürüm tutulur).
-for (const f of fs.readdirSync(outDir)) if (/^app-.*\.asar$/i.test(f)) fs.unlinkSync(path.join(outDir, f));
+// Eski sürüm dosyalarını kaldır. Bir önceki sürüm de tutulur: GitHub latest.json'ı birkaç
+// dakika önbellekte tutabildiği için o arada eski bilgiyle indiren biri dosyayı bulabilsin.
+const prev = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(outDir, 'latest.json'), 'utf8')).asar.file; } catch { return ''; }
+})();
+for (const f of fs.readdirSync(outDir)) {
+  if (/^app-.*\.asar$/i.test(f) && f !== prev) fs.unlinkSync(path.join(outDir, f));
+}
 
 const asar = fs.readFileSync(asarSrc);
 const file = `app-${pkg.version}.asar`;
