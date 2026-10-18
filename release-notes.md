@@ -1,3 +1,3 @@
-• Radyo Fenerbahçe (97.0) eklendi
-• Arama artık Türkiye listesiyle birlikte tüm dünyada da kendiliğinden arıyor; “Fenerbahçe” ve “Fenerbahce” aynı sonucu veriyor
-• Arama sonuçlarında “Yayın adresiyle ekle” düğmesi
+• Radyo logoları yenilendi: her logo kendi renginde, boşlukları kırpılmış, tek tip kare kutucuklar olarak görünüyor
+• Daha yüksek çözünürlüklü logo kaynakları; logolar bilgisayarda saklanıyor, liste daha hızlı açılıyor
+• Logosu olmayan radyolar için yeni renkli kutucuklar

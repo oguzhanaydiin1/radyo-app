@@ -25,7 +25,7 @@ function publishState() {
   publishTimer = setTimeout(() => {
     const s = state.current;
     P.sendState({
-      station: s ? { id: s.id, name: s.name, favicon: logoSources(s)[0] || '', initials: initials(s.name), tint: tintFor(s.id) } : null,
+      station: s ? { id: s.id, name: s.name, favicon: tileFor(s) || logoSources(s)[0] || '', initials: initials(s.name), tint: tintFor(s.id) } : null,
       playing: state.playing,
       buffering: state.buffering,
       title: state.playing ? state.nowTitle || '' : '',

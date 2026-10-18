@@ -271,28 +271,148 @@ function filteredWorld() {
 
 // ---------- HTML parçaları ----------
 
-/** Sırayla denenecek logo adresleri: istasyonun logosu, sonra sitesinin simgesi. */
+/** Sırayla denenecek logo adresleri: istasyonun logosu, sonra sitesinin (yüksek çözünürlüklü) simgesi. */
+const proxied = (u) => `radyo-logo://img/?u=${encodeURIComponent(u)}`;
 function logoSources(s) {
   const full = registry.get(s.id) || s; // eski kayıtlarda en güncel bilgiyi kullan
   const list = [];
   const fav = full.favicon || s.favicon || '';
-  if (/^https?:\/\//i.test(fav)) list.push(fav);
+  if (/^https?:\/\//i.test(fav)) list.push(proxied(fav));
   const home = full.homepage || s.homepage || '';
   try {
     const host = /^https?:\/\//i.test(home) ? new URL(home).hostname : '';
-    if (host && host.includes('.')) list.push(`https://www.google.com/s2/favicons?sz=128&domain=${encodeURIComponent(host)}`);
+    if (host && host.includes('.')) {
+      list.push(proxied(`https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&url=${encodeURIComponent(`https://${host}`)}&size=256`));
+    }
   } catch {
     /* geçersiz site adresi */
   }
   return list;
 }
 
+// ---------- Logo kutucukları ----------
+// Logolar farklı boyut ve biçimlerde gelir (küçük simge, geniş yazı, şeffaf PNG...).
+// Her biri tuvale çizilip tek tip kare bir kutucuğa dönüştürülür: logonun kendi arka plan
+// rengi bulunur, boş kenarlar kırpılır ve logo ortalanır.
+
+const tiles = new Map();       // kaynak adresi -> kutucuk (data: adresi) ya da false
+const stationTile = new Map(); // istasyon -> kutucuk
+const TILE = 168;
+
+function tileFor(s) {
+  if (!s) return '';
+  const t = stationTile.get(s.id);
+  if (t) return t;
+  for (const src of logoSources(s)) {
+    const v = tiles.get(src);
+    if (v) return v;
+    if (v !== false) break;
+  }
+  return '';
+}
+
+const lum = (r, g, b) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+function buildTile(img) {
+  const w = img.naturalWidth;
+  const h = img.naturalHeight;
+  if (!w || !h) return null;
+  // Çözümleme için küçük bir kopya.
+  const k = Math.min(1, 128 / Math.max(w, h));
+  const cw = Math.max(1, Math.round(w * k));
+  const ch = Math.max(1, Math.round(h * k));
+  const c = document.createElement('canvas');
+  c.width = cw; c.height = ch;
+  const x = c.getContext('2d', { willReadFrequently: true });
+  x.drawImage(img, 0, 0, cw, ch);
+  const px = x.getImageData(0, 0, cw, ch).data;
+  const at = (i, j) => (j * cw + i) * 4;
+
+  // Kenar pikselleri: şeffaf mı, tek renk mi?
+  let n = 0; let clear = 0; let r = 0; let g = 0; let b = 0;
+  const edge = [];
+  const take = (i, j) => {
+    const o = at(i, j);
+    n++;
+    if (px[o + 3] < 40) { clear++; return; }
+    r += px[o]; g += px[o + 1]; b += px[o + 2];
+    edge.push(o);
+  };
+  for (let i = 0; i < cw; i++) { take(i, 0); take(i, ch - 1); }
+  for (let j = 1; j < ch - 1; j++) { take(0, j); take(cw - 1, j); }
+  const transparent = clear / n > 0.35;
+  const solid = edge.length || 1;
+  r /= solid; g /= solid; b /= solid;
+  let dev = 0;
+  for (const o of edge) dev += Math.abs(px[o] - r) + Math.abs(px[o + 1] - g) + Math.abs(px[o + 2] - b);
+  dev /= solid * 3;
+  const uniform = !transparent && dev < 14;
+
+  // Kenarları dolu ve karışık (fotoğraf ya da hazır kare logo): kareye kırpıp tam doldur.
+  const out = document.createElement('canvas');
+  out.width = TILE; out.height = TILE;
+  const o = out.getContext('2d');
+  o.imageSmoothingQuality = 'high';
+  if (!transparent && !uniform && Math.abs(w / h - 1) < 0.3) {
+    const side = Math.min(w, h);
+    o.drawImage(img, (w - side) / 2, (h - side) / 2, side, side, 0, 0, TILE, TILE);
+    return out.toDataURL('image/webp', 0.92);
+  }
+
+  // Arka plan rengi.
+  let bg;
+  if (transparent) {
+    let lr = 0; let cnt = 0;
+    for (let i = 0; i < px.length; i += 4) if (px[i + 3] > 120) { lr += lum(px[i], px[i + 1], px[i + 2]); cnt++; }
+    const light = cnt && lr / cnt > 0.82; // beyaz logo: koyu zemin
+    bg = light ? [32, 36, 48] : [255, 255, 255];
+  } else {
+    bg = [r, g, b].map(Math.round);
+  }
+
+  // Logonun kapladığı alan (arka plandan farklı pikseller).
+  let x0 = cw; let y0 = ch; let x1 = -1; let y1 = -1;
+  for (let j = 0; j < ch; j++) {
+    for (let i = 0; i < cw; i++) {
+      const q = at(i, j);
+      const a = px[q + 3];
+      const differs = transparent
+        ? a > 30
+        : a > 30 && (Math.abs(px[q] - bg[0]) + Math.abs(px[q + 1] - bg[1]) + Math.abs(px[q + 2] - bg[2])) > 42;
+      if (differs) {
+        if (i < x0) x0 = i; if (i > x1) x1 = i;
+        if (j < y0) y0 = j; if (j > y1) y1 = j;
+      }
+    }
+  }
+  if (x1 < 0) return null; // boş görüntü
+  const sx = x0 / k; const sy = y0 / k;
+  const sw = (x1 - x0 + 1) / k; const sh = (y1 - y0 + 1) / k;
+
+  o.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`;
+  o.fillRect(0, 0, TILE, TILE);
+  // Geniş yazı logoları yana doğru daha çok yer kaplayabilir.
+  const wide = sw / sh > 1.8;
+  const bw = TILE * (wide ? 0.86 : 0.76);
+  const bh = TILE * (wide ? 0.6 : 0.76);
+  // Küçük simgeler fazla büyütülürse bulanıklaşır.
+  const scale = Math.min(bw / sw, bh / sh, Math.max(3, 96 / Math.max(sw, sh)));
+  const dw = sw * scale; const dh = sh * scale;
+  o.drawImage(img, sx, sy, sw, sh, (TILE - dw) / 2, (TILE - dh) / 2, dw, dh);
+  return out.toDataURL('image/webp', 0.92);
+}
+
 function logoHTML(s, size = 48, radius = 10) {
-  const fallback = `<span class="logo-fallback" style="background:${tintFor(s.id)};font-size:${Math.round(size * 0.36)}px">${esc(initials(s.name))}</span>`;
-  const [first, ...rest] = logoSources(s);
-  const img = first
-    ? `<img src="${esc(first)}" data-next="${esc(rest.join(' '))}" alt="" loading="lazy" referrerpolicy="no-referrer" draggable="false">`
-    : '';
+  const fallback = `<span class="logo-fallback" style="--tint:${tintFor(s.id)};font-size:${Math.round(size * 0.36)}px">${esc(initials(s.name))}</span>`;
+  const ready = tileFor(s);
+  let img = '';
+  if (ready) {
+    img = `<img class="tiled" src="${esc(ready)}" alt="" draggable="false">`;
+  } else {
+    const list = logoSources(s).filter((u) => tiles.get(u) !== false);
+    const [first, ...rest] = list;
+    if (first) img = `<img src="${esc(first)}" data-sid="${esc(s.id)}" data-next="${esc(rest.join(' '))}" alt="" loading="lazy" crossorigin="anonymous" draggable="false">`;
+  }
   return `<span class="logo" style="width:${size}px;height:${size}px;border-radius:${radius}px">${fallback}${img}</span>`;
 }
 
@@ -300,11 +420,44 @@ function logoHTML(s, size = 48, radius = 10) {
 function nextLogo(img) {
   const rest = (img.dataset.next || '').split(' ').filter(Boolean);
   if (!rest.length) {
+    // Daha iyisi bulunamadı: elde küçük bir simge varsa onu kullan.
+    if (img.dataset.backup) {
+      const b = img.dataset.backup;
+      delete img.dataset.backup;
+      img.dataset.accept = '1';
+      img.src = b;
+      return;
+    }
     img.remove();
     return;
   }
   img.dataset.next = rest.slice(1).join(' ');
   img.src = rest[0];
+}
+
+function onLogoLoad(img) {
+  if (img.classList.contains('tiled')) return;
+  const src = img.getAttribute('src');
+  // Çok küçük simgeler: önce daha iyisini dene.
+  if (img.naturalWidth < 40 && !img.dataset.accept) {
+    if (img.naturalWidth >= 16 && !img.dataset.backup) img.dataset.backup = src;
+    if (img.naturalWidth < 16) tiles.set(src, false);
+    nextLogo(img);
+    return;
+  }
+  let tile = tiles.get(src);
+  if (!tile) {
+    try {
+      tile = buildTile(img);
+    } catch {
+      tile = null;
+    }
+    if (!tile) { tiles.set(src, false); nextLogo(img); return; }
+    tiles.set(src, tile);
+  }
+  if (img.dataset.sid) stationTile.set(img.dataset.sid, tile);
+  img.classList.add('tiled');
+  img.src = tile;
 }
 
 function favHTML(s) {
@@ -372,7 +525,7 @@ function cardHTML(s) {
   return `<article class="station-card${cls}" data-card="${esc(s.id)}">
     <button class="card-hit" type="button" data-action="play" data-id="${esc(s.id)}" aria-label="${esc(s.name)} dinle"></button>
     <div class="card-top">
-      <span class="logo-wrap">${logoHTML(s)}<span class="logo-overlay">${ICON.play.replace('<svg', '<svg class="i-play"')}${ICON.pause.replace('<svg', '<svg class="i-pause"')}</span></span>
+      <span class="logo-wrap">${logoHTML(s, 56, 12)}<span class="logo-overlay">${ICON.play.replace('<svg', '<svg class="i-play"')}${ICON.pause.replace('<svg', '<svg class="i-pause"')}</span></span>
       <span class="card-actions">${remove}${favHTML(s)}</span>
     </div>
     <div class="card-bottom">
@@ -1282,12 +1435,15 @@ window.addEventListener('resize', fillScreen);
 
 // Logo yüklenemezse sıradaki kaynağı dene, o da yoksa baş harfler görünsün.
 document.addEventListener('error', (e) => {
-  if (e.target instanceof HTMLImageElement && e.target.closest('.logo')) nextLogo(e.target);
+  const img = e.target;
+  if (!(img instanceof HTMLImageElement) || !img.closest('.logo')) return;
+  if (!img.classList.contains('tiled')) tiles.set(img.getAttribute('src'), false);
+  nextLogo(img);
 }, true);
-// 16 piksellik "varsayılan" simgeler bulanık durur; onları da atla.
+// Yüklenen logoyu kare kutucuğa dönüştür.
 document.addEventListener('load', (e) => {
   const img = e.target;
-  if (img instanceof HTMLImageElement && img.closest('.logo') && img.naturalWidth > 0 && img.naturalWidth < 24) nextLogo(img);
+  if (img instanceof HTMLImageElement && img.closest('.logo')) onLogoLoad(img);
 }, true);
 
 $('#add-form').addEventListener('submit', onAddSubmit);

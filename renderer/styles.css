@@ -206,10 +206,14 @@ svg { display: block; flex: none; }
 
 .logo { position: relative; display: inline-block; flex: none; overflow: hidden; background: var(--surface-high); }
 .logo img, .logo-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
-.logo img { object-fit: cover; }
+.logo img { object-fit: contain; opacity: 0; }
+.logo img.tiled { object-fit: cover; opacity: 1; animation: logo-in .25s ease; }
+@keyframes logo-in { from { opacity: 0; } to { opacity: 1; } }
+.logo::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); pointer-events: none; }
 .logo-fallback {
   display: flex; align-items: center; justify-content: center;
-  color: var(--bg); font-family: var(--font-display); font-weight: 700;
+  color: #14151c; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em;
+  background: radial-gradient(120% 120% at 20% 10%, color-mix(in srgb, var(--tint) 70%, white) 0%, var(--tint) 45%, color-mix(in srgb, var(--tint) 70%, black) 100%);
 }
 
 /* ---------- Büyük kart ---------- */

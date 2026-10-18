@@ -12,6 +12,9 @@ const nowPlaying = require('./src/nowplaying');
 const scheduler = require('./src/scheduler');
 const settings = require('./src/settings');
 const updater = require('./src/updater');
+const logos = require('./src/logos');
+
+logos.registerScheme();
 
 // Logosu ya da yayını bozuk sertifikalı sitelerden gelen istasyonlar için
 // Chromium'un terminale yazdığı "handshake failed" satırlarını gizle.
@@ -203,7 +206,7 @@ function registerIpc() {
     if (!st || typeof st !== 'object') return;
     player = {
       station: st.station && typeof st.station.name === 'string'
-        ? { id: String(st.station.id || ''), name: st.station.name.slice(0, 120), favicon: String(st.station.favicon || '').slice(0, 1000), initials: String(st.station.initials || '').slice(0, 3), tint: String(st.station.tint || '').slice(0, 9) }
+        ? { id: String(st.station.id || ''), name: st.station.name.slice(0, 120), favicon: (() => { const f = String(st.station.favicon || ''); return /^data:image\/(webp|png);base64,/.test(f) ? f.slice(0, 300000) : f.slice(0, 2000); })(), initials: String(st.station.initials || '').slice(0, 3), tint: String(st.station.tint || '').slice(0, 9) }
         : null,
       playing: !!st.playing,
       buffering: !!st.buffering,
@@ -369,6 +372,8 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(async () => {
     app.setAppUserModelId('com.radyo.app');
     settings.loadSync();
+    logos.handle();
+    setTimeout(() => logos.prune(), 60000);
     registerIpc();
     createWindow();
     createTray();

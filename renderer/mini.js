@@ -26,12 +26,13 @@ function render(st) {
     ini.textContent = s ? s.initials || '?' : 'R';
     ini.style.background = (s && s.tint) || '#F2A541';
     box.appendChild(ini);
-    if (s && /^https?:\/\//i.test(s.favicon || '')) {
+    if (s && /^(https?:\/\/|radyo-logo:\/\/|data:image\/)/i.test(s.favicon || '')) {
       const img = document.createElement('img');
       img.alt = '';
       img.referrerPolicy = 'no-referrer';
       img.onerror = () => img.remove();
       img.onload = () => { if (img.naturalWidth < 24) img.remove(); };
+      if (!s.favicon.startsWith('data:')) img.style.objectFit = 'contain', img.style.background = '#fff';
       img.src = s.favicon;
       box.appendChild(img);
     }

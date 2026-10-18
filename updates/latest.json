@@ -1,12 +1,12 @@
 {
-  "version": "0.5.3",
+  "version": "0.5.4",
   "electron": "44.9.0",
-  "date": "2026-10-18T00:03:57.784Z",
-  "notes": "• Radyo Fenerbahçe (97.0) eklendi\n• Arama artık Türkiye listesiyle birlikte tüm dünyada da kendiliğinden arıyor; “Fenerbahçe” ve “Fenerbahce” aynı sonucu veriyor\n• Arama sonuçlarında “Yayın adresiyle ekle” düğmesi",
+  "date": "2026-10-18T00:11:46.664Z",
+  "notes": "• Radyo logoları yenilendi: her logo kendi renginde, boşlukları kırpılmış, tek tip kare kutucuklar olarak görünüyor\n• Daha yüksek çözünürlüklü logo kaynakları; logolar bilgisayarda saklanıyor, liste daha hızlı açılıyor\n• Logosu olmayan radyolar için yeni renkli kutucuklar",
   "asar": {
-    "file": "app-0.5.3.asar",
-    "size": 866895,
-    "sha256": "2ab341f1dbea1d1068aed2eb5a0ad3d97b746ac4a6c2d99e2459381e06afd6d0"
+    "file": "app-0.5.4.asar",
+    "size": 879147,
+    "sha256": "0af7373704301d262c8e5be6b2ee4be0544347aaf157b1aff4a03514dbf091cc"
   },
   "full": ""
 }
