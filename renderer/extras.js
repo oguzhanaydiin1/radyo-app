@@ -190,8 +190,9 @@ const markEqBtn = () => eqBtn.classList.toggle('active', eqActive());
 markEqBtn();
 eqBtn.addEventListener('click', () => {
   if (popOwner === 'eq') { closePop(); return; }
-  openPop(eqBtn, eqHTML(), 'eq', 'above');
+  pop.classList.remove('songs-pop');
   pop.classList.add('eq-pop');
+  openPop(eqBtn, eqHTML(), 'eq', 'above');
 });
 
 function setEq(patch) {
@@ -262,10 +263,7 @@ P.onMeta((m) => {
   saveSongs();
   updatePlayerSong();
   updateDiscord();
-  if (state.section === 'discover') {
-    const box = $('#song-box');
-    if (box) box.outerHTML = songBoxHTML(s);
-  }
+  if (popOwner === 'songs') pop.innerHTML = songsPopHTML(s);
 });
 
 const ytUrl = (t) => `https://www.youtube.com/results?search_query=${encodeURIComponent(t)}`;
@@ -283,19 +281,16 @@ function songAgo(ms) {
   return new Date(ms).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
 }
 
-function songBoxHTML(s) {
-  const list = (Array.isArray(songs[s.id]) ? songs[s.id] : []).slice(0, 8);
+/** Alt çubuktan açılan "Son çalan şarkılar" listesi. */
+function songsPopHTML(s) {
+  const list = (Array.isArray(songs[s.id]) ? songs[s.id] : []).slice(0, 10);
   const nowT = isCurrent(s.id) && state.playing ? state.nowTitle : '';
-  if (!list.length && !nowT) return '<div id="song-box" hidden></div>';
-  return `<section class="song-box card" id="song-box" aria-label="Son çalan şarkılar">
-    <h2 class="similar-title">${IC.music}<span>Son çalan şarkılar</span></h2>
+  if (!list.length) return '<div class="menu-title">SON ÇALAN ŞARKILAR</div><p class="menu-note">Bu radyo şarkı adı göndermiyor ya da henüz şarkı çalmadı.</p>';
+  return `<div class="menu-title">SON ÇALAN ŞARKILAR · ${esc(s.name.toLocaleUpperCase('tr'))}</div>
     <div class="song-list">${list.map((x, i) => `<div class="song-row${i === 0 && nowT === x.t ? ' now' : ''}">
       <span class="song-t" title="${esc(x.t)}">${i === 0 && nowT === x.t ? '<span class="now-dot"></span>' : ''}${esc(x.t)}</span>
-      <span class="song-at">${i === 0 && nowT === x.t ? 'şimdi çalıyor' : esc(songAgo(x.at))}</span>${songLinks(x.t)}</div>`).join('')}</div>
-  </section>`;
+      <span class="song-at">${i === 0 && nowT === x.t ? 'şimdi' : esc(songAgo(x.at))}</span>${songLinks(x.t)}</div>`).join('')}</div>`;
 }
-
-chain('afterHero', (prev, s) => songBoxHTML(s) + (prev(s) || ''));
 
 // Alt çubukta çalan şarkının yanında YouTube / Spotify düğmeleri.
 const pSong = document.createElement('span');
@@ -304,10 +299,14 @@ pSong.id = 'p-song';
 $('.player-text').after(pSong);
 let pSongKey = '';
 function updatePlayerSong() {
+  const s = state.current;
   const t = state.playing && state.nowTitle && isSong(state.nowTitle) ? state.nowTitle : '';
-  if (t === pSongKey) return;
-  pSongKey = t;
-  pSong.innerHTML = t ? songLinks(t) : '';
+  const has = !!(s && Array.isArray(songs[s.id]) && songs[s.id].length);
+  const key = `${t}|${has}|${s ? s.id : ''}`;
+  if (key === pSongKey) return;
+  pSongKey = key;
+  const histBtn = has ? `<button class="song-link hist" type="button" data-action="songs-pop" data-pop-anchor="1" title="Son çalan şarkılar">${IC.music}</button>` : '';
+  pSong.innerHTML = t || has ? `<span class="song-links">${t ? songLinks(t).replace(/^<span class="song-links">|<\/span>$/g, '') : ''}${histBtn}</span>` : '';
 }
 chain('playerRendered', (prev) => { updatePlayerSong(); updateDiscord(); return prev(); });
 
@@ -846,6 +845,13 @@ document.addEventListener('click', async (e) => {
     case 'song-open':
       if (/^https:\/\//.test(el.dataset.href || '')) AS.openExternal(el.dataset.href);
       break;
+    case 'songs-pop':
+      if (popOwner === 'songs') { closePop(); break; }
+      if (!state.current) break;
+      pop.classList.remove('eq-pop');
+      pop.classList.add('songs-pop');
+      openPop(el, songsPopHTML(state.current), 'songs', 'above');
+      break;
     case 'share': {
       const s = registry.get(el.dataset.id);
       if (s) share(s);
@@ -860,7 +866,7 @@ document.addEventListener('click', async (e) => {
       break;
     case 'fold-menu':
       if (popOwner === `fold:${el.dataset.id}`) { closePop(); break; }
-      pop.classList.remove('eq-pop');
+      pop.classList.remove('eq-pop', 'songs-pop');
       openPop(el, folderMenuHTML(el.dataset.id), `fold:${el.dataset.id}`);
       break;
     case 'fold-rename': {

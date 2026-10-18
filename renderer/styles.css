@@ -960,3 +960,6 @@ svg { display: block; flex: none; }
 :root[data-theme="light"] .field input[type="date"],
 :root[data-theme="light"] .field input[type="number"] { color-scheme: light; }
 :root[data-theme="light"] .world-item.on .wi-native { color: #A0661E; }
+.songs-pop { width: 420px; max-width: calc(100vw - 32px); padding: 6px 12px 8px; }
+.songs-pop .song-list { max-height: 360px; overflow-y: auto; }
+.song-link.hist:hover { color: var(--accent); border-color: var(--accent); }

@@ -1,12 +1,12 @@
 {
-  "version": "0.6.0",
+  "version": "0.6.1",
   "electron": "44.9.0",
-  "date": "2026-10-18T00:31:18.075Z",
-  "notes": "• Yayın koparsa uygulama kendiliğinden yeniden bağlanıyor; internet gidip gelince de kaldığı yerden devam ediyor\n• Ekolayzır: Bas, Konuşma, Pop, Rock, Araba, Gece gibi hazır ayarlar ve 5 bant (alt çubuktaki ayar düğmesi)\n• Ses dengeleme: radyo değiştirince ses bir bağırıp bir fısıldamıyor\n• Şarkıyı bul: çalan şarkıyı tek tıkla YouTube ya da Spotify’da ara; her radyonun son çalan şarkıları\n• Şehre göre radyolar (Türkiye listesinde “Tüm şehirler” seçimi)\n• Favori klasörleri ve favorileri sürükleyerek sıralama\n• İstatistikler: ne kadar ve en çok neyi dinlediğin\n• Açık tema (Ayarlar → Görünüm)\n• Görev çubuğu önizlemesinde çal/durdur, önceki/sonraki düğmeleri\n• İstasyon paylaşma: “Bağlantıyı kopyala”",
+  "date": "2026-10-18T00:36:39.977Z",
+  "notes": "• “Son çalan şarkılar” artık sayfada yer kaplamıyor: alt çubuktaki ♫ düğmesine basınca açılıyor",
   "asar": {
-    "file": "app-0.6.0.asar",
-    "size": 945083,
-    "sha256": "9ff36d3e2973009af9fa3d1f6aa4643d925073d1f6783051618ebca6f1e6a16e"
+    "file": "app-0.6.1.asar",
+    "size": 946006,
+    "sha256": "74aa63cb7f81bad45bc9d7c05c5611543d26e15f1f939f8936308e3ace30632a"
   },
   "full": ""
 }
