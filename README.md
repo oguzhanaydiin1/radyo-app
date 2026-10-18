@@ -75,7 +75,7 @@ Yeni sürüm yayınlamak için:
 
 ## İndirme sayfası
 
-`docs/index.html` — GitHub Pages ile yayınlanır (Settings → Pages → Branch: main, klasör: /docs).
+`docs/ (oalabs.dev: index.html = OA Labs, radyo/ = indirme sayfası)` — GitHub Pages ile yayınlanır (Settings → Pages → Branch: main, klasör: /docs).
 Adres: https://oguzhanaydiin1.github.io/radyo-app/
 
 Electron sürümü değiştiyse kurulu uygulamalar kendini güncelleyemez; Güncellemeler sayfası
