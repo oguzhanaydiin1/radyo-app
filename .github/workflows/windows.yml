@@ -1,0 +1,37 @@
+# Yeni sürüm etiketi (v0.7.0 gibi) gönderildiğinde GitHub'ın Windows makinesinde
+# kurulum dosyası (Radyo-Setup.exe) ve zip paketi üretilir, "Releases" sayfasına konur.
+name: Windows paketleri
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx electron-builder --win nsis zip --x64 --publish never
+      - name: Sürüm
+        id: v
+        shell: bash
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Releases sayfasına koy
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.version }}
+          name: Radyo ${{ steps.v.outputs.version }}
+          body_path: release-notes.md
+          make_latest: true
+          files: |
+            dist/Radyo-Setup.exe
+            dist/Radyo-*-win.zip

@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win --x64 --publish never",
+    "dist": "electron-builder --win nsis zip --x64 --publish never",
     "check": "node --check boot.js && node --check main.js && node --check preload.js && node --check renderer/app.js",
     "pack": "electron-builder --win zip --x64 --publish never",
     "release": "node scripts/release.js",
@@ -33,20 +33,33 @@
     "win": {
       "target": [
         "nsis",
-        "portable"
+        "zip"
       ],
       "icon": "build/icon.ico"
     },
     "nsis": {
       "oneClick": false,
+      "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "shortcutName": "Radyo",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
       "installerIcon": "build/icon.ico",
-      "uninstallerIcon": "build/icon.ico"
+      "uninstallerIcon": "build/icon.ico",
+      "artifactName": "Radyo-Setup.${ext}",
+      "deleteAppDataOnUninstall": false
     },
-    "portable": {
-      "artifactName": "Radyo-tasinabilir-${version}.exe"
-    }
+    "zip": {
+      "artifactName": "Radyo-${version}-win.${ext}"
+    },
+    "protocols": [
+      {
+        "name": "Radyo",
+        "schemes": [
+          "radyo"
+        ]
+      }
+    ]
   },
   "updateSource": {
     "owner": "oguzhanaydiin1",
