@@ -1,7 +1,7 @@
-name: Windows kurulum dosyası
+# Yeni sürüm etiketi (v0.7.0 gibi) gönderildiğinde GitHub'ın Windows makinesinde
+# kurulum dosyası (Radyo-Setup.exe) ve zip paketi üretilir, "Releases" sayfasına konur.
+name: Windows paketleri
 
-# "v0.7.0" gibi bir etiket gönderilince Windows'ta Setup.exe ve zip üretilir,
-# GitHub'da o sürümün "Release" sayfasına yüklenir.
 on:
   push:
     tags: ['v*']
@@ -20,17 +20,18 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Paketle (Setup.exe + zip)
-        run: npx electron-builder --win nsis zip --x64 --publish never
-        env:
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - name: Sürüm sayfasına yükle
+      - run: npx electron-builder --win nsis zip --x64 --publish never
+      - name: Sürüm
+        id: v
         shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          TAG="v$VERSION"
-          NOTES=$(cat release-notes.md 2>/dev/null || echo "Radyo $VERSION")
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Radyo $VERSION" --notes "$NOTES" --latest
-          gh release upload "$TAG" dist/Radyo-Kurulum.exe "dist/Radyo-$VERSION-win.zip" --clobber
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Releases sayfasına koy
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.version }}
+          name: Radyo ${{ steps.v.outputs.version }}
+          body_path: release-notes.md
+          make_latest: true
+          files: |
+            dist/Radyo-Setup.exe
+            dist/Radyo-*-win.zip

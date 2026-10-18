@@ -41,14 +41,13 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Radyo",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Radyo",
-      "runAfterFinish": true,
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
-      "artifactName": "Radyo-Kurulum.${ext}",
-      "uninstallDisplayName": "Radyo"
+      "artifactName": "Radyo-Setup.${ext}",
+      "deleteAppDataOnUninstall": false
     },
     "protocols": [
       {
@@ -57,10 +56,7 @@
           "radyo"
         ]
       }
-    ],
-    "zip": {
-      "artifactName": "Radyo-${version}-win.${ext}"
-    }
+    ]
   },
   "updateSource": {
     "owner": "oguzhanaydiin1",
