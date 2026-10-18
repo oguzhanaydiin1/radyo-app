@@ -7,10 +7,10 @@
 const APP_INFO = {
   developer: 'Oğuzhan Aydın',
   title: 'Yazılım Geliştirici',
-  email: 'oguzhanaydin1996@icloud.com',
+  email: 'destek@oalabs.dev',
   phone: '',       // örn. +90 5xx xxx xx xx  (WhatsApp bağlantısı da bundan oluşur)
   whatsapp: true,  // telefon numarası WhatsApp'ta da kullanılıyorsa true
-  website: '',     // örn. https://ornek.com
+  website: 'https://oalabs.dev/radyo/',     // örn. https://ornek.com
   instagram: '',   // kullanıcı adı, @ olmadan
   copyrightYear: 2026,
 };
