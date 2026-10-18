@@ -49,9 +49,6 @@
       "artifactName": "Radyo-Setup.${ext}",
       "deleteAppDataOnUninstall": false
     },
-    "zip": {
-      "artifactName": "Radyo-${version}-win.${ext}"
-    },
     "protocols": [
       {
         "name": "Radyo",
