@@ -70,3 +70,14 @@ contextBridge.exposeInMainWorld('appSettings', {
   openExternal: (url) => ipcRenderer.invoke('open:external', url),
   about: () => ipcRenderer.invoke('app:about'),
 });
+
+// Tema, Discord durumu, radyo:// bağlantıları.
+contextBridge.exposeInMainWorld('extras', {
+  setTheme: (mode) => ipcRenderer.send('win:theme', mode),
+  discordAvailable: () => ipcRenderer.invoke('discord:available'),
+  discordEnable: (on) => ipcRenderer.send('discord:enable', on),
+  discordSet: (st) => ipcRenderer.send('discord:set', st),
+  pendingLink: () => ipcRenderer.invoke('deeplink:pending'),
+  onLink: on('deeplink'),
+  byUuid: (id) => ipcRenderer.invoke('radio:byuuid', id),
+});

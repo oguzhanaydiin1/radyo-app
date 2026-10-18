@@ -320,7 +320,7 @@ $('#set-login').addEventListener('change', async (e) => renderSettings(await AS.
 
 // ---------- Bilgisayarlar arası eşitleme ----------
 
-const SYNC_KEYS = new Set(['favorites', 'custom', 'recent']);
+const SYNC_KEYS = new Set(['favorites', 'custom', 'recent', 'favFolders']);
 const rawSet = store.set.bind(store);
 let deviceId = store.get('deviceId', null);
 if (!deviceId) {
@@ -349,7 +349,7 @@ function markLocalChange() {
 const validStation = (s) => s && typeof s === 'object' && typeof s.id === 'string' && /^https?:\/\//i.test(s.url || '') && typeof s.name === 'string';
 
 function syncPayload() {
-  return { v: 1, app: 'radyo', updatedAt: localUpdatedAt, device: deviceId, favorites: state.favorites, custom: state.custom, recent: state.recent };
+  return { v: 1, app: 'radyo', updatedAt: localUpdatedAt, device: deviceId, favorites: state.favorites, custom: state.custom, recent: state.recent, favFolders: store.get('favFolders', []) };
 }
 
 function unionById(a, b) {
@@ -377,6 +377,7 @@ function applyRemote(r, merge) {
     store.set('favorites', state.favorites);
     store.set('custom', state.custom);
     store.set('recent', state.recent);
+    if (Array.isArray(r.favFolders)) hook('remoteFolders', r.favFolders, merge);
     register(state.favorites);
     register(state.custom);
     register(state.recent.map((e) => e.station));

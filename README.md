@@ -37,7 +37,17 @@ npm start
 - Uyku zamanlayıcı, medya tuşları, Windows ses penceresinde istasyon ve şarkı adı
 - Açılış ekranı: radyo sayıları ve geliştirici bilgisi
 - Destek sekmesi: iletişim bilgileri ve e-postayla sorun bildirme (bilgiler renderer/info.js içinde)
-- Ayarlar: Windows açılınca başlatma, bulut klasörüyle bilgisayarlar arası eşitleme, yedek
+- Ayarlar: Windows açılınca başlatma, bulut klasörüyle bilgisayarlar arası eşitleme, yedek, açık/koyu tema
+- Yayın koparsa kendiliğinden yeniden bağlanma (internet gidip gelince de)
+- Ekolayzır (hazır ayarlar + 5 bant) ve radyolar arası ses dengeleme
+- Şarkıyı bul: çalan şarkıyı YouTube / Spotify'da arama, her radyonun son çalan şarkıları
+- Şehre göre Türkiye radyoları
+- Favori klasörleri, favorileri sürükleyerek sıralama
+- Dinleme istatistikleri
+- Görev çubuğu önizlemesinde çal/durdur, önceki/sonraki düğmeleri
+- Discord'da "Radyo dinliyor" durumu (package.json → discordClientId gerekir)
+- İstasyon paylaşma: radyo://istasyon/<kimlik> bağlantıları uygulamada açılır
+- Ek istasyon listesi: stations/ek-istasyonlar.json (Radio Browser'da olmayan ya da bozuk olan radyolar)
 
 ## Uygulama içi güncelleme
 
@@ -80,6 +90,9 @@ renderer/index.html    Ana ekranın iskeleti
 renderer/info.js       Geliştirici ve destek bilgileri
 renderer/app.js        Arayüz, oynatıcı, listeler
 renderer/features.js   Tepsi/mini bağlantısı, alarm, zamanlama, ayarlar, öneriler
+renderer/extras.js     Ekolayzır, şarkılar, şehirler, klasörler, istatistik, tema, paylaşma
+src/logos.js           Logo indirme ve önbellek (radyo-logo://)
+src/discord.js         Discord durumu
 renderer/mini.*        Mini oynatıcı
 renderer/styles.css    Görünüm
 assets/, build/        İkonlar

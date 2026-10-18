@@ -45,6 +45,7 @@ function toStation(j) {
     favicon: str('favicon'),
     homepage: str('homepage'),
     country: str('countrycode'),
+    state: str('state').slice(0, 60),
     language: str('language'),
     codec: str('codec'),
     bitrate: Number(j.bitrate) || 0,
@@ -110,6 +111,7 @@ function parseExtras(j) {
       favicon: /^https?:\/\//i.test(String(x.favicon || '')) ? String(x.favicon).trim() : '',
       homepage: /^https?:\/\//i.test(String(x.homepage || '')) ? String(x.homepage).trim() : '',
       country: cleanText(x.country, 2).toUpperCase(),
+      state: cleanText(x.state, 60),
       language: cleanText(x.language, 40),
       codec: cleanText(x.codec, 12),
       bitrate: Number(x.bitrate) || 0,
@@ -173,7 +175,7 @@ const fold = (s) => s.toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD
 // ---------- Türkiye'nin tüm istasyonları (günde bir yenilenir) ----------
 
 const CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
-const cacheFile = () => path.join(app.getPath('userData'), 'istasyonlar-TR-v3.json');
+const cacheFile = () => path.join(app.getPath('userData'), 'istasyonlar-TR-v4.json');
 
 async function readCache() {
   try {
@@ -271,6 +273,15 @@ function register() {
     const exIds = new Set(ex.map((x) => x.id));
     const exUrls = new Set(ex.map((x) => x.url.toLowerCase()));
     return [...ex, ...dedupe(found).filter((s) => !exIds.has(s.id) && !exUrls.has(s.url.toLowerCase()))];
+  });
+
+  ipcMain.handle('radio:byuuid', async (_event, id) => {
+    if (typeof id !== 'string' || !UUID.test(id)) return null;
+    const ex = (await loadExtras()).find((x) => x.id === id);
+    if (ex) return ex;
+    const data = await apiGet(`/json/stations/byuuid/${id}`);
+    const list = Array.isArray(data) ? data.map(toStation) : [];
+    return list[0] || null;
   });
 
   ipcMain.handle('radio:click', async (_event, id) => {

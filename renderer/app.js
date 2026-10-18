@@ -107,6 +107,9 @@ const state = {
   lastVolume: 70,
   sleepAt: null,
   nowTitle: '',
+  city: store.get('city', ''),
+  retry: 0,            // yeniden bağlanma denemesi
+  everPlayed: false,    // bu istasyon bu oturumda en az bir kez çaldı mı
 };
 
 /** id -> istasyon; tıklamalarda istasyonu bulmak için. */
@@ -123,8 +126,10 @@ let sleepTick = null;
 let hls = null;
 
 const audio = new Audio();
+// Ekolayzır ve ses dengeleme için (yayınlara uygulama CORS izni ekler).
+audio.crossOrigin = 'anonymous';
 audio.preload = 'none';
-audio.volume = state.volume / 100;
+applyVolume();
 
 register(state.custom);
 register(state.favorites);
@@ -251,6 +256,7 @@ function filtered() {
   const cat = CATEGORIES[state.categoryIndex] || CATEGORIES[0];
   let list = cat.custom ? state.custom : state.custom.concat(state.all);
   if (cat.keys) list = list.filter((s) => cat.keys.some((k) => hay(s).includes(k)));
+  if (state.city) list = list.filter((s) => hook('cityOf', s) === state.city);
   const words = norm(state.query).split(/\s+/).filter(Boolean);
   if (words.length) list = list.filter((s) => words.every((w) => hay(s).includes(w)));
   if (state.sort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
@@ -589,6 +595,7 @@ function listBarHTML() {
     <span class="count">${fmtCount(view.length)} istasyon</span>
     ${status}
     <span class="spacer"></span>
+    ${hook('listBarExtra') || ''}
     <label><span class="sr-only">Sıralama</span>
       <select class="select" id="sort">
         <option value="popular"${state.sort === 'popular' ? ' selected' : ''}>En çok dinlenen</option>
@@ -742,6 +749,8 @@ function dunyaHTML() {
 }
 
 function favoritesHTML() {
+  const custom = hook('favoritesHTML');
+  if (custom !== undefined) return custom;
   let html = '<h1 class="page-title">Favoriler</h1>';
   if (!state.favorites.length) {
     html += emptyHTML(ICON.heart.replace('class="off-icon" ', ''), 'Henüz favorin yok',
@@ -824,7 +833,7 @@ function renderPlayer() {
   const sub = $('#p-sub');
   sub.classList.toggle('error', !!state.playError);
   sub.textContent = state.playError
-    || (!s ? 'Listeden bir istasyona tıkla' : state.buffering ? 'Bağlanıyor…' : state.nowTitle && state.playing ? `♪ ${state.nowTitle}` : subtitle(s));
+    || (!s ? 'Listeden bir istasyona tıkla' : state.reconnecting ? `Bağlantı koptu, yeniden bağlanıyor… (${state.retry})` : state.buffering ? 'Bağlanıyor…' : state.nowTitle && state.playing ? `♪ ${state.nowTitle}` : subtitle(s));
   sub.title = state.nowTitle && state.playing ? state.nowTitle : '';
 
   const play = $('#btn-play');
@@ -905,7 +914,7 @@ async function load(force = false) {
 }
 
 function selectSection(section) {
-  if (!['discover', 'world', 'favorites', 'recent', 'recordings', 'alarms', 'support', 'updates'].includes(section)) return;
+  if (!['discover', 'world', 'favorites', 'recent', 'stats', 'recordings', 'alarms', 'support', 'updates'].includes(section)) return;
   hook('enterSection', section);
   if (section === 'recordings') loadRecordings();
   const wasWorld = state.section === 'world';
@@ -1194,28 +1203,65 @@ function stopStream() {
   audio.load();
 }
 
+const RETRY_DELAYS = [1000, 2000, 4000, 8000, 15000, 30000];
+let retryTimer = null;
+
+/** Yayın koptu: birkaç kez artan aralıklarla yeniden bağlanmayı dene. */
 function failPlay() {
   if (!state.current) return;
-  state.playError = PLAY_ERROR;
+  const s = state.current;
+  // Daha önce çalmış bir yayın kopmuşsa 6 kez, hiç açılamamışsa 1 kez daha dene.
+  const max = state.everPlayed ? RETRY_DELAYS.length : 1;
+  if (state.retry < max && navigator.onLine !== false) {
+    const delay = RETRY_DELAYS[state.retry];
+    state.retry += 1;
+    state.buffering = true;
+    state.playing = false;
+    state.reconnecting = true;
+    stopStream();
+    renderPlayer();
+    clearTimeout(retryTimer);
+    retryTimer = setTimeout(() => { if (state.current === s && state.reconnecting) play(s, { retry: true }); }, delay);
+    return;
+  }
+  if (navigator.onLine === false && state.everPlayed) {
+    // İnternet gelince kaldığı yerden devam etsin.
+    state.waitOnline = true;
+  }
+  state.reconnecting = false;
+  if (!state.waitOnline) state.wantPlay = false;
+  state.playError = navigator.onLine === false ? 'İnternet bağlantısı yok. Bağlantı gelince yayın kendiliğinden devam edecek.' : PLAY_ERROR;
   state.buffering = false;
   state.playing = false;
   syncPlaying();
 }
 
-async function play(s) {
+async function play(s, opts = {}) {
+  clearTimeout(retryTimer);
+  const same = state.current && state.current.id === s.id;
+  if (!opts.retry) {
+    state.retry = 0;
+    state.reconnecting = false;
+    state.waitOnline = false;
+    if (!same) state.everPlayed = false;
+  }
   state.current = s;
-  state.nowTitle = '';
+  state.wantPlay = true;
+  if (!opts.retry) state.nowTitle = '';
   hook('stationChanged', s);
   state.playError = null;
   state.buffering = true;
   state.playing = false;
-  addRecent(s);
-  if (!isCustom(s)) api.click(s.id).catch(() => {});
+  if (!opts.retry) {
+    addRecent(s);
+    if (!isCustom(s)) api.click(s.id).catch(() => {});
+  }
   stopStream();
+  hook('beforePlay', s);
 
   const useHls = (s.hls || /\.m3u8(\?|$)/i.test(s.url)) && window.Hls && window.Hls.isSupported();
   if (useHls) {
-    hls = new window.Hls({ enableWorker: true });
+    hls = new window.Hls({ enableWorker: true, manifestLoadingMaxRetry: 3, levelLoadingMaxRetry: 4, fragLoadingMaxRetry: 6 });
     hls.on(window.Hls.Events.ERROR, (_e, data) => { if (data && data.fatal) failPlay(); });
     hls.loadSource(s.url);
     hls.attachMedia(audio);
@@ -1242,6 +1288,10 @@ function togglePlay() {
     return;
   }
   if (state.playing || state.buffering) {
+    clearTimeout(retryTimer);
+    state.reconnecting = false;
+    state.waitOnline = false;
+    state.wantPlay = false;
     audio.pause();
     if (hls) hls.stopLoad();
     state.buffering = false;
@@ -1265,10 +1315,15 @@ function step(delta) {
   play(list[next]);
 }
 
+function applyVolume() {
+  // Ses grafiği etkinse ses düzeyi orada uygulanır (ses dengeleme ölçümü bozulmasın).
+  if (hook('applyVolume', state.volume / 100) !== true) audio.volume = state.volume / 100;
+}
+
 function setVolume(v) {
   state.volume = clamp(Math.round(v), 0, 100);
   if (state.volume > 0) state.lastVolume = state.volume;
-  audio.volume = state.volume / 100;
+  applyVolume();
   store.set('volume', state.volume);
   renderPlayer();
 }
@@ -1284,12 +1339,32 @@ audio.addEventListener('playing', () => {
   state.playing = true;
   state.buffering = false;
   state.playError = null;
+  state.everPlayed = true;
+  state.reconnecting = false;
+  // Yayın bir süre sorunsuz çalarsa deneme sayacı sıfırlansın.
+  const s = state.current;
+  setTimeout(() => { if (state.current === s && state.playing) state.retry = 0; }, 20000);
   syncPlaying();
 });
+let stallTimer = null;
 audio.addEventListener('waiting', () => {
   if (!state.current) return;
   state.buffering = true;
   renderPlayer();
+  // 15 saniyedir veri gelmiyorsa yayın takılmıştır: yeniden bağlan.
+  clearTimeout(stallTimer);
+  const s = state.current;
+  stallTimer = setTimeout(() => { if (state.current === s && state.buffering && !audio.paused) failPlay(); }, 15000);
+});
+audio.addEventListener('timeupdate', () => clearTimeout(stallTimer));
+// Canlı yayın "bitti" diyorsa bağlantı kopmuştur.
+audio.addEventListener('ended', () => { if (state.current && state.wantPlay) failPlay(); });
+window.addEventListener('online', () => {
+  if (state.current && (state.waitOnline || state.reconnecting)) {
+    state.waitOnline = false;
+    state.retry = 0;
+    play(state.current, { retry: true });
+  }
 });
 audio.addEventListener('pause', () => {
   if (!state.playing) return;

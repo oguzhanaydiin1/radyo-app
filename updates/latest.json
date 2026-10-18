@@ -1,12 +1,12 @@
 {
-  "version": "0.5.4",
+  "version": "0.6.0",
   "electron": "44.9.0",
-  "date": "2026-10-18T00:11:46.664Z",
-  "notes": "• Radyo logoları yenilendi: her logo kendi renginde, boşlukları kırpılmış, tek tip kare kutucuklar olarak görünüyor\n• Daha yüksek çözünürlüklü logo kaynakları; logolar bilgisayarda saklanıyor, liste daha hızlı açılıyor\n• Logosu olmayan radyolar için yeni renkli kutucuklar",
+  "date": "2026-10-18T00:31:18.075Z",
+  "notes": "• Yayın koparsa uygulama kendiliğinden yeniden bağlanıyor; internet gidip gelince de kaldığı yerden devam ediyor\n• Ekolayzır: Bas, Konuşma, Pop, Rock, Araba, Gece gibi hazır ayarlar ve 5 bant (alt çubuktaki ayar düğmesi)\n• Ses dengeleme: radyo değiştirince ses bir bağırıp bir fısıldamıyor\n• Şarkıyı bul: çalan şarkıyı tek tıkla YouTube ya da Spotify’da ara; her radyonun son çalan şarkıları\n• Şehre göre radyolar (Türkiye listesinde “Tüm şehirler” seçimi)\n• Favori klasörleri ve favorileri sürükleyerek sıralama\n• İstatistikler: ne kadar ve en çok neyi dinlediğin\n• Açık tema (Ayarlar → Görünüm)\n• Görev çubuğu önizlemesinde çal/durdur, önceki/sonraki düğmeleri\n• İstasyon paylaşma: “Bağlantıyı kopyala”",
   "asar": {
-    "file": "app-0.5.4.asar",
-    "size": 879147,
-    "sha256": "0af7373704301d262c8e5be6b2ee4be0544347aaf157b1aff4a03514dbf091cc"
+    "file": "app-0.6.0.asar",
+    "size": 945083,
+    "sha256": "9ff36d3e2973009af9fa3d1f6aa4643d925073d1f6783051618ebca6f1e6a16e"
   },
   "full": ""
 }

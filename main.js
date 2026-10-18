@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, Notification, dialog, screen,
+  app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, Notification, dialog, screen, session,
 } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
@@ -13,6 +13,7 @@ const scheduler = require('./src/scheduler');
 const settings = require('./src/settings');
 const updater = require('./src/updater');
 const logos = require('./src/logos');
+const discord = require('./src/discord');
 
 logos.registerScheme();
 
@@ -214,6 +215,7 @@ function registerIpc() {
       volume: Number(st.volume) || 0,
     };
     updateTray();
+    updateThumbar();
     sendMini('player:state', player);
   });
   ipcMain.on('player:cmd', (_e, cmd) => {
@@ -339,6 +341,77 @@ function registerIpc() {
   });
 }
 
+// ---------- Görev çubuğu düğmeleri, tema, Discord, radyo:// bağlantıları ----------
+
+const thumbIcon = (n) => nativeImage.createFromPath(path.join(__dirname, 'assets', `thumb-${n}.png`));
+let thumbKey = '';
+function updateThumbar() {
+  if (process.platform !== 'win32' || !mainWindow || mainWindow.isDestroyed()) return;
+  const has = !!(player && player.station);
+  const on = !!(player && (player.playing || player.buffering));
+  const key = `${has}|${on}`;
+  if (key === thumbKey) return;
+  thumbKey = key;
+  const cmd = (type) => () => sendMain('player:cmd', { type });
+  try {
+    mainWindow.setThumbarButtons([
+      { tooltip: 'Önceki istasyon', icon: thumbIcon('prev'), click: cmd('prev'), flags: has ? [] : ['disabled'] },
+      { tooltip: on ? 'Duraklat' : 'Çal', icon: thumbIcon(on ? 'pause' : 'play'), click: cmd('toggle') },
+      { tooltip: 'Sonraki istasyon', icon: thumbIcon('next'), click: cmd('next'), flags: has ? [] : ['disabled'] },
+    ]);
+  } catch { /* desteklenmiyor */ }
+}
+
+const THEMES = {
+  dark: { bg: '#12131A', bar: '#0E0F14', sym: '#B4B6C2' },
+  light: { bg: '#F6F4EF', bar: '#ECE9E2', sym: '#4A4C57' },
+};
+function applyTheme(mode) {
+  const t = THEMES[mode] || THEMES.dark;
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  try {
+    mainWindow.setBackgroundColor(t.bg);
+    if (process.platform === 'win32') mainWindow.setTitleBarOverlay({ color: t.bar, symbolColor: t.sym, height: 48 });
+  } catch { /* eski sistem */ }
+}
+
+/** radyo://istasyon/<kimlik>?ad=…&u=… biçimindeki bağlantıyı ayıklar. */
+function parseDeepLink(argv) {
+  const raw = (argv || []).find((a) => typeof a === 'string' && /^radyo:\/\//i.test(a));
+  if (!raw) return null;
+  try {
+    const u = new URL(raw);
+    const id = decodeURIComponent((u.pathname || '').replace(/^\/+/, '') || '');
+    if (u.hostname !== 'istasyon' || !/^[\w-]{3,64}$/.test(id)) return null;
+    const url = u.searchParams.get('u') || '';
+    return {
+      id,
+      name: (u.searchParams.get('ad') || '').slice(0, 120),
+      url: /^https?:\/\//i.test(url) ? url.slice(0, 2000) : '',
+    };
+  } catch {
+    return null;
+  }
+}
+let pendingLink = parseDeepLink(process.argv);
+function handleDeepLink(link) {
+  if (!link) return;
+  showMain();
+  if (mainWindow && !mainWindow.webContents.isLoading()) sendMain('deeplink', link);
+  else pendingLink = link;
+}
+
+function registerExtrasIpc() {
+  ipcMain.on('win:theme', (_e, mode) => applyTheme(mode === 'light' ? 'light' : 'dark'));
+  ipcMain.handle('discord:available', () => discord.available());
+  ipcMain.on('discord:enable', (_e, on) => discord.setEnabled(!!on));
+  ipcMain.on('discord:set', (_e, st) => {
+    if (!st || typeof st !== 'object' || typeof st.name !== 'string') { discord.setStation(null); return; }
+    discord.setStation({ name: st.name.slice(0, 120), title: String(st.title || '').slice(0, 120), logo: String(st.logo || '').slice(0, 500), startedAt: Number(st.startedAt) || Date.now() });
+  });
+  ipcMain.handle('deeplink:pending', () => { const l = pendingLink; pendingLink = null; return l; });
+}
+
 // ---------- Zamanlanmış işler ----------
 
 async function onScheduledRecord(item) {
@@ -367,12 +440,31 @@ function onAlarm(item) {
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on('second-instance', () => showMain());
+  app.on('second-instance', (_e, argv) => {
+    const link = parseDeepLink(argv);
+    if (link) handleDeepLink(link);
+    else showMain();
+  });
+  // radyo:// bağlantıları bu uygulamayla açılsın.
+  try {
+    if (app.isPackaged) app.setAsDefaultProtocolClient('radyo');
+    else app.setAsDefaultProtocolClient('radyo', process.execPath, [path.resolve(process.argv[1] || '.')]);
+  } catch { /* kayıt yapılamadı */ }
 
   app.whenReady().then(async () => {
     app.setAppUserModelId('com.radyo.app');
     settings.loadSync();
     logos.handle();
+    // Ekolayzır için: yayın yanıtlarına CORS izni ekle (Web Audio sessiz kalmasın).
+    session.defaultSession.webRequest.onHeadersReceived((details, cb) => {
+      const h = details.responseHeaders || {};
+      if (details.resourceType === 'media' || details.resourceType === 'xhr' || details.resourceType === 'other') {
+        for (const k of Object.keys(h)) if (k.toLowerCase() === 'access-control-allow-origin') delete h[k];
+        h['Access-Control-Allow-Origin'] = ['*'];
+      }
+      cb({ responseHeaders: h });
+    });
+    registerExtrasIpc();
     setTimeout(() => logos.prune(), 60000);
     registerIpc();
     createWindow();

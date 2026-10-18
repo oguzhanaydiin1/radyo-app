@@ -843,3 +843,120 @@ svg { display: block; flex: none; }
 .upd-notes h2 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
 .upd-notes-text { white-space: pre-wrap; font-size: 14px; line-height: 1.6; color: var(--text-soft); user-select: text; }
 .world-box.add-hint { margin-top: 16px; }
+
+/* ---------- 0.6: kayan menü, ekolayzır ---------- */
+
+.fx-pop { position: fixed; right: auto; bottom: auto; z-index: 50; max-width: 340px; }
+.eq-pop { width: 330px; padding: 8px 10px 10px; }
+.menu-note { margin: 4px 10px 8px; color: var(--text-faint); font-size: 13px; }
+.eq-presets { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 4px 10px; }
+.eq-presets .chip { height: 28px; padding: 0 10px; font-size: 12px; }
+.eq-bands { display: flex; justify-content: space-between; gap: 4px; padding: 6px 4px 4px; }
+.eq-band { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.eq-band input {
+  writing-mode: vertical-lr; direction: rtl; width: 22px; height: 120px; margin: 0;
+  accent-color: var(--accent); cursor: pointer;
+}
+.eq-val { font-family: var(--font-mono); font-size: 11px; color: var(--text-soft); min-width: 26px; text-align: center; }
+.eq-f { font-size: 11px; color: var(--text-faint); }
+.eq-norm { margin-top: 8px; padding: 10px 4px 0; border-top: 1px solid var(--border); }
+.menu .switch-row { height: auto; }
+
+/* ---------- Şarkıyı bul ---------- */
+
+.p-song { flex: none; display: flex; }
+.song-links { display: inline-flex; gap: 4px; flex: none; }
+.song-link {
+  width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-muted);
+  display: inline-flex; align-items: center; justify-content: center; padding: 0;
+}
+.song-link svg { width: 15px; height: 15px; }
+.song-link.yt:hover { color: #FF4E45; border-color: #FF4E45; }
+.song-link.sp:hover { color: #1ED760; border-color: #1ED760; }
+.song-box { padding: 16px 20px; margin: -12px 0 28px; }
+.song-box .similar-title { display: flex; align-items: center; gap: 8px; }
+.song-box .similar-title svg { width: 16px; height: 16px; }
+.song-list { display: flex; flex-direction: column; }
+.song-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; border-top: 1px solid var(--divider); }
+.song-row:first-child { border-top: none; }
+.song-t { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-soft); display: flex; align-items: center; gap: 8px; }
+.song-row.now .song-t { color: var(--text); font-weight: 600; }
+.song-at { color: var(--text-faint); font-size: 12px; flex: none; }
+.now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* ---------- Favori klasörleri ---------- */
+
+.fold-chips .chip { display: inline-flex; align-items: center; gap: 6px; }
+.fold-chips .chip svg { width: 14px; height: 14px; }
+.chip.ghost { border-style: dashed; color: var(--text-muted); }
+.chip.drop-on { border-color: var(--accent); background: var(--accent-deep); color: var(--accent); transform: scale(1.05); }
+.list-bar .hint { display: inline-flex; align-items: center; gap: 6px; color: var(--text-faint); font-size: 12px; }
+.list-bar .hint svg { width: 14px; height: 14px; }
+.fav-grid .station-card { cursor: grab; }
+.station-card.dragging { opacity: .35; border-style: dashed; }
+.fold-btn svg { width: 17px; height: 17px; }
+.fold-row { display: flex; align-items: center; gap: 8px; }
+.fold-check { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; color: var(--accent); font-weight: 700; }
+.fold-check svg { width: 16px; height: 16px; }
+.fold-row.on { font-weight: 600; }
+
+/* ---------- İstatistikler ---------- */
+
+.stat-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat-card { padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.stat-k { font-size: 12px; color: var(--text-faint); letter-spacing: .3px; }
+.stat-v { font-family: var(--font-display); font-size: 26px; font-weight: 700; }
+.stat-v.small { font-size: 17px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stat-chart, .stat-top { padding: 18px 20px; margin-bottom: 16px; }
+.bars-chart { height: 160px; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 6px; align-items: end; }
+.bc-col { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; }
+.bc-bar { width: 100%; max-width: 38px; border-radius: 6px 6px 2px 2px; background: linear-gradient(to top, color-mix(in srgb, var(--accent) 55%, transparent), var(--accent)); min-height: 2px; }
+.bc-l { font-size: 11px; color: var(--text-faint); height: 14px; }
+.top-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--divider); }
+.top-row:first-of-type { border-top: none; }
+.top-n { width: 20px; text-align: right; font-family: var(--font-mono); color: var(--text-faint); }
+.top-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.top-bar { height: 6px; border-radius: 3px; background: var(--surface-high); overflow: hidden; }
+.top-bar span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.top-d { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); min-width: 76px; text-align: right; }
+@media (max-width: 1100px) { .stat-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- Ayarlar: tema ---------- */
+
+.theme-seg { margin: 4px 0 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.theme-seg button:focus-visible { outline-offset: -2px; }
+.share-row .btn-ghost svg { width: 15px; height: 15px; }
+
+/* ---------- Açık tema ---------- */
+
+:root[data-theme="light"] {
+  --bg: #F6F4EF;
+  --bg-deep: #ECE9E2;
+  --sidebar: #F0EDE6;
+  --surface: #FFFFFF;
+  --surface-low: #F9F7F3;
+  --surface-high: #EAE6DE;
+  --border: #DCD7CC;
+  --divider: #E6E1D8;
+  --text: #1D1E25;
+  --text-soft: #34363F;
+  --text-muted: #555865;
+  --text-faint: #7A7D8A;
+  --accent: #D9862A;
+  --accent-deep: #FBEBD6;
+  --danger: #C9533C;
+  color-scheme: light;
+}
+:root[data-theme="light"] .logo::after { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+:root[data-theme="light"] .logo-overlay { background: rgba(255, 255, 255, 0.8); color: var(--text); }
+:root[data-theme="light"] .menu,
+:root[data-theme="light"] .dialog { box-shadow: 0 16px 40px rgba(40, 30, 10, 0.18); }
+:root[data-theme="light"] .dialog::backdrop { background: rgba(40, 36, 30, 0.35); }
+:root[data-theme="light"] .chip.active { color: #fff; }
+:root[data-theme="light"] .play-btn { color: #fff; }
+:root[data-theme="light"] .field input[type="time"],
+:root[data-theme="light"] .field input[type="date"],
+:root[data-theme="light"] .field input[type="number"] { color-scheme: light; }
+:root[data-theme="light"] .world-item.on .wi-native { color: #A0661E; }
