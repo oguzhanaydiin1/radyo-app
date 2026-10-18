@@ -838,3 +838,4 @@ svg { display: block; flex: none; }
 .upd-notes { margin-top: 16px; padding: 20px 24px; }
 .upd-notes h2 { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
 .upd-notes-text { white-space: pre-wrap; font-size: 14px; line-height: 1.6; color: var(--text-soft); user-select: text; }
+.world-box.add-hint { margin-top: 16px; }

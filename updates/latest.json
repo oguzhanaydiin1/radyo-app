@@ -1,12 +1,12 @@
 {
-  "version": "0.5.2",
+  "version": "0.5.3",
   "electron": "44.9.0",
-  "date": "2026-10-17T23:44:21.447Z",
-  "notes": "• “Yeniden başlat ve güncelle” düğmesi artık uygulamayı güvenilir şekilde yeni sürümle yeniden açıyor\n• Güncellemeler artık kullanıcı klasörüne indiriliyor; uygulama klasörüne yazma izni gerekmiyor",
+  "date": "2026-10-18T00:03:57.784Z",
+  "notes": "• Radyo Fenerbahçe (97.0) eklendi\n• Arama artık Türkiye listesiyle birlikte tüm dünyada da kendiliğinden arıyor; “Fenerbahçe” ve “Fenerbahce” aynı sonucu veriyor\n• Arama sonuçlarında “Yayın adresiyle ekle” düğmesi",
   "asar": {
-    "file": "app-0.5.2.asar",
-    "size": 860854,
-    "sha256": "87b303bed21122e4e34de5f878e5cc0a2eff33155381270ede6e21927400e3bf"
+    "file": "app-0.5.3.asar",
+    "size": 866895,
+    "sha256": "2ab341f1dbea1d1068aed2eb5a0ad3d97b746ac4a6c2d99e2459381e06afd6d0"
   },
   "full": ""
 }

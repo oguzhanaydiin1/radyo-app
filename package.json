@@ -1,7 +1,7 @@
 {
   "name": "radyo",
   "productName": "Radyo",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Canlı radyo dinleme uygulaması",
   "main": "boot.js",
   "private": true,

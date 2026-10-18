@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "stations": [
+    {
+      "id": "6cc1ec36-e315-4191-ba52-2c4cb79b3a5f",
+      "name": "Radyo Fenerbahçe",
+      "url": "https://radyofenerbahce.fenerbahce.org/radyofenerbahce/radyofenerbahce.stream_aac/playlist.m3u8",
+      "hls": true,
+      "homepage": "https://www.fenerbahce.org",
+      "favicon": "",
+      "country": "TR",
+      "language": "turkish",
+      "codec": "AAC",
+      "bitrate": 128,
+      "tags": ["spor", "fenerbahçe", "97.0", "fb"],
+      "clicks": 500
+    }
+  ]
+}

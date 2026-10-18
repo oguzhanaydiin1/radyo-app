@@ -117,6 +117,7 @@ const hayCache = new Map();
 let view = [];
 let requestId = 0;
 let searchTimer = null;
+let worldTimer = null;
 let sleepTimer = null;
 let sleepTick = null;
 let hls = null;
@@ -463,6 +464,10 @@ function worldHTML() {
   } else {
     html += `<div class="grid">${w.results.map(cardHTML).join('')}</div>`;
   }
+  if (!w.loading) {
+    html += `<div class="world-box add-hint"><p>Aradığın radyo yok mu? Yayın adresini (örn. …/playlist.m3u8 ya da …:8000/stream) biliyorsan kendin ekleyebilirsin.</p>
+      <button class="btn-ghost accent" type="button" data-action="add-open">${ICON.plus}<span>Yayın adresiyle ekle</span></button></div>`;
+  }
   return html;
 }
 
@@ -496,7 +501,8 @@ function discoverHTML() {
   html += listBarHTML();
   if (!view.length) {
     html += searching
-      ? emptyHTML(ICON.search, 'Türkiye listesinde bulunamadı', 'Aşağıdan tüm dünyada arayabilir ya da istasyonu kendin ekleyebilirsin.')
+      ? emptyHTML(ICON.search, 'Türkiye listesinde bulunamadı', 'Aşağıda tüm dünyadaki sonuçlar var. Orada da yoksa yayın adresiyle kendin ekleyebilirsin.',
+        `<button class="pill" type="button" data-action="add-open">${ICON.plus}<span>Yayın adresiyle ekle</span></button>`)
       : emptyHTML(ICON.radio, 'Bu kategoride istasyon yok', 'Başka bir kategori seç.');
   } else {
     html += `<div class="grid" id="main-grid">${view.slice(0, state.shown).map(cardHTML).join('')}</div>${moreHTML()}`;
@@ -919,6 +925,13 @@ function setQuery(text) {
   }
   renderContent();
   $('#content').scrollTop = 0;
+  // Türkiye listesiyle birlikte tüm dünyada da kendiliğinden ara.
+  clearTimeout(worldTimer);
+  if (q.length >= 3 && !q.includes('://')) {
+    worldTimer = setTimeout(() => {
+      if (state.query === q && state.world.query !== q && (state.section === 'discover')) searchWorld();
+    }, 650);
+  }
 }
 
 function onSearchInput(e) {
