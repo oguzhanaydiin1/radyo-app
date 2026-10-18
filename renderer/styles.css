@@ -963,3 +963,14 @@ svg { display: block; flex: none; }
 .songs-pop { width: 420px; max-width: calc(100vw - 32px); padding: 6px 12px 8px; }
 .songs-pop .song-list { max-height: 360px; overflow-y: auto; }
 .song-link.hist:hover { color: var(--accent); border-color: var(--accent); }
+.sink-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fx-pop .fold-row { min-width: 260px; }
+.keys-list { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin-top: 10px; font-size: 13px; color: var(--text-muted); align-items: center; }
+kbd {
+  display: inline-block; min-width: 22px; padding: 1px 6px; border-radius: 5px;
+  border: 1px solid var(--border); border-bottom-width: 2px; background: var(--surface);
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-soft); text-align: center;
+}
+.lang-row { display: flex; align-items: center; gap: 16px; margin: 0 0 14px; }
+.lang-label { font-size: 13px; color: var(--text-soft); font-weight: 600; flex: none; }
+.lang-seg { flex: 1; margin: 0; }

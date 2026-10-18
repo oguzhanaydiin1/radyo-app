@@ -733,6 +733,11 @@ lookGroup.innerHTML = `<h3>Görünüm</h3>
     <button type="button" data-theme-mode="light">Açık</button>
     <button type="button" data-theme-mode="system">Windows’a uy</button>
   </div>
+  <div class="lang-row"><span class="lang-label">Dil / Language</span>
+    <div class="seg lang-seg" role="radiogroup" aria-label="Dil">
+      <button type="button" data-lang="tr" data-noi18n>Türkçe</button>
+      <button type="button" data-lang="en" data-noi18n>English</button>
+    </div></div>
   <label class="switch-row" id="discord-row">
     <span><strong>Discord’da dinlediğimi göster</strong><em id="discord-note">Discord açıksa profilinde “Radyo dinliyor” ve çalan şarkı görünür.</em></span>
     <input type="checkbox" class="switch" id="set-discord">
@@ -747,7 +752,15 @@ function markTheme() {
   }
 }
 markTheme();
-lookGroup.addEventListener('click', (e) => {
+for (const b of lookGroup.querySelectorAll('[data-lang]')) b.classList.toggle('on', b.dataset.lang === LANG);
+lookGroup.addEventListener('click', async (e) => {
+  const lb = e.target.closest('[data-lang]');
+  if (lb) {
+    if (lb.dataset.lang === LANG) return;
+    store.set('lang', lb.dataset.lang);
+    await AS.set({ lang: lb.dataset.lang }).catch(() => {}); // ana süreç pencereyi yeniden yükler
+    return;
+  }
   const b = e.target.closest('[data-theme-mode]');
   if (!b) return;
   themeMode = b.dataset.themeMode;
@@ -894,3 +907,186 @@ document.addEventListener('click', async (e) => {
 
 // Ana dosyadaki listede olmayan istasyonlar için çalma: istatistiklerdeki eski istasyonlar.
 register(Object.values(stats.st).filter((s) => s && s.id && /^https?:\/\//i.test(s.url || '')).filter((s) => !registry.get(s.id)));
+
+// =====================================================================
+// 9) Ses çıkışı seçimi (kulaklık, hoparlör, Bluetooth)
+// =====================================================================
+
+IC.speaker = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="14" r="3.5"/><path d="M12 7h.01"/></svg>';
+
+let sinkId = String(store.get('sink', 'default') || 'default');
+let outputs = [];
+
+async function listOutputs() {
+  try {
+    const all = await navigator.mediaDevices.enumerateDevices();
+    outputs = all.filter((d) => d.kind === 'audiooutput' && d.deviceId !== 'communications');
+  } catch {
+    outputs = [];
+  }
+  return outputs;
+}
+
+async function applySink(id, quiet) {
+  const want = id || 'default';
+  try {
+    if (typeof audio.setSinkId === 'function') await audio.setSinkId(G.ctx ? 'default' : want);
+    if (G.ctx && typeof G.ctx.setSinkId === 'function') await G.ctx.setSinkId(want === 'default' ? '' : want);
+    sinkId = want;
+    store.set('sink', sinkId);
+    return true;
+  } catch (err) {
+    if (!quiet) toast('Bu ses çıkışına geçilemedi. Cihaz bağlı mı?', { ms: 3500, error: true });
+    if (want !== 'default') { sinkId = 'default'; store.set('sink', 'default'); }
+    return false;
+  }
+}
+
+function outputLabel(d) {
+  if (d.deviceId === 'default') return 'Windows varsayılanı';
+  return (d.label || 'Ses cihazı').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)\s*$/i, '');
+}
+
+function outputsHTML() {
+  const rows = outputs.map((d) => {
+    const on = d.deviceId === sinkId;
+    return `<button type="button" class="fold-row${on ? ' on' : ''}" data-sink="${esc(d.deviceId)}"><span class="fold-check">${on ? IC.check : ''}</span><span class="sink-name">${esc(outputLabel(d))}</span></button>`;
+  }).join('');
+  return `<div class="menu-title">SES ÇIKIŞI</div>${rows || '<p class="menu-note">Ses cihazı bulunamadı.</p>'}`;
+}
+
+const outBtn = document.createElement('button');
+outBtn.className = 'icon-btn';
+outBtn.id = 'btn-output';
+outBtn.type = 'button';
+outBtn.dataset.popAnchor = '1';
+outBtn.title = 'Ses çıkışı (kulaklık, hoparlör)';
+outBtn.setAttribute('aria-label', 'Ses çıkışı');
+outBtn.innerHTML = IC.speaker;
+$('#btn-mute').before(outBtn);
+const markOutBtn = () => outBtn.classList.toggle('active', sinkId !== 'default');
+outBtn.addEventListener('click', async () => {
+  if (popOwner === 'out') { closePop(); return; }
+  await listOutputs();
+  pop.classList.remove('eq-pop', 'songs-pop');
+  openPop(outBtn, outputsHTML(), 'out', 'above');
+});
+pop.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-sink]');
+  if (!b) return;
+  const ok = await applySink(b.dataset.sink);
+  markOutBtn();
+  pop.innerHTML = outputsHTML();
+  if (ok) {
+    const d = outputs.find((x) => x.deviceId === sinkId);
+    toast(`Ses artık şuradan çıkıyor: ${d ? outputLabel(d) : 'Windows varsayılanı'}`, { ms: 2500 });
+  }
+});
+navigator.mediaDevices.addEventListener('devicechange', async () => {
+  await listOutputs();
+  if (popOwner === 'out') pop.innerHTML = outputsHTML();
+  // Seçili cihaz çıkarıldıysa varsayılana dön.
+  if (sinkId !== 'default' && !outputs.some((d) => d.deviceId === sinkId)) {
+    await applySink('default', true);
+    markOutBtn();
+    toast('Seçili ses cihazı çıkarıldı, ses Windows varsayılanından devam ediyor.', { ms: 4000 });
+  }
+});
+// Açılışta kayıtlı cihazı uygula (bağlıysa).
+listOutputs().then(() => {
+  if (sinkId !== 'default' && outputs.some((d) => d.deviceId === sinkId)) applySink(sinkId, true);
+  else sinkId = 'default';
+  markOutBtn();
+});
+// Ses grafiği sonradan kurulursa seçili cihaz ona da uygulansın.
+chain('beforePlay', (prev, s) => {
+  const r = prev(s);
+  if (G.ctx && sinkId !== 'default' && !G.sinkApplied) { G.sinkApplied = true; applySink(sinkId, true); }
+  return r;
+});
+
+// =====================================================================
+// 10) Her yerden kısayollar (uygulama arka plandayken de)
+// =====================================================================
+
+P.onCmd((cmd) => {
+  if (!cmd) return;
+  if (cmd.type === 'volup') setVolume(state.volume + 5);
+  else if (cmd.type === 'voldown') setVolume(state.volume - 5);
+  else if (cmd.type === 'mute') setVolume(state.volume > 0 ? 0 : state.lastVolume || 70);
+});
+
+const keysGroup = document.createElement('section');
+keysGroup.className = 'set-group';
+keysGroup.innerHTML = `<h3>Kısayollar</h3>
+  <label class="switch-row">
+    <span><strong>Uygulama arka plandayken de kısayollar çalışsın</strong><em id="keys-note">Başka bir programdayken de radyoyu kontrol edebilirsin.</em></span>
+    <input type="checkbox" class="switch" id="set-keys">
+  </label>
+  <div class="keys-list">
+    <span><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd></span><span>Çal / duraklat</span>
+    <span><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>→</kbd> <kbd>←</kbd></span><span>Sonraki / önceki istasyon</span>
+    <span><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>↑</kbd> <kbd>↓</kbd></span><span>Sesi aç / kıs</span>
+    <span><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>M</kbd></span><span>Sesi kapat / aç</span>
+  </div>`;
+lookGroup.after(keysGroup);
+async function renderKeys() {
+  const st = await EX.keysStatus().catch(() => ({ on: true, failed: [] }));
+  $('#set-keys').checked = !!st.on;
+  $('#keys-note').textContent = st.on && st.failed.length
+    ? `Şu kısayolları başka bir program kullanıyor: ${st.failed.map((k) => k.replace('CommandOrControl', 'Ctrl')).join(', ')}`
+    : 'Başka bir programdayken de radyoyu kontrol edebilirsin.';
+}
+renderKeys();
+$('#set-keys').addEventListener('change', async (e) => {
+  await AS.set({ globalKeys: e.target.checked });
+  renderKeys();
+});
+
+// =====================================================================
+// 11) "Bu radyo çalışmıyor" bildirimi
+// =====================================================================
+
+IC.flag = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>';
+let appVersion = '';
+AS.get().then((s) => { appVersion = s.version || ''; }).catch(() => {});
+
+function reportStation(s, reason) {
+  if (!s || !APP_INFO.email) return;
+  const full = registry.get(s.id) || s;
+  const body = [
+    'Merhaba,', '', `“${full.name}” radyosu çalışmıyor.`, '',
+    `Sorun: ${reason || 'Yayın açılmıyor'}`,
+    `İstasyon kimliği: ${full.id}`,
+    `Yayın adresi: ${full.url}`,
+    full.homepage ? `Sitesi: ${full.homepage}` : '',
+    `Uygulama sürümü: ${appVersion}`,
+    `Tarih: ${new Date().toLocaleString('tr-TR')}`, '',
+    '(İstersen buraya not ekleyebilirsin: radyonun yeni adresi, frekansı vb.)',
+  ].filter((x) => x !== '').join('\n');
+  const url = `mailto:${APP_INFO.email}?subject=${encodeURIComponent(`Çalışmayan radyo: ${full.name}`)}&body=${encodeURIComponent(body)}`;
+  AS.openExternal(url);
+  toast('E-posta programın açıldı; göndermen yeterli. Teşekkürler!', { ms: 4000 });
+}
+
+chain('infoExtra', (prev, s) => `${prev(s) || ''}<div class="info-row share-row"><span>Sorun</span><span></span>
+  <button class="btn-ghost" type="button" data-action="report" data-id="${esc(s.id)}" title="Bu radyo çalışmıyorsa geliştiriciye bildir">${IC.flag}<span>Çalışmıyor, bildir</span></button></div>`);
+
+// Yayın açılamayınca alttaki uyarıda "Bildir" seçeneği.
+let reportedFor = '';
+chain('playerRendered', (prev) => {
+  const s = state.current;
+  if (s && state.playError && reportedFor !== s.id) {
+    reportedFor = s.id;
+    toast(`${s.name} şu an açılamadı.`, { actionLabel: 'Çalışmıyor, bildir', onAction: () => reportStation(s, state.playError), ms: 9000, error: true });
+  }
+  if (!state.playError) reportedFor = '';
+  return prev();
+});
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-action="report"]');
+  if (!el) return;
+  const s = registry.get(el.dataset.id);
+  if (s) reportStation(s, isCurrent(s.id) && state.playError ? state.playError : '');
+});

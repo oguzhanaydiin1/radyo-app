@@ -21,7 +21,7 @@ npm start
 ## Paket üretme
 
 - Kurulum gerektirmeyen paket (zip): `npm run pack` → `dist\Radyo-<sürüm>-win.zip`
-- Kurulum dosyası: `npm run dist` → `dist\Radyo Setup <sürüm>.exe` ve taşınabilir tek dosya
+- Kurulum dosyası: `npm run dist` → `dist\Radyo-Setup.exe` (GitHub da her sürüm etiketinde otomatik üretir)
 
 ## Neler var
 
@@ -46,6 +46,10 @@ npm start
 - Dinleme istatistikleri
 - Görev çubuğu önizlemesinde çal/durdur, önceki/sonraki düğmeleri
 - Discord'da "Radyo dinliyor" durumu (package.json → discordClientId gerekir)
+- İngilizce arayüz (Ayarlar → Görünüm → Dil), renderer/i18n.js
+- Ses çıkışı seçimi (kulaklık, hoparlör, Bluetooth)
+- Her yerden kısayollar: Ctrl+Alt+P, Ctrl+Alt+→/←, Ctrl+Alt+↑/↓, Ctrl+Alt+M
+- "Bu radyo çalışmıyor" bildirimi (e-postayla)
 - İstasyon paylaşma: radyo://istasyon/<kimlik> bağlantıları uygulamada açılır
 - Ek istasyon listesi: stations/ek-istasyonlar.json (Radio Browser'da olmayan ya da bozuk olan radyolar)
 
@@ -63,8 +67,16 @@ Yeni sürüm yayınlamak için:
 1. `package.json` içinde `version` değerini artır (örn. 0.5.0 → 0.5.1).
 2. `release-notes.md` dosyasına bu sürümdeki yenilikleri yaz.
 3. `npm run pack` ve ardından `npm run release` → `updates/` klasörü hazırlanır.
-4. `git add -A && git commit -m "Sürüm 0.5.1" && git push` → birkaç dakika içinde
+4. `git add -A && git commit -m "Sürüm 0.7.0" && git push` → birkaç dakika içinde
    kurulu uygulamalar yeni sürümü görür.
+5. `git tag v0.7.0 && git push origin v0.7.0` → GitHub kendi Windows makinesinde
+   kurulum dosyasını (Radyo-Setup.exe) ve zip paketini üretip Releases sayfasına koyar
+   (.github/workflows/windows.yml). İndirme sayfasındaki düğme hep en son Setup.exe'yi verir.
+
+## İndirme sayfası
+
+`docs/index.html` — GitHub Pages ile yayınlanır (Settings → Pages → Branch: main, klasör: /docs).
+Adres: https://oguzhanaydiin1.github.io/radyo-app/
 
 Electron sürümü değiştiyse kurulu uygulamalar kendini güncelleyemez; Güncellemeler sayfası
 GitHub sayfasını açar (tam paket elle kurulmalı).

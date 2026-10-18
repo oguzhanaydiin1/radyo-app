@@ -80,4 +80,5 @@ contextBridge.exposeInMainWorld('extras', {
   pendingLink: () => ipcRenderer.invoke('deeplink:pending'),
   onLink: on('deeplink'),
   byUuid: (id) => ipcRenderer.invoke('radio:byuuid', id),
+  keysStatus: () => ipcRenderer.invoke('keys:status'),
 });

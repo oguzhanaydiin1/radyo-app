@@ -44,7 +44,7 @@ const manifest = {
   date: new Date().toISOString(),
   notes,
   asar: { file, size: asar.length, sha256: crypto.createHash('sha256').update(asar).digest('hex') },
-  full: '',
+  full: pkg.updateSource ? `https://github.com/${pkg.updateSource.owner}/${pkg.updateSource.repo}/releases/latest` : '',
 };
 fs.writeFileSync(path.join(outDir, 'latest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Hazır: updates/ (sürüm ${pkg.version}, Electron ${electronVersion}, ${(asar.length / 1024).toFixed(0)} KB)`);

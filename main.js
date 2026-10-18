@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, Notification, dialog, screen, session,
+  app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, Notification, dialog, screen, session, globalShortcut,
 } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
@@ -14,6 +14,7 @@ const settings = require('./src/settings');
 const updater = require('./src/updater');
 const logos = require('./src/logos');
 const discord = require('./src/discord');
+const { t: T } = require('./src/i18n-main');
 
 logos.registerScheme();
 
@@ -94,7 +95,7 @@ function createWindow(show = !startHidden) {
     e.preventDefault();
     mainWindow.hide();
     if (!settings.get().trayHintShown) {
-      notify('Radyo arka planda çalıyor', 'Kapatmak için saatin yanındaki Radyo simgesine sağ tıklayıp “Çıkış”ı seç.');
+      notify(T('Radyo arka planda çalıyor'), T('Kapatmak için saatin yanındaki Radyo simgesine sağ tıklayıp “Çıkış”ı seç.'));
       settings.set({ trayHintShown: true }).catch(() => {});
     }
   });
@@ -117,19 +118,19 @@ function updateTray() {
   tray.setToolTip(trayLabel(tip, 120));
   const rs = recorder.status();
   const items = [
-    { label: s ? trayLabel(s.name) : 'İstasyon seçilmedi', enabled: false },
+    { label: s ? trayLabel(s.name) : T('İstasyon seçilmedi'), enabled: false },
     ...(player.title ? [{ label: trayLabel(`♪ ${player.title}`), enabled: false }] : []),
     ...(rs.active ? [{ label: trayLabel(`● Kaydediliyor: ${rs.station.name}`), enabled: false }] : []),
     { type: 'separator' },
-    { label: player.playing || player.buffering ? 'Duraklat' : 'Çal', enabled: !!s, click: () => sendMain('player:cmd', { type: 'toggle' }) },
-    { label: 'Sonraki istasyon', enabled: !!s, click: () => sendMain('player:cmd', { type: 'next' }) },
-    { label: 'Önceki istasyon', enabled: !!s, click: () => sendMain('player:cmd', { type: 'prev' }) },
-    ...(rs.active ? [{ label: 'Kaydı durdur', click: () => recorder.stop() }] : []),
+    { label: player.playing || player.buffering ? T('Duraklat') : T('Çal'), enabled: !!s, click: () => sendMain('player:cmd', { type: 'toggle' }) },
+    { label: T('Sonraki istasyon'), enabled: !!s, click: () => sendMain('player:cmd', { type: 'next' }) },
+    { label: T('Önceki istasyon'), enabled: !!s, click: () => sendMain('player:cmd', { type: 'prev' }) },
+    ...(rs.active ? [{ label: T('Kaydı durdur'), click: () => recorder.stop() }] : []),
     { type: 'separator' },
-    { label: 'Mini oynatıcı', type: 'checkbox', checked: !!(miniWindow && !miniWindow.isDestroyed()), click: () => toggleMini() },
-    { label: 'Radyo’yu göster', click: () => showMain() },
+    { label: T('Mini oynatıcı'), type: 'checkbox', checked: !!(miniWindow && !miniWindow.isDestroyed()), click: () => toggleMini() },
+    { label: T('Radyo’yu göster'), click: () => showMain() },
     { type: 'separator' },
-    { label: 'Çıkış', click: () => { quitting = true; app.quit(); } },
+    { label: T('Çıkış'), click: () => { quitting = true; app.quit(); } },
   ];
   tray.setContextMenu(Menu.buildFromTemplate(items));
 }
@@ -238,8 +239,8 @@ function registerIpc() {
     sendMain('rec:event', ev);
     if (ev.type !== 'progress') updateTray();
     if (ev.type !== 'progress' && ev.scheduled) {
-      if (ev.type === 'failed') notify('Zamanlanmış kayıt yapılamadı', ev.message || '');
-      else notify('Zamanlanmış kayıt tamamlandı', ev.name);
+      if (ev.type === 'failed') notify(T('Zamanlanmış kayıt yapılamadı'), ev.message || '');
+      else notify(T('Zamanlanmış kayıt tamamlandı'), ev.name);
     }
   });
   ipcMain.handle('rec:start', async (_e, station) => {
@@ -275,13 +276,22 @@ function registerIpc() {
   ipcMain.handle('settings:get', () => ({ ...settings.get(), version: APP_VERSION, packaged: app.isPackaged }));
   ipcMain.handle('settings:set', async (_e, patch) => {
     const allowed = {};
-    for (const k of ['closeToTray', 'openAtLogin']) if (patch && k in patch) allowed[k] = patch[k];
+    for (const k of ['closeToTray', 'openAtLogin', 'globalKeys', 'lang']) if (patch && k in patch) allowed[k] = patch[k];
     await settings.set(allowed);
+    if ('globalKeys' in allowed) registerGlobalKeys();
+    if ('lang' in allowed) {
+      updateTray();
+      // Arayüzü yeni dille yeniden yükle (sayfa kendi kendine yenilenemiyor).
+      setTimeout(() => {
+        if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.reload();
+        if (miniWindow && !miniWindow.isDestroyed()) miniWindow.webContents.reload();
+      }, 150);
+    }
     return { ...settings.get(), version: APP_VERSION, packaged: app.isPackaged };
   });
   ipcMain.handle('sync:choose', async () => {
     const r = await dialog.showOpenDialog(mainWindow, {
-      title: 'Eşitleme klasörünü seç (örneğin OneDrive içinde bir klasör)',
+      title: T('Eşitleme klasörünü seç (örneğin OneDrive içinde bir klasör)'),
       properties: ['openDirectory', 'createDirectory'],
     });
     if (r.canceled || !r.filePaths[0]) return null;
@@ -298,9 +308,9 @@ function registerIpc() {
 
   ipcMain.handle('data:export', async (_e, payload) => {
     const r = await dialog.showSaveDialog(mainWindow, {
-      title: 'Yedeği kaydet',
+      title: T('Yedeği kaydet'),
       defaultPath: path.join(app.getPath('documents'), 'radyo-yedek.json'),
-      filters: [{ name: 'Radyo yedeği', extensions: ['json'] }],
+      filters: [{ name: T('Radyo yedeği'), extensions: ['json'] }],
     });
     if (r.canceled || !r.filePath) return false;
     await fs.writeFile(r.filePath, JSON.stringify(payload, null, 2), 'utf8');
@@ -308,7 +318,7 @@ function registerIpc() {
   });
   ipcMain.handle('data:import', async () => {
     const r = await dialog.showOpenDialog(mainWindow, {
-      title: 'Yedeği aç', properties: ['openFile'], filters: [{ name: 'Radyo yedeği', extensions: ['json'] }],
+      title: T('Yedeği aç'), properties: ['openFile'], filters: [{ name: T('Radyo yedeği'), extensions: ['json'] }],
     });
     if (r.canceled || !r.filePaths[0]) return null;
     const text = await fs.readFile(r.filePaths[0], 'utf8');
@@ -355,9 +365,9 @@ function updateThumbar() {
   const cmd = (type) => () => sendMain('player:cmd', { type });
   try {
     mainWindow.setThumbarButtons([
-      { tooltip: 'Önceki istasyon', icon: thumbIcon('prev'), click: cmd('prev'), flags: has ? [] : ['disabled'] },
-      { tooltip: on ? 'Duraklat' : 'Çal', icon: thumbIcon(on ? 'pause' : 'play'), click: cmd('toggle') },
-      { tooltip: 'Sonraki istasyon', icon: thumbIcon('next'), click: cmd('next'), flags: has ? [] : ['disabled'] },
+      { tooltip: T('Önceki istasyon'), icon: thumbIcon('prev'), click: cmd('prev'), flags: has ? [] : ['disabled'] },
+      { tooltip: on ? T('Duraklat') : T('Çal'), icon: thumbIcon(on ? 'pause' : 'play'), click: cmd('toggle') },
+      { tooltip: T('Sonraki istasyon'), icon: thumbIcon('next'), click: cmd('next'), flags: has ? [] : ['disabled'] },
     ]);
   } catch { /* desteklenmiyor */ }
 }
@@ -401,7 +411,29 @@ function handleDeepLink(link) {
   else pendingLink = link;
 }
 
+// Uygulama arka plandayken de çalışan kısayollar.
+const GLOBAL_KEYS = [
+  ['CommandOrControl+Alt+P', 'toggle'],
+  ['CommandOrControl+Alt+Right', 'next'],
+  ['CommandOrControl+Alt+Left', 'prev'],
+  ['CommandOrControl+Alt+Up', 'volup'],
+  ['CommandOrControl+Alt+Down', 'voldown'],
+  ['CommandOrControl+Alt+M', 'mute'],
+];
+let keysFailed = [];
+function registerGlobalKeys() {
+  globalShortcut.unregisterAll();
+  keysFailed = [];
+  if (!settings.get().globalKeys) return;
+  for (const [acc, type] of GLOBAL_KEYS) {
+    let ok = false;
+    try { ok = globalShortcut.register(acc, () => sendMain('player:cmd', { type })); } catch { ok = false; }
+    if (!ok) keysFailed.push(acc);
+  }
+}
+
 function registerExtrasIpc() {
+  ipcMain.handle('keys:status', () => ({ on: !!settings.get().globalKeys, failed: keysFailed }));
   ipcMain.on('win:theme', (_e, mode) => applyTheme(mode === 'light' ? 'light' : 'dark'));
   ipcMain.handle('discord:available', () => discord.available());
   ipcMain.on('discord:enable', (_e, on) => discord.setEnabled(!!on));
@@ -416,23 +448,23 @@ function registerExtrasIpc() {
 
 async function onScheduledRecord(item) {
   if (recorder.isActive()) {
-    notify('Zamanlanmış kayıt başlatılamadı', `${item.station.name}: başka bir kayıt sürüyor.`);
+    notify(T('Zamanlanmış kayıt başlatılamadı'), `${item.station.name}: ${T('başka bir kayıt sürüyor.')}`);
     return;
   }
   try {
     await recorder.start(item.station, { maxMs: item.durationMin * 60000, scheduled: true });
-    notify('Zamanlanmış kayıt başladı', `${item.station.name} — ${item.durationMin} dakika`);
+    notify(T('Zamanlanmış kayıt başladı'), `${item.station.name} — ${item.durationMin} ${T('dakika')}`);
     sendMain('rec:event', { type: 'started', scheduled: true, station: { id: item.station.id, name: item.station.name } });
     updateTray();
   } catch (err) {
-    notify('Zamanlanmış kayıt başlatılamadı', `${item.station.name}: ${err.message}`);
+    notify(T('Zamanlanmış kayıt başlatılamadı'), `${item.station.name}: ${err.message}`);
   }
 }
 
 function onAlarm(item) {
   showMain();
   sendMain('player:cmd', { type: 'alarm', station: item.station });
-  notify('Günaydın! Alarm çalıyor', item.station.name);
+  notify(T('Günaydın! Alarm çalıyor'), item.station.name);
 }
 
 // ---------- Uygulama ----------
@@ -465,6 +497,10 @@ if (!app.requestSingleInstanceLock()) {
       cb({ responseHeaders: h });
     });
     registerExtrasIpc();
+    registerGlobalKeys();
+    // Ses çıkış cihazlarının adlarını görebilmek ve panoya kopyalayabilmek için.
+    session.defaultSession.setPermissionCheckHandler((_wc, permission) => ['media', 'speaker-selection', 'clipboard-sanitized-write', 'clipboard-read', 'notifications', 'fullscreen'].includes(permission) || permission === 'background-sync');
+    session.defaultSession.setPermissionRequestHandler((_wc, permission, cb) => cb(['speaker-selection', 'clipboard-sanitized-write', 'notifications', 'fullscreen'].includes(permission)));
     setTimeout(() => logos.prune(), 60000);
     registerIpc();
     createWindow();
@@ -494,6 +530,8 @@ if (!app.requestSingleInstanceLock()) {
     e.preventDefault();
     recorder.stopAndWait().finally(() => app.exit(0));
   });
+
+  app.on('will-quit', () => globalShortcut.unregisterAll());
 
   app.on('window-all-closed', () => {
     if (quitting || !settings.get().closeToTray) app.quit();

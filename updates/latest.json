@@ -1,12 +1,12 @@
 {
-  "version": "0.6.1",
+  "version": "0.7.0",
   "electron": "44.9.0",
-  "date": "2026-10-18T00:36:39.977Z",
-  "notes": "• “Son çalan şarkılar” artık sayfada yer kaplamıyor: alt çubuktaki ♫ düğmesine basınca açılıyor",
+  "date": "2026-10-18T01:00:14.958Z",
+  "notes": "• Kurulum dosyası (Radyo-Setup.exe): Başlat menüsüne ve masaüstüne kısayol ekler, Programlar listesinden kaldırılabilir\n• İngilizce arayüz (Ayarlar → Görünüm → Dil)\n• Ses çıkışı seçimi: kulaklık, hoparlör ya da Bluetooth (alt çubuktaki hoparlör düğmesi)\n• Her yerden kısayollar: Ctrl+Alt+P çal/duraklat, Ctrl+Alt+→/← istasyon, Ctrl+Alt+↑/↓ ses, Ctrl+Alt+M sessiz\n• “Çalışmıyor, bildir”: açılmayan radyoyu tek tıkla geliştiriciye bildir",
   "asar": {
-    "file": "app-0.6.1.asar",
-    "size": 946006,
-    "sha256": "74aa63cb7f81bad45bc9d7c05c5611543d26e15f1f939f8936308e3ace30632a"
+    "file": "app-0.7.0.asar",
+    "size": 989737,
+    "sha256": "a2e5d70aaf10dfe482ded784e2d95dd127945bf3244f14f512c277e4dd2cd732"
   },
-  "full": ""
+  "full": "https://github.com/oguzhanaydiin1/radyo-app/releases/latest"
 }

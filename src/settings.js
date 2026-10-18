@@ -13,6 +13,8 @@ const DEFAULTS = {
   syncDir: '',
   trayHintShown: false,
   miniBounds: null,
+  globalKeys: true,
+  lang: 'tr',
 };
 const SYNC_NAME = 'radyo-esitleme.json';
 
@@ -51,6 +53,8 @@ async function set(patch = {}) {
   if ('syncDir' in patch) next.syncDir = typeof patch.syncDir === 'string' ? patch.syncDir : '';
   if ('trayHintShown' in patch) next.trayHintShown = !!patch.trayHintShown;
   if ('miniBounds' in patch) next.miniBounds = patch.miniBounds;
+  if ('globalKeys' in patch) next.globalKeys = !!patch.globalKeys;
+  if ('lang' in patch) next.lang = patch.lang === 'en' ? 'en' : 'tr';
   data = next;
   await persist();
   if ('syncDir' in patch) watchSync();

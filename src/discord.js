@@ -10,6 +10,8 @@ const net = require('node:net');
 const path = require('node:path');
 const os = require('node:os');
 
+const { t: T } = require('./i18n-main');
+
 const CLIENT_ID = String(require('../package.json').discordClientId || '');
 
 let sock = null;
@@ -101,7 +103,7 @@ function setStation(st) {
   const activity = {
     type: 2, // "Dinliyor"
     details: String(st.title || st.name).slice(0, 120),
-    state: st.title ? String(st.name).slice(0, 120) : 'Canlı radyo',
+    state: st.title ? String(st.name).slice(0, 120) : T('Canlı radyo'),
     timestamps: { start: Number(st.startedAt) || Date.now() },
     assets: {
       large_image: /^https:\/\//i.test(st.logo || '') ? st.logo : 'radyo',
