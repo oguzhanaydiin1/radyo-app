@@ -1,0 +1,51 @@
+/* Web sürümüne özel küçük düzeltmeler (masaüstü görünümü aynen korunur). */
+.titlebar-rest { min-width: 0; }            /* Windows pencere düğmeleri için ayrılan boşluk web'de gereksiz */
+.titlebar, .titlebar * { -webkit-app-region: no-drag; }
+
+/* ---------- Telefon ve dar ekranlar ---------- */
+@media (max-width: 760px) {
+  body { height: 100dvh; }
+  .titlebar { gap: 12px; padding: 0 12px; }
+  .brand { flex: none; }
+  .brand > span:last-child { display: none; }
+  .search { flex: 1 1 auto; }
+  .titlebar-rest { display: none; }
+
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: auto; flex: none; gap: 8px;
+    padding: 8px 12px;
+    border-right: none; border-bottom: 1px solid var(--divider);
+    flex-direction: row; flex-wrap: wrap;
+  }
+  .nav-item { height: 36px; gap: 6px; padding: 0 10px; font-size: 13px; }
+  .nav-item svg { width: 16px; height: 16px; }
+  .nav-item.active::before { display: none; }
+  .nav-item:nth-of-type(4) span:first-of-type { font-size: 0; } /* "Son dinlenenler" yalnız simge */
+  #side-default { display: none; }
+  #side-world { flex-basis: 100%; max-height: 170px; display: flex; flex-direction: column; gap: 6px; }
+  #side-world[hidden] { display: none; }
+
+  .content { padding: 16px 16px 24px; }
+  .page-title { font-size: 24px; margin-bottom: 16px; }
+  .hero { padding: 16px; gap: 14px; }
+  .hero-top .mono { display: none; }
+  .bars { height: 36px; }
+  .hero-name { font-size: 22px; }
+  .hero-bottom { flex-wrap: wrap; }
+  .hero-text { flex-basis: calc(100% - 96px); }
+  .hero-row .info { display: none; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px 16px; padding: 0 16px; scrollbar-width: none; }
+  .chip { flex: none; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .station-card { height: 150px; }
+  .list-bar { flex-wrap: wrap; row-gap: 8px; }
+  .list-bar > span:nth-child(2) { display: none; } /* "Liste güncellendi" */
+  .list-bar .btn-ghost span:last-child { display: none; } /* yalnız simgeler */
+
+  .player { height: 72px; gap: 8px; padding: 0 12px; }
+  .player-controls { gap: 0; }
+  #btn-prev, #btn-next { width: 36px; }
+  .volume, #btn-mute { display: none; } /* telefonda ses tuşları kullanılır */
+  .player-extra { flex: none; }
+}
