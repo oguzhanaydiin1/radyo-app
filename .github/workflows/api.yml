@@ -20,6 +20,8 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      ADMIN_SET: ${{ secrets.OA_ADMIN_KEY != '' }}
+      PEPPER_SET: ${{ secrets.OA_PEPPER != '' }}
     steps:
       - name: "Var mı: CLOUDFLARE_API_TOKEN"
         if: env.CLOUDFLARE_API_TOKEN != ''
@@ -30,11 +32,11 @@ jobs:
         run: "true"
         working-directory: .
       - name: "Var mı: OA_ADMIN_KEY"
-        if: ${{ secrets.OA_ADMIN_KEY != '' }}
+        if: env.ADMIN_SET == 'true'
         run: "true"
         working-directory: .
       - name: "Var mı: OA_PEPPER"
-        if: ${{ secrets.OA_PEPPER != '' }}
+        if: env.PEPPER_SET == 'true'
         run: "true"
         working-directory: .
       - name: Cloudflare bilgileri girilmiş mi?
