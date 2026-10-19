@@ -1,8 +1,8 @@
 {
   "name": "radyo",
-  "productName": "Radyo",
-  "version": "0.7.1",
-  "description": "Canlı radyo dinleme uygulaması",
+  "productName": "OA Radyo",
+  "version": "0.8.0",
+  "description": "OA Radyo — canlı radyo dinleme uygulaması",
   "main": "boot.js",
   "private": true,
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "com.radyo.app",
-    "productName": "Radyo",
+    "productName": "OA Radyo",
     "files": [
       "boot.js",
       "main.js",
@@ -41,22 +41,25 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
-      "shortcutName": "Radyo",
+      "shortcutName": "OA Radyo",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
       "artifactName": "Radyo-Setup.${ext}",
-      "deleteAppDataOnUninstall": false
+      "deleteAppDataOnUninstall": false,
+      "uninstallDisplayName": "OA Radyo"
     },
     "protocols": [
       {
-        "name": "Radyo",
+        "name": "OA Radyo",
         "schemes": [
           "radyo"
         ]
       }
-    ]
+    ],
+    "executableName": "Radyo",
+    "copyright": "© 2026 OA Labs"
   },
   "updateSource": {
     "owner": "oguzhanaydiin1",
@@ -66,5 +69,11 @@
     "type": "git",
     "url": "https://github.com/oguzhanaydiin1/radyo-app.git"
   },
-  "discordClientId": ""
+  "discordClientId": "",
+  "author": {
+    "name": "OA Labs",
+    "email": "destek@oalabs.dev",
+    "url": "https://oalabs.dev"
+  },
+  "homepage": "https://oalabs.dev/radyo/"
 }

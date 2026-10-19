@@ -739,7 +739,7 @@ lookGroup.innerHTML = `<h3>Görünüm</h3>
       <button type="button" data-lang="en" data-noi18n>English</button>
     </div></div>
   <label class="switch-row" id="discord-row">
-    <span><strong>Discord’da dinlediğimi göster</strong><em id="discord-note">Discord açıksa profilinde “Radyo dinliyor” ve çalan şarkı görünür.</em></span>
+    <span><strong>Discord’da dinlediğimi göster</strong><em id="discord-note">Discord açıksa profilinde “OA Radyo dinliyor” ve çalan şarkı görünür.</em></span>
     <input type="checkbox" class="switch" id="set-discord">
   </label>`;
 setForm.insertBefore(lookGroup, firstGroup);
@@ -819,7 +819,7 @@ function shareLink(s) {
 
 async function share(s) {
   const lines = [`🎧 ${s.name}${state.nowTitle && isCurrent(s.id) && isSong(state.nowTitle) ? ` — şimdi: ${state.nowTitle}` : ''}`,
-    `Radyo uygulamasında aç: ${shareLink(s)}`];
+    `OA Radyo uygulamasında aç: ${shareLink(s)}`];
   if (s.homepage) lines.push(`Sitesi: ${s.homepage}`);
   lines.push(`Yayın adresi: ${s.url}`);
   try {

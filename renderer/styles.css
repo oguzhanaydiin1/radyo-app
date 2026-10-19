@@ -974,3 +974,4 @@ kbd {
 .lang-row { display: flex; align-items: center; gap: 16px; margin: 0 0 14px; }
 .lang-label { font-size: 13px; color: var(--text-soft); font-weight: 600; flex: none; }
 .lang-seg { flex: 1; margin: 0; }
+.splash-oa { color: var(--accent); }

@@ -4,6 +4,9 @@ const {
   app, BrowserWindow, ipcMain, shell, Tray, Menu, nativeImage, Notification, dialog, screen, session, globalShortcut,
 } = require('electron');
 const path = require('node:path');
+
+// Veri klasörü sabit: %APPDATA%\Radyo (uygulamanın adı değişse de favoriler ve ayarlar kaybolmasın).
+app.setPath('userData', path.join(app.getPath('appData'), 'Radyo'));
 const fs = require('node:fs/promises');
 
 const radio = require('./src/radio');
@@ -65,7 +68,7 @@ function createWindow(show = !startHidden) {
     height: 820,
     minWidth: 960,
     minHeight: 640,
-    title: 'Radyo',
+    title: 'OA Radyo',
     icon: ICON,
     backgroundColor: '#12131A',
     show: false,
@@ -95,7 +98,7 @@ function createWindow(show = !startHidden) {
     e.preventDefault();
     mainWindow.hide();
     if (!settings.get().trayHintShown) {
-      notify(T('Radyo arka planda çalıyor'), T('Kapatmak için saatin yanındaki Radyo simgesine sağ tıklayıp “Çıkış”ı seç.'));
+      notify(T('OA Radyo arka planda çalıyor'), T('Kapatmak için saatin yanındaki OA Radyo simgesine sağ tıklayıp “Çıkış”ı seç.'));
       settings.set({ trayHintShown: true }).catch(() => {});
     }
   });
@@ -114,7 +117,7 @@ function trayLabel(s, max = 60) {
 function updateTray() {
   if (!tray) return;
   const s = player.station;
-  const tip = s ? `Radyo — ${s.name}${player.title ? `\n♪ ${player.title}` : ''}` : 'Radyo';
+  const tip = s ? `OA Radyo — ${s.name}${player.title ? `\n♪ ${player.title}` : ''}` : 'OA Radyo';
   tray.setToolTip(trayLabel(tip, 120));
   const rs = recorder.status();
   const items = [
@@ -128,7 +131,7 @@ function updateTray() {
     ...(rs.active ? [{ label: T('Kaydı durdur'), click: () => recorder.stop() }] : []),
     { type: 'separator' },
     { label: T('Mini oynatıcı'), type: 'checkbox', checked: !!(miniWindow && !miniWindow.isDestroyed()), click: () => toggleMini() },
-    { label: T('Radyo’yu göster'), click: () => showMain() },
+    { label: T('OA Radyo’yu göster'), click: () => showMain() },
     { type: 'separator' },
     { label: T('Çıkış'), click: () => { quitting = true; app.quit(); } },
   ];
@@ -163,7 +166,7 @@ function openMini() {
   miniWindow = new BrowserWindow({
     width: w, height: h, x, y,
     frame: false, resizable: false, maximizable: false, minimizable: false, fullscreenable: false,
-    alwaysOnTop: true, skipTaskbar: true, title: 'Radyo — mini', icon: ICON, backgroundColor: '#1A1C25', show: false,
+    alwaysOnTop: true, skipTaskbar: true, title: 'OA Radyo — mini', icon: ICON, backgroundColor: '#1A1C25', show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   miniWindow.setAlwaysOnTop(true, 'floating');
@@ -310,7 +313,7 @@ function registerIpc() {
     const r = await dialog.showSaveDialog(mainWindow, {
       title: T('Yedeği kaydet'),
       defaultPath: path.join(app.getPath('documents'), 'radyo-yedek.json'),
-      filters: [{ name: T('Radyo yedeği'), extensions: ['json'] }],
+      filters: [{ name: T('OA Radyo yedeği'), extensions: ['json'] }],
     });
     if (r.canceled || !r.filePath) return false;
     await fs.writeFile(r.filePath, JSON.stringify(payload, null, 2), 'utf8');
@@ -318,7 +321,7 @@ function registerIpc() {
   });
   ipcMain.handle('data:import', async () => {
     const r = await dialog.showOpenDialog(mainWindow, {
-      title: T('Yedeği aç'), properties: ['openFile'], filters: [{ name: T('Radyo yedeği'), extensions: ['json'] }],
+      title: T('Yedeği aç'), properties: ['openFile'], filters: [{ name: T('OA Radyo yedeği'), extensions: ['json'] }],
     });
     if (r.canceled || !r.filePaths[0]) return null;
     const text = await fs.readFile(r.filePaths[0], 'utf8');

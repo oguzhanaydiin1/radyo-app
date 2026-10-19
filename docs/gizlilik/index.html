@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gizlilik politikası — OA Labs</title>
+  <meta name="description" content="OA Radyo ve OA Labs uygulamalarının gizlilik politikası.">
+  <link rel="canonical" href="https://oalabs.dev/gizlilik/">
+  <link rel="icon" href="../radyo/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #12131A; --border: #2A2C38; --text: #F2EFE8; --muted: #A9ABB8; --accent: #F2A541;
+      --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+      --body: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+      color-scheme: dark;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #F6F4EF; --border: #DCD7CC; --text: #1D1E25; --muted: #5D606C; --accent: #B86E12; color-scheme: light; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.65 var(--body); -webkit-font-smoothing: antialiased; }
+    .wrap { width: min(720px, 100% - 32px); margin-inline: auto; }
+    a { color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    .top { padding: 28px 0; }
+    .word { font: 800 20px/1 var(--display); color: var(--text); text-decoration: none; }
+    .word span { color: var(--accent); }
+    h1 { font: 800 clamp(34px, 6vw, 52px)/1.05 var(--display); letter-spacing: -0.02em; margin: 32px 0 8px; }
+    .date { color: var(--muted); margin: 0 0 36px; }
+    .short { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; margin: 0 0 40px; font-size: 19px; }
+    h2 { font: 800 22px/1.3 var(--display); margin: 40px 0 10px; }
+    p, li { color: var(--text); }
+    ul { padding-left: 22px; }
+    li { margin: 6px 0; }
+    .muted { color: var(--muted); }
+    hr { border: none; border-top: 1px solid var(--border); margin: 56px 0; }
+    footer { padding: 40px 0 56px; color: var(--muted); font-size: 15px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><a class="word" href="/">OA Labs<span>.</span></a></header>
+
+    <main>
+      <h1>Gizlilik politikası</h1>
+      <p class="date">Son güncelleme: 19 Ekim 2026 · Geçerli olduğu uygulama: OA Radyo (Windows)</p>
+
+      <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam ya da takip aracı içermez. Favorilerin, ayarların ve dinleme geçmişin yalnızca senin bilgisayarında durur.</p>
+
+      <h2>Toplamadığımız şeyler</h2>
+      <ul>
+        <li>Adın, e-posta adresin, telefon numaran ya da konumun.</li>
+        <li>Hangi radyoları ne kadar dinlediğin. İstatistikler ekranındaki bilgiler sadece senin bilgisayarında hesaplanır, bize gönderilmez.</li>
+        <li>Kullanım ölçümü, reklam kimliği, çerez ya da benzeri takip araçları.</li>
+      </ul>
+
+      <h2>Bilgisayarında tutulanlar</h2>
+      <p>Favoriler ve klasörleri, son dinlenenler, eklediğin istasyonlar, alarmlar, zamanlanmış kayıtlar, ayarlar, ekolayzır seçimleri, dinleme istatistikleri, son çalan şarkılar ve indirilen istasyon logoları Windows’taki uygulama klasöründe (<span class="muted">%APPDATA%\Radyo</span>) tutulur. Yaptığın kayıtlar Müzik klasöründeki “Radyo Kayıtları”na kaydedilir. Uygulamayı kaldırıp bu klasörleri silersen hepsi silinir.</p>
+
+      <h2>Uygulamanın bağlandığı yerler</h2>
+      <p>Radyo dinlemek için uygulamanın internete bağlanması gerekir. Bu bağlantılarda karşı taraf, her internet bağlantısında olduğu gibi IP adresini görür. Bunların dışında bir bilgi gönderilmez.</p>
+      <ul>
+        <li><strong>Radio Browser</strong> (radio-browser.info): istasyon listeleri buradan gelir. Bir istasyonu açtığında o istasyonun dinlenme sayacı artırılır; “Beğendim”e basarsan oyun iletilir. İkisinde de sadece istasyonun kimliği gönderilir.</li>
+        <li><strong>Radyo istasyonlarının sunucuları:</strong> dinlediğin yayın doğrudan o radyonun sunucusundan gelir. Kayıt ve şarkı adı da bu yayından alınır.</li>
+        <li><strong>Logo kaynakları:</strong> istasyon logoları radyonun kendi sitesinden ya da Google’ın site simgesi hizmetinden indirilir.</li>
+        <li><strong>GitHub:</strong> yeni sürüm denetimi, güncelleme dosyaları ve ek istasyon listesi buradan indirilir.</li>
+        <li><strong>Google Fonts:</strong> uygulamanın yazı tipleri.</li>
+      </ul>
+
+      <h2>Senin açtığın özellikler</h2>
+      <ul>
+        <li><strong>Bilgisayarlar arası eşitleme:</strong> açarsan favorilerin ve listelerin, seçtiğin klasöre (örneğin OneDrive ya da Google Drive) bir dosya olarak yazılır. O dosyaya bulut hizmetinin kendi gizlilik koşulları uygulanır.</li>
+        <li><strong>Discord durumu:</strong> açarsan dinlediğin istasyonun ve şarkının adı bilgisayarındaki Discord uygulamasına iletilir ve Discord profilinde görünür.</li>
+        <li><strong>YouTube / Spotify’da ara, paylaş, “Çalışmıyor, bildir”:</strong> bu düğmeler tarayıcını ya da e-posta uygulamanı açar. Ne gönderileceğini sen görür, sen gönderirsin.</li>
+      </ul>
+
+      <h2>Çocuklar</h2>
+      <p>Uygulama hiçbir yaştan kullanıcıdan kişisel bilgi toplamaz.</p>
+
+      <h2>Değişiklikler ve iletişim</h2>
+      <p>Bu politika değişirse bu sayfa ve üstteki tarih güncellenir. Sorun ya da isteklerin için: <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
+
+      <hr>
+
+      <h1 lang="en">Privacy policy</h1>
+      <div lang="en">
+        <p class="date">Last updated: 19 October 2026 · Applies to: OA Radyo (Windows)</p>
+        <p class="short">In short: OA Radyo needs no account, collects no information that identifies you, and contains no ads or trackers. Your favourites, settings and listening history stay on your computer.</p>
+        <h2>What we don’t collect</h2>
+        <p>No name, email, phone number or location; no record of what you listen to (the Statistics screen is calculated on your computer only); no analytics, advertising IDs, cookies or similar tracking.</p>
+        <h2>Stored on your computer</h2>
+        <p>Favourites, history, added stations, alarms, schedules, settings, equalizer choices, listening statistics, recent songs and cached station logos are kept in <span class="muted">%APPDATA%\Radyo</span>. Recordings are saved to “Radyo Kayıtları” in your Music folder.</p>
+        <h2>Services the app connects to</h2>
+        <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and Google Fonts. As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
+        <h2>Features you turn on</h2>
+        <p>Sync writes your lists to a file in a folder you choose (such as OneDrive). Discord status sends the current station and song to the Discord app on your computer. Search, share and “report” buttons open your browser or email app; you see and send the content yourself.</p>
+        <h2>Contact</h2>
+        <p><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
+      </div>
+    </main>
+
+    <footer>© 2026 OA Labs · Oğuzhan Aydın</footer>
+  </div>
+</body>
+</html>

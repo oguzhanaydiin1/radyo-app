@@ -1332,7 +1332,7 @@ function setMediaSession(s) {
   if (!('mediaSession' in navigator)) return;
   const artwork = /^https?:\/\//i.test(s.favicon || '') ? [{ src: s.favicon, sizes: '256x256' }] : [];
   const song = state.nowTitle && isCurrent(s.id) ? state.nowTitle : '';
-  navigator.mediaSession.metadata = new MediaMetadata({ title: song || s.name, artist: song ? s.name : subtitle(s), album: 'Radyo', artwork });
+  navigator.mediaSession.metadata = new MediaMetadata({ title: song || s.name, artist: song ? s.name : subtitle(s), album: 'OA Radyo', artwork });
 }
 
 audio.addEventListener('playing', () => {

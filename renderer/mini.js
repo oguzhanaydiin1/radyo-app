@@ -8,7 +8,7 @@ let lastLogo = '';
 
 function render(st) {
   const s = st && st.station;
-  $('name').textContent = s ? s.name : 'Radyo';
+  $('name').textContent = s ? s.name : 'OA Radyo';
   $('song').textContent = !s ? 'Bir istasyon seç' : st.buffering ? 'Bağlanıyor…' : st.title ? `♪ ${st.title}` : st.playing ? 'Canlı yayın' : 'Duraklatıldı';
   $('song').title = st && st.title ? st.title : '';
   const playing = !!(st && (st.playing || st.buffering));

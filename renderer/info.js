@@ -12,5 +12,7 @@ const APP_INFO = {
   whatsapp: true,  // telefon numarası WhatsApp'ta da kullanılıyorsa true
   website: 'https://oalabs.dev/radyo/',     // örn. https://ornek.com
   instagram: '',   // kullanıcı adı, @ olmadan
+  privacy: 'https://oalabs.dev/gizlilik/',
+  company: 'OA Labs',
   copyrightYear: 2026,
 };

@@ -1,4 +1,4 @@
-# Radyo
+# OA Radyo
 
 Canlı radyo dinleme uygulaması (Windows, Electron ile).
 İstasyonlar ücretsiz [Radio Browser](https://www.radio-browser.info) veritabanından gelir.

@@ -1,2 +1,3 @@
-• Destek adresi artık destek@oalabs.dev
-• Destek sekmesine web sitesi bağlantısı eklendi: oalabs.dev/radyo
+• Uygulamanın yeni adı: OA Radyo (yayıncı: OA Labs)
+• Favorilerin, ayarların ve kayıtların olduğu gibi duruyor
+• Destek sekmesine gizlilik politikası bağlantısı eklendi

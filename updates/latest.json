@@ -1,12 +1,12 @@
 {
-  "version": "0.7.1",
+  "version": "0.8.0",
   "electron": "44.9.0",
-  "date": "2026-10-18T22:58:59.910Z",
-  "notes": "• Destek adresi artık destek@oalabs.dev\n• Destek sekmesine web sitesi bağlantısı eklendi: oalabs.dev/radyo",
+  "date": "2026-10-19T05:48:47.339Z",
+  "notes": "• Uygulamanın yeni adı: OA Radyo (yayıncı: OA Labs)\n• Favorilerin, ayarların ve kayıtların olduğu gibi duruyor\n• Destek sekmesine gizlilik politikası bağlantısı eklendi",
   "asar": {
-    "file": "app-0.7.1.asar",
-    "size": 989752,
-    "sha256": "a3ff2d350244d7ab404c69a0661d43af51b9aa59535880b9b8403612b36d9102"
+    "file": "app-0.8.0.asar",
+    "size": 990905,
+    "sha256": "cf9e6183231f53cc588e1c6cad49bc70b92f7dbb663e9d146c3721f73794d86f"
   },
   "full": "https://github.com/oguzhanaydiin1/radyo-app/releases/latest"
 }

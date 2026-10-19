@@ -11,6 +11,10 @@ const { app } = require('electron');
 const path = require('node:path');
 const ofs = require('original-fs'); // .asar dosyalarını arşiv değil düz dosya olarak görür
 
+// Uygulamanın adı "OA Radyo" oldu; ayarlar, favoriler ve güncellemeler eskisi gibi
+// %APPDATA%\Radyo klasöründe kalsın (ad değişince klasör de değişmesin).
+app.setPath('userData', path.join(app.getPath('appData'), 'Radyo'));
+
 const bundled = require('./package.json').version;
 
 function cmp(a, b) {

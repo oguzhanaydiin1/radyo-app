@@ -140,7 +140,7 @@ function schedRowHTML(it) {
   </div>`;
 }
 
-const reminder = '<p class="legal-note">Zamanlamalar yalnızca Radyo açıkken (simge saatin yanındayken de olur) ve bilgisayar uykuda değilken çalışır. Ayarlar’dan “Windows açılınca başlat”ı açabilirsin.</p>';
+const reminder = '<p class="legal-note">Zamanlamalar yalnızca OA Radyo açıkken (simge saatin yanındayken de olur) ve bilgisayar uykuda değilken çalışır. Ayarlar’dan “Windows açılınca başlat”ı açabilirsin.</p>';
 
 hooks.recordingsExtra = () => {
   const items = schedList.filter((x) => x.type === 'record');
@@ -553,7 +553,7 @@ document.addEventListener('click', async (e) => {
           toast(added > 0 ? `${added} istasyon içe aktarıldı.` : 'Yedekteki her şey zaten listende.', { ms: 4000 });
         }
       } catch {
-        toast('Bu dosya okunamadı; Radyo yedeği olduğundan emin ol.', { error: true });
+        toast('Bu dosya okunamadı; OA Radyo yedeği olduğundan emin ol.', { error: true });
       }
       break;
     case 'updates-open':
@@ -682,6 +682,7 @@ function contactRows() {
   }
   if (I.website) rows.push({ icon: SUP.web, label: 'Web sitesi', value: I.website.replace(/^https?:\/\//, ''), url: I.website.startsWith('http') ? I.website.replace(/^http:/, 'https:') : `https://${I.website}` });
   if (I.instagram) rows.push({ icon: SUP.insta, label: 'Instagram', value: `@${I.instagram.replace(/^@/, '')}`, url: `https://instagram.com/${I.instagram.replace(/^@/, '')}` });
+  if (I.privacy) rows.push({ icon: SUP.web, label: 'Gizlilik politikası', value: I.privacy.replace(/^https?:\/\//, '').replace(/\/$/, ''), url: I.privacy });
   return rows;
 }
 
@@ -734,7 +735,7 @@ function sendReport() {
   const a = aboutInfo || {};
   const cur = state.current ? `${state.current.name} (${state.current.url})` : '—';
   const body = `${text || '(Mesajını buraya yaz)'}\n\n---\nSürüm: ${a.version || ''}\nSistem: ${a.os || ''} ${a.arch || ''}\nÇalan istasyon: ${cur}`;
-  const url = `mailto:${APP_INFO.email}?subject=${encodeURIComponent(`Radyo destek — sürüm ${a.version || ''}`)}&body=${encodeURIComponent(body)}`;
+  const url = `mailto:${APP_INFO.email}?subject=${encodeURIComponent(`OA Radyo destek — sürüm ${a.version || ''}`)}&body=${encodeURIComponent(body)}`;
   AS.openExternal(url.slice(0, 3900));
 }
 
@@ -783,7 +784,7 @@ AS.onUpdate((ev) => {
   if (ev.type === 'checked') {
     setUpd({ ...ev, type: undefined, current: ev.current || upd.current, checkedAt: Date.now() });
     if (ev.status === 'available') setUpd({ status: 'downloading', received: 0, total: ev.size || 0 });
-    if (ev.status === 'full') toast(`Radyo’nun yeni sürümü (${ev.version}) çıktı.`, { actionLabel: 'Ayrıntılar', onAction: () => selectSection('updates'), ms: 10000 });
+    if (ev.status === 'full') toast(`OA Radyo’nun yeni sürümü (${ev.version}) çıktı.`, { actionLabel: 'Ayrıntılar', onAction: () => selectSection('updates'), ms: 10000 });
   } else if (ev.type === 'progress') {
     upd.received = ev.received;
     upd.total = ev.total;
@@ -793,7 +794,7 @@ AS.onUpdate((ev) => {
     if (txt) txt.textContent = ev.total ? `${fmtBytes(ev.received)} / ${fmtBytes(ev.total)}` : fmtBytes(ev.received);
   } else if (ev.type === 'ready') {
     setUpd({ status: 'ready', version: ev.version, notes: ev.notes || upd.notes });
-    toast(`Radyo ${ev.version} indirildi.`, { actionLabel: 'Yeniden başlat ve güncelle', onAction: () => AS.installUpdate(), ms: 20000 });
+    toast(`OA Radyo ${ev.version} indirildi.`, { actionLabel: 'Yeniden başlat ve güncelle', onAction: () => AS.installUpdate(), ms: 20000 });
   } else if (ev.type === 'error') {
     setUpd({ status: 'error', message: ev.message, fullUrl: ev.fullUrl });
   }
@@ -801,7 +802,7 @@ AS.onUpdate((ev) => {
 
 function updatesHTML() {
   const u = upd;
-  const checked = u.checkedAt ? `Son denetim: ${new Date(u.checkedAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}` : 'Radyo açıldıktan kısa süre sonra ve 6 saatte bir kendiliğinden denetler.';
+  const checked = u.checkedAt ? `Son denetim: ${new Date(u.checkedAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}` : 'OA Radyo açıldıktan kısa süre sonra ve 6 saatte bir kendiliğinden denetler.';
   let body;
   switch (u.status) {
     case 'checking':
@@ -813,16 +814,16 @@ function updatesHTML() {
     case 'available':
     case 'downloading': {
       const pct = u.total ? Math.min(100, (u.received / u.total) * 100) : 5;
-      body = `<div class="upd-state"><span class="spinner"></span><div class="upd-grow"><div class="upd-title">Radyo ${esc(u.version)} indiriliyor…</div>
+      body = `<div class="upd-state"><span class="spinner"></span><div class="upd-grow"><div class="upd-title">OA Radyo ${esc(u.version)} indiriliyor…</div>
         <div class="upd-bar-wrap"><span id="upd-bar" style="width:${pct}%"></span></div><div class="upd-sub" id="upd-progress-text">${esc(fmtBytes(u.received))}${u.total ? ` / ${esc(fmtBytes(u.total))}` : ''}</div></div></div>`;
       break;
     }
     case 'ready':
-      body = `<div class="upd-state ok"><span class="upd-ok">↻</span><div class="upd-grow"><div class="upd-title">Radyo ${esc(u.version)} hazır</div><div class="upd-sub">Uygulama birkaç saniyeliğine kapanıp yeni sürümle yeniden açılacak.</div></div>
+      body = `<div class="upd-state ok"><span class="upd-ok">↻</span><div class="upd-grow"><div class="upd-title">OA Radyo ${esc(u.version)} hazır</div><div class="upd-sub">Uygulama birkaç saniyeliğine kapanıp yeni sürümle yeniden açılacak.</div></div>
         <button class="pill" type="button" data-action="upd-install">${UPD_ICON}<span>Yeniden başlat ve güncelle</span></button></div>`;
       break;
     case 'full':
-      body = `<div class="upd-state"><span class="upd-ok">!</span><div class="upd-grow"><div class="upd-title">Radyo ${esc(u.version)} çıktı</div><div class="upd-sub">Bu sürüm tam paket olarak indirilmeli; indirme sayfası tarayıcıda açılacak.</div></div>
+      body = `<div class="upd-state"><span class="upd-ok">!</span><div class="upd-grow"><div class="upd-title">OA Radyo ${esc(u.version)} çıktı</div><div class="upd-sub">Bu sürüm tam paket olarak indirilmeli; indirme sayfası tarayıcıda açılacak.</div></div>
         <button class="pill" type="button" data-action="upd-full">${UPD_ICON}<span>İndirme sayfasını aç</span></button></div>`;
       break;
     case 'error':
