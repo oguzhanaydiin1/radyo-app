@@ -86,6 +86,18 @@
         <div class="tile"><span>Kişi başı günlük</span><b id="t-avg">—</b></div>
       </div>
 
+      <section class="card" aria-labelledby="c0">
+        <h2 id="c0">İndirmeler</h2>
+        <div class="tiles" style="margin: 0 0 12px">
+          <div class="tile"><span>Toplam indirme</span><b id="d-total">—</b></div>
+          <div class="tile"><span>Kurulum dosyası</span><b id="d-setup">—</b></div>
+          <div class="tile"><span>Zip paketi</span><b id="d-zip">—</b></div>
+          <div class="tile"><span>Son sürüm (<span id="d-ver" style="display:inline">—</span>)</span><b id="d-latest">—</b></div>
+        </div>
+        <table><thead><tr><th>Sürüm</th><th>Tarih</th><th class="num">İndirme</th></tr></thead><tbody id="d-rows"></tbody></table>
+        <p class="note" style="margin: 12px 0 0">GitHub’daki sürüm sayfalarından yapılan indirmeler. Uygulamanın kendi içinden güncellenmesi bu sayıya girmez; o kullanıcılar yukarıdaki “Farklı kullanıcı” sayısında görünür.</p>
+      </section>
+
       <div class="two">
         <section class="card" aria-labelledby="c1"><h2 id="c1">Günlük kullanıcı</h2><div class="chart" id="ch-users"></div><div class="axis" id="ax-users"></div></section>
         <section class="card" aria-labelledby="c2"><h2 id="c2">Günlük dinleme (saat)</h2><div class="chart" id="ch-hours"></div><div class="axis" id="ax-hours"></div></section>
@@ -159,7 +171,30 @@
     }
     function hideTip() { document.querySelectorAll('.tip').forEach((t) => t.remove()); }
 
+    // GitHub sürüm sayfalarından indirme sayıları (herkese açık bilgi, anahtar gerekmez).
+    async function loadDownloads() {
+      try {
+        const rels = await fetch('https://api.github.com/repos/oguzhanaydiin1/radyo-app/releases?per_page=100').then((r) => (r.ok ? r.json() : []));
+        let total = 0, setup = 0, zip = 0;
+        const rows = rels.map((r) => {
+          const n = (r.assets || []).reduce((a, x) => a + (x.download_count || 0), 0);
+          for (const x of r.assets || []) {
+            if (/\.exe$/i.test(x.name)) setup += x.download_count || 0;
+            else if (/\.zip$/i.test(x.name)) zip += x.download_count || 0;
+          }
+          total += n;
+          return { v: String(r.tag_name || '').replace(/^v/, ''), date: r.published_at, n };
+        });
+        $('#d-total').textContent = fmt(total);
+        $('#d-setup').textContent = fmt(setup);
+        $('#d-zip').textContent = fmt(zip);
+        if (rows[0]) { $('#d-ver').textContent = rows[0].v; $('#d-latest').textContent = fmt(rows[0].n); }
+        $('#d-rows').innerHTML = rows.length ? rows.slice(0, 12).map((r) => `<tr><td>${esc(r.v)}</td><td>${r.date ? new Date(r.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}</td><td class="num">${fmt(r.n)}</td></tr>`).join('') : '<tr><td colspan="3" class="note">Henüz sürüm yok.</td></tr>';
+      } catch { $('#d-rows').innerHTML = '<tr><td colspan="3" class="note">GitHub’a ulaşılamadı.</td></tr>'; }
+    }
+
     async function load() {
+      loadDownloads();
       $('#status').textContent = 'Yükleniyor…';
       try {
         const s = await call(`/v1/stats?app=radyo&days=${days}`);
