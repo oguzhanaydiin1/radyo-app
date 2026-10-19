@@ -59,7 +59,10 @@
       }
     ],
     "executableName": "Radyo",
-    "copyright": "© 2026 OA Labs"
+    "copyright": "© 2026 OA Labs",
+    "zip": {
+      "artifactName": "Radyo-${version}-win.${ext}"
+    }
   },
   "updateSource": {
     "owner": "oguzhanaydiin1",
