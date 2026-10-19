@@ -7,8 +7,12 @@
  *   GET  /v1/admin/chat/:oda   Odanın son mesajları, kimlik özetleriyle (yönetici)
  *   POST /v1/admin/chat/:oda   { action: "delete", id } | { action: "ban", uid } (yönetici)
  *
- * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER.
+ *   /v1/list/…, /v1/admin/list E-posta listesi (ayrıntılar list.js'te)
+ *
+ * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
+
+import { subscribe, confirm, leave, adminList } from './list.js';
 
 const APPS = new Set(['radyo']);
 const ROOM_RE = /^[A-Za-z0-9_-]{3,80}$/;
@@ -129,6 +133,18 @@ export default {
       if (url.pathname === '/v1/stats' && req.method === 'GET') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
         return json(await stats(url, env), 200, h);
+      }
+
+      if (url.pathname === '/v1/list/subscribe' && req.method === 'POST') {
+        const ip = await sha(`${env.PEPPER || 'oa'}:ip:${req.headers.get('CF-Connecting-IP') || ''}`);
+        const r = await subscribe(req, env, ip);
+        return json(r.data, r.status, h);
+      }
+      if (url.pathname === '/v1/list/confirm' && req.method === 'GET') return confirm(url, env);
+      if (url.pathname === '/v1/list/leave') return leave(req, url, env);
+      if (url.pathname === '/v1/admin/list') {
+        if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
+        return json(await adminList(req, url, env), 200, h);
       }
 
       const chat = url.pathname.match(/^\/v1\/(admin\/)?chat\/([^/]+)$/);

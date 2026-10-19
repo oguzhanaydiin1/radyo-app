@@ -17,3 +17,19 @@ CREATE TABLE IF NOT EXISTS listen_daily (
   PRIMARY KEY (day, app, station)
 );
 CREATE INDEX IF NOT EXISTS listen_day ON listen_daily (day);
+
+-- E-posta listesi (duyurular). Kişi onay bağlantısına tıklayınca "active" olur;
+-- listeden ayrılınca kayıt tamamen silinir.
+CREATE TABLE IF NOT EXISTS subscribers (
+  email TEXT PRIMARY KEY,
+  status TEXT NOT NULL,            -- pending | active
+  token TEXT NOT NULL UNIQUE,      -- onay ve ayrılma bağlantısı
+  created TEXT NOT NULL,
+  confirmed TEXT,
+  lang TEXT,
+  source TEXT,
+  consent TEXT,                    -- onaylanan metnin sürümü
+  ip TEXT,                         -- IP adresinin tek yönlü özeti (kötüye kullanım için)
+  mailed TEXT                      -- son onay e-postasının gönderildiği zaman
+);
+CREATE INDEX IF NOT EXISTS subscribers_status ON subscribers (status, created);

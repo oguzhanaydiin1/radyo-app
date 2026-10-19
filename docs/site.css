@@ -77,3 +77,29 @@ section { padding: 72px 0; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* E-posta listesi formu */
+.join { border-radius: 24px; background: var(--surface); border: 1px solid var(--border); padding: 40px; display: flex; flex-wrap: wrap; gap: 32px 48px; align-items: center; }
+.join-text { flex: 1 1 320px; min-width: 0; }
+.join-text .h2 { font-size: 36px; margin-bottom: 10px; }
+.join-text p { margin: 0; color: var(--text-2); }
+.join-form { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.join-row { display: flex; gap: 10px; }
+.join-row input[type=email] { flex: 1; min-width: 0; height: 54px; border-radius: 27px; border: 1px solid var(--border-2); background: var(--bg); color: var(--text); padding: 0 22px; font: inherit; font-size: 17px; }
+.join-row input[type=email]::placeholder { color: var(--faint); }
+.join-row input[type=email]:focus { outline: none; border-color: var(--amber); }
+.join-row .btn { flex: none; cursor: pointer; font-family: inherit; }
+.join-row .btn[disabled] { opacity: .6; cursor: wait; }
+.join-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5; color: var(--muted); cursor: pointer; }
+.join-consent input { margin: 3px 0 0; width: 17px; height: 17px; accent-color: var(--amber); flex: none; }
+.join-msg { margin: 0; font-size: 15px; min-height: 1.5em; }
+.join-msg.ok { color: var(--green); }
+.join-msg.err { color: #F08A7E; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+@media (max-width: 760px) {
+  .join { padding: 28px 20px; }
+  .join-text .h2 { font-size: 30px; }
+  .join-row { flex-direction: column; }
+  .join-row input[type=email] { flex: none; }
+  .join-row .btn { justify-content: center; }
+}
