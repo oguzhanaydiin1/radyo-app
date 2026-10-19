@@ -76,7 +76,13 @@ jobs:
 
       - name: Sunucuyu yükle
         if: steps.check.outputs.skip != '1'
-        run: npx wrangler deploy
+        run: |
+          set -o pipefail
+          if ! npx wrangler deploy 2>&1 | tee deploy.log; then
+            # Hata satırlarını GitHub notu olarak göster (anahtar içermez).
+            grep -v '^\s*$' deploy.log | tail -25 | sed 's/%/%25/g' | while IFS= read -r line; do echo "::error title=wrangler::$line"; done
+            exit 1
+          fi
 
       - name: Gizli değerleri ayarla
         if: steps.check.outputs.skip != '1'
