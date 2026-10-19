@@ -18,18 +18,33 @@ CREATE TABLE IF NOT EXISTS listen_daily (
 );
 CREATE INDEX IF NOT EXISTS listen_day ON listen_daily (day);
 
--- E-posta listesi (duyurular). Kişi onay bağlantısına tıklayınca "active" olur;
--- listeden ayrılınca kayıt tamamen silinir.
-CREATE TABLE IF NOT EXISTS subscribers (
-  email TEXT PRIMARY KEY,
-  status TEXT NOT NULL,            -- pending | active
-  token TEXT NOT NULL UNIQUE,      -- onay ve ayrılma bağlantısı
+-- Üyelik (şifresiz, e-posta koduyla giriş).
+DROP TABLE IF EXISTS subscribers;
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
   created TEXT NOT NULL,
-  confirmed TEXT,
-  lang TEXT,
-  source TEXT,
-  consent TEXT,                    -- onaylanan metnin sürümü
-  ip TEXT,                         -- IP adresinin tek yönlü özeti (kötüye kullanım için)
-  mailed TEXT                      -- son onay e-postasının gönderildiği zaman
+  last_login TEXT,
+  announce INTEGER NOT NULL DEFAULT 0,   -- duyuru e-postalarına izin (isteğe bağlı)
+  consent TEXT                            -- onaylanan aydınlatma metninin sürümü
 );
-CREATE INDEX IF NOT EXISTS subscribers_status ON subscribers (status, created);
+-- Bekleyen giriş kodları: kod yalnızca özet olarak tutulur, 10 dakikada geçersiz olur.
+CREATE TABLE IF NOT EXISTS login_codes (
+  email TEXT PRIMARY KEY,
+  code TEXT NOT NULL,
+  expires TEXT NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  created TEXT NOT NULL,
+  ip TEXT,
+  pending TEXT                            -- üye olurken girilen bilgiler (kod onaylanınca hesap açılır)
+);
+CREATE INDEX IF NOT EXISTS login_codes_ip ON login_codes (ip, created);
+-- Oturumlar: çerezdeki anahtarın yalnızca özeti tutulur.
+CREATE TABLE IF NOT EXISTS sessions (
+  token TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  created TEXT NOT NULL,
+  expires TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS sessions_user ON sessions (user_id);

@@ -7,24 +7,31 @@
  *   GET  /v1/admin/chat/:oda   Odanın son mesajları, kimlik özetleriyle (yönetici)
  *   POST /v1/admin/chat/:oda   { action: "delete", id } | { action: "ban", uid } (yönetici)
  *
- *   /v1/list/…, /v1/admin/list E-posta listesi (ayrıntılar list.js'te)
+ *   /v1/auth/…, /v1/me, /v1/admin/users  Üyelik (ayrıntılar auth.js'te)
  *
  * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
 
-import { subscribe, confirm, leave, adminList } from './list.js';
+import { start, verify, logout, me, deleteMe, adminUsers } from './auth.js';
 
 const APPS = new Set(['radyo']);
 const ROOM_RE = /^[A-Za-z0-9_-]{3,80}$/;
 const PANEL_ORIGINS = new Set(['https://oalabs.dev', 'https://www.oalabs.dev']);
 
-function cors(origin, admin) {
+function cors(origin, admin, account, env) {
   const h = {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400',
   };
-  if (admin) {
+  if (account) {
+    // Üyelik istekleri çerez taşır: yalnızca kendi sitemizden.
+    if (PANEL_ORIGINS.has(origin) || (env.DEV_ORIGIN && origin === env.DEV_ORIGIN)) {
+      h['Access-Control-Allow-Origin'] = origin;
+      h['Access-Control-Allow-Credentials'] = 'true';
+      h.Vary = 'Origin';
+    }
+  } else if (admin) {
     if (PANEL_ORIGINS.has(origin)) { h['Access-Control-Allow-Origin'] = origin; h.Vary = 'Origin'; }
   } else {
     h['Access-Control-Allow-Origin'] = '*';
@@ -119,7 +126,14 @@ export default {
     const url = new URL(req.url);
     const origin = req.headers.get('Origin') || '';
     const adminPath = url.pathname === '/v1/stats' || url.pathname.startsWith('/v1/admin/');
-    const h = cors(origin, adminPath);
+    const accountPath = url.pathname.startsWith('/v1/auth/') || url.pathname.startsWith('/v1/me');
+    const h = cors(origin, adminPath, accountPath, env);
+    const secure = url.protocol === 'https:' && url.hostname.endsWith('oalabs.dev');
+    const send = (r) => {
+      const headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...h });
+      if (r.cookie) headers.append('Set-Cookie', r.cookie);
+      return new Response(JSON.stringify(r.data), { status: r.status, headers });
+    };
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: h });
 
     try {
@@ -135,16 +149,20 @@ export default {
         return json(await stats(url, env), 200, h);
       }
 
-      if (url.pathname === '/v1/list/subscribe' && req.method === 'POST') {
-        const ip = await sha(`${env.PEPPER || 'oa'}:ip:${req.headers.get('CF-Connecting-IP') || ''}`);
-        const r = await subscribe(req, env, ip);
-        return json(r.data, r.status, h);
+      if (accountPath && req.method === 'POST' && origin && !PANEL_ORIGINS.has(origin) && origin !== env.DEV_ORIGIN) {
+        return json({ ok: false, error: 'kaynak' }, 403, h); // başka sitelerden gelen istekleri reddet
       }
-      if (url.pathname === '/v1/list/confirm' && req.method === 'GET') return confirm(url, env);
-      if (url.pathname === '/v1/list/leave') return leave(req, url, env);
-      if (url.pathname === '/v1/admin/list') {
+      if (url.pathname === '/v1/auth/start' && req.method === 'POST') {
+        const ip = await sha(`${env.PEPPER || 'oa'}:ip:${req.headers.get('CF-Connecting-IP') || ''}`);
+        return send(await start(req, env, ip));
+      }
+      if (url.pathname === '/v1/auth/verify' && req.method === 'POST') return send(await verify(req, env, secure));
+      if (url.pathname === '/v1/auth/logout' && req.method === 'POST') return send(await logout(req, env, secure));
+      if (url.pathname === '/v1/me' && (req.method === 'GET' || req.method === 'POST')) return send(await me(req, env, secure));
+      if (url.pathname === '/v1/me/delete' && req.method === 'POST') return send(await deleteMe(req, env, secure));
+      if (url.pathname === '/v1/admin/users') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
-        return json(await adminList(req, url, env), 200, h);
+        return json(await adminUsers(req, url, env), 200, h);
       }
 
       const chat = url.pathname.match(/^\/v1\/(admin\/)?chat\/([^/]+)$/);

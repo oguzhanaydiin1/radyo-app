@@ -59,7 +59,7 @@
 
   <main class="wrap">
     <h1>Panel</h1>
-    <p class="sub">İsimsiz kullanım sayıları, e-posta listesi ve sohbet yönetimi. Bu sayfa yalnızca yönetici anahtarıyla çalışır.</p>
+    <p class="sub">İsimsiz kullanım sayıları, üyeler ve sohbet yönetimi. Bu sayfa yalnızca yönetici anahtarıyla çalışır.</p>
 
     <form class="row" id="login">
       <label class="sr-only" for="key">Yönetici anahtarı</label>
@@ -98,21 +98,20 @@
         <p class="note" style="margin: 12px 0 0">GitHub’daki sürüm sayfalarından yapılan indirmeler. Uygulamanın kendi içinden güncellenmesi bu sayıya girmez; o kullanıcılar yukarıdaki “Farklı kullanıcı” sayısında görünür.</p>
       </section>
 
-      <section class="card" aria-labelledby="c7" id="list">
-        <h2 id="c7">E-posta listesi</h2>
+      <section class="card" aria-labelledby="c7" id="users">
+        <h2 id="c7">Üyeler</h2>
         <div class="tiles" style="margin: 0 0 12px">
-          <div class="tile"><span>Onaylı üye</span><b id="l-active">—</b></div>
-          <div class="tile"><span>Onay bekleyen</span><b id="l-pending">—</b></div>
-          <div class="tile"><span>Bu dönemde katılan</span><b id="l-period">—</b></div>
-          <div class="tile"><span>E-posta gönderimi</span><b id="l-mail" style="font-size: 20px">—</b></div>
+          <div class="tile"><span>Toplam üye</span><b id="m-total">—</b></div>
+          <div class="tile"><span>Bu dönemde katılan</span><b id="m-period">—</b></div>
+          <div class="tile"><span>Son 30 günde giriş yapan</span><b id="m-active">—</b></div>
+          <div class="tile"><span>Duyuru izni veren</span><b id="m-announce">—</b></div>
         </div>
-        <div class="chart" id="ch-list" style="height: 120px"></div><div class="axis" id="ax-list"></div>
+        <div class="chart" id="ch-members" style="height: 120px"></div><div class="axis" id="ax-members"></div>
         <div class="row" style="margin: 16px 0 8px">
-          <button class="btn small" type="button" id="l-csv">Onaylı adresleri indir (CSV)</button>
-          <button class="btn small" type="button" id="l-send" hidden>Bekleyenlere onay e-postası gönder</button>
-          <span class="note" id="l-note"></span>
+          <button class="btn small" type="button" id="m-csv">Üye listesini indir (CSV)</button>
+          <span class="note" id="m-note"></span>
         </div>
-        <table><thead><tr><th>E-posta</th><th>Durum</th><th>Tarih</th><th>Kaynak</th><th></th></tr></thead><tbody id="l-rows"></tbody></table>
+        <table><thead><tr><th>Ad soyad</th><th>E-posta</th><th>Üyelik</th><th>Son giriş</th><th>Duyuru</th><th></th></tr></thead><tbody id="m-rows"></tbody></table>
       </section>
 
       <div class="two">
@@ -210,42 +209,34 @@
       } catch { $('#d-rows').innerHTML = '<tr><td colspan="3" class="note">GitHub’a ulaşılamadı.</td></tr>'; }
     }
 
-    let listRows = [];
-    async function loadList() {
+    let members = [];
+    async function loadUsers() {
       try {
-        const r = await call(`/v1/admin/list?days=${days}`);
-        listRows = r.rows;
-        $('#l-active').textContent = fmt(r.counts.active);
-        $('#l-pending').textContent = fmt(r.counts.pending);
-        $('#l-period').textContent = fmt(r.daily.reduce((a, x) => a + x.n, 0));
-        $('#l-mail').textContent = r.mailEnabled ? 'Açık' : 'Kapalı (Resend yok)';
-        $('#l-send').style.display = r.mailEnabled && r.counts.unmailed > 0 ? '' : 'none';
-        $('#l-send').textContent = `Bekleyen ${fmt(r.counts.unmailed)} kişiye onay e-postası gönder`;
+        const r = await call(`/v1/admin/users?days=${days}`);
+        members = r.rows;
+        $('#m-total').textContent = fmt(r.counts.total);
+        $('#m-period').textContent = fmt(r.daily.reduce((a, x) => a + x.n, 0));
+        $('#m-active').textContent = fmt(r.counts.active);
+        $('#m-announce').textContent = fmt(r.counts.announce);
+        $('#m-note').textContent = r.mailEnabled ? '' : 'E-posta gönderimi kapalı: Resend anahtarı eklenene kadar kimse üye olamaz.';
         const today = new Date().toISOString().slice(0, 10);
         const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
         const n = Object.fromEntries(r.daily.map((x) => [x.day, x.n]));
-        bars($('#ch-list'), $('#ax-list'), fill(from, today).map((d) => ({ d, v: n[d] || 0 })), (v) => fmt(v) + ' kişi');
-        const dt = (x) => (x ? new Date(x).toLocaleString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '');
-        $('#l-rows').innerHTML = r.rows.length ? r.rows.slice(0, 100).map((x) => `<tr><td>${esc(x.email)}</td><td>${x.status === 'active' ? 'Onaylı' : '<span class="note">Onay bekliyor</span>'}</td><td style="white-space: nowrap">${dt(x.confirmed || x.created)}</td><td>${esc(x.source || '')}</td>
-          <td><div class="msg-actions"><button type="button" class="danger" data-unsub="${esc(x.email)}">Sil</button></div></td></tr>`).join('') : '<tr><td colspan="5" class="note">Henüz kimse katılmadı.</td></tr>';
+        bars($('#ch-members'), $('#ax-members'), fill(from, today).map((d) => ({ d, v: n[d] || 0 })), (v) => fmt(v) + ' üye');
+        const dt = (x) => (x ? new Date(x).toLocaleString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—');
+        $('#m-rows').innerHTML = r.rows.length ? r.rows.slice(0, 200).map((x) => `<tr><td>${esc(x.name)}</td><td>${esc(x.email)}</td><td style="white-space: nowrap">${dt(x.created)}</td><td style="white-space: nowrap">${dt(x.last_login)}</td><td>${x.announce ? 'Evet' : '<span class="note">Hayır</span>'}</td>
+          <td><div class="msg-actions"><button type="button" class="danger" data-rmuser="${esc(x.id)}">Sil</button></div></td></tr>`).join('') : '<tr><td colspan="6" class="note">Henüz üye yok.</td></tr>';
       } catch (err) {
-        $('#l-note').innerHTML = `<span class="err">${esc(err.message)}</span>`;
+        $('#m-note').innerHTML = `<span class="err">${esc(err.message)}</span>`;
       }
     }
-    $('#l-csv').addEventListener('click', () => {
-      const act = listRows.filter((x) => x.status === 'active');
-      const csv = 'email,onay_tarihi,dil,kaynak\n' + act.map((x) => [x.email, x.confirmed, x.lang, x.source].map((v) => `"${String(v || '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    $('#m-csv').addEventListener('click', () => {
+      const csv = 'ad_soyad,eposta,uyelik,son_giris,duyuru\n' + members.map((x) => [x.name, x.email, x.created, x.last_login, x.announce ? 'evet' : 'hayir'].map((v) => `"${String(v || '').replace(/"/g, '""')}"`).join(',')).join('\n');
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
-      a.download = `oalabs-liste-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `oalabs-uyeler-${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    });
-    $('#l-send').addEventListener('click', async () => {
-      $('#l-note').textContent = 'Gönderiliyor…';
-      const r = await call('/v1/admin/list', { method: 'POST', body: JSON.stringify({ action: 'send-pending' }) }).catch((e) => ({ ok: false, error: e.message }));
-      $('#l-note').textContent = r.ok ? `${r.sent} e-posta gönderildi.` : r.error;
-      loadList();
     });
 
     async function load() {
@@ -273,7 +264,7 @@
         const rows = (list, k) => list.length ? list.map((x) => `<tr><td>${esc(x[k] || '—')}</td><td class="num">${fmt(x.users)} kişi</td></tr>`).join('') : '<tr><td class="note">Veri yok.</td></tr>';
         $('#versions').innerHTML = rows(s.versions, 'version');
         $('#langs').innerHTML = rows(s.langs.map((x) => ({ ...x, lang: x.lang === 'tr' ? 'Türkçe' : x.lang === 'en' ? 'İngilizce' : x.lang })), 'lang');
-        loadList();
+        loadUsers();
         $('#updated').textContent = 'Güncellendi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
         $('#status').innerHTML = `<span class="err">${esc(err.message === 'Failed to fetch' ? 'Sunucuya ulaşılamadı.' : err.message)}</span>`;
@@ -307,11 +298,11 @@
       if (open) { room = open.dataset.room; $('#room').value = room; loadRoom(); $('#mod').scrollIntoView({ behavior: 'smooth' }); return; }
       const del = e.target.closest('[data-del]');
       if (del) { await call(`/v1/admin/chat/${encodeURIComponent(room)}`, { method: 'POST', body: JSON.stringify({ action: 'delete', id: Number(del.dataset.del) }) }).catch(() => {}); loadRoom(); return; }
-      const un = e.target.closest('[data-unsub]');
-      if (un) {
-        if (un.dataset.confirm !== '1') { un.dataset.confirm = '1'; un.textContent = 'Silinsin mi?'; return; }
-        await call('/v1/admin/list', { method: 'POST', body: JSON.stringify({ action: 'remove', email: un.dataset.unsub }) }).catch(() => {});
-        loadList();
+      const rm = e.target.closest('[data-rmuser]');
+      if (rm) {
+        if (rm.dataset.confirm !== '1') { rm.dataset.confirm = '1'; rm.textContent = 'Silinsin mi?'; return; }
+        await call('/v1/admin/users', { method: 'POST', body: JSON.stringify({ action: 'remove', id: rm.dataset.rmuser }) }).catch(() => {});
+        loadUsers();
         return;
       }
       const ban = e.target.closest('[data-ban]');

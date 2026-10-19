@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hesabım — OA Labs</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0D0F16">
+  <link rel="icon" href="../radyo/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../site.css">
+  <style>
+    .info { margin: 0 0 22px; padding: 0; list-style: none; color: var(--text-2); font-size: 15px; }
+    .info li { padding: 4px 0; }
+    .info b { color: var(--text); font-weight: 600; }
+    .danger-zone { margin-top: 20px; }
+    .danger-zone summary { cursor: pointer; color: var(--muted); font-size: 15px; }
+    .btn.danger { color: #F08A7E; border-color: #5A2E26; }
+    .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .actions .btn { margin-top: 0; }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <div class="auth" id="loading"><p class="sub">Yükleniyor…</p></div>
+
+    <div class="auth" id="account" hidden>
+      <h1 id="hello">Hesabım</h1>
+      <p class="sub" id="welcome"></p>
+      <div class="auth-card">
+        <ul class="info">
+          <li>E-posta: <b id="u-email"></b></li>
+          <li>Üyelik tarihi: <b id="u-date"></b></li>
+        </ul>
+        <form id="profile" novalidate>
+          <div class="field">
+            <label for="name">Ad soyad</label>
+            <input id="name" name="name" autocomplete="name" maxlength="80" required>
+          </div>
+          <label class="check"><input type="checkbox" name="announce" id="announce"><span>Yeni uygulamalar ve önemli güncellemeler için e-posta almak istiyorum.</span></label>
+          <button class="btn primary" type="submit" id="save">Kaydet</button>
+          <p class="form-msg" id="msg" role="status" aria-live="polite"></p>
+        </form>
+        <div class="actions">
+          <button class="btn" type="button" id="logout">Çıkış yap</button>
+        </div>
+        <details class="danger-zone">
+          <summary>Hesabımı sil</summary>
+          <p style="color: var(--text-2); font-size: 15px">Hesabın ve bütün bilgilerin kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
+          <button class="btn danger" type="button" id="delete">Hesabımı kalıcı olarak sil</button>
+        </details>
+      </div>
+    </div>
+  </main>
+  <footer class="site-foot">
+    <div class="wrap foot">
+      <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      <div class="foot-links"><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a><a class="quiet" href="/gizlilik/#uyelik">Gizlilik politikası</a></div>
+    </div>
+  </footer>
+  <script src="../hesap.js"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      function show(text, cls) { $('#msg').textContent = text; $('#msg').className = 'form-msg ' + (cls || ''); }
+      function render(u) {
+        $('#hello').textContent = 'Merhaba, ' + (u.name.split(' ')[0] || '') ;
+        $('#u-email').textContent = u.email;
+        $('#u-date').textContent = new Date(u.created).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+        $('#name').value = u.name;
+        $('#announce').checked = !!u.announce;
+      }
+      OA.me().then(function (r) {
+        if (!r || !r.ok) { location.replace('/uye/?giris'); return; }
+        $('#loading').hidden = true; $('#account').hidden = false;
+        if (/hosgeldin/.test(location.search)) $('#welcome').textContent = 'OA Labs’e hoş geldin! Üyeliğin açıldı.';
+        render(r.user);
+      });
+      $('#profile').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name = $('#name').value.trim();
+        if (name.length < 2) { show(OA.msg('ad'), 'err'); return; }
+        $('#save').disabled = true;
+        OA.call('/v1/me', { name: name, announce: $('#announce').checked }).then(function (r) {
+          $('#save').disabled = false;
+          if (r.ok) { render(r.user); show('Kaydedildi.', 'ok'); } else show(OA.msg(r.error), 'err');
+        });
+      });
+      $('#logout').addEventListener('click', function () {
+        OA.call('/v1/auth/logout', {}).then(function () { location.href = '/'; });
+      });
+      $('#delete').addEventListener('click', function () {
+        var b = this;
+        if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Emin misin? Silmek için tekrar bas'; return; }
+        b.disabled = true;
+        OA.call('/v1/me/delete', {}).then(function (r) {
+          if (r.ok) { location.href = '/?hesap=silindi'; } else { b.disabled = false; show(OA.msg(r.error), 'err'); }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -68,7 +68,7 @@
       <div class="nav-links">
         <a href="#uygulamalar">Uygulamalar</a>
         <a href="#ilkeler">Nasıl çalışırız</a>
-        <a href="#liste">Haber al</a>
+        <a href="uye/?giris" data-account>Giriş yap</a>
         <a href="#iletisim">İletişim</a>
       </div>
       <a class="btn primary small" href="radyo/">OA Radyo’yu indir</a>
@@ -80,7 +80,7 @@
       <div class="hero-text">
         <p class="kicker">Oğuzhan Aydın’ın yazılım atölyesi</p>
         <h1>Küçük uygulamalar, özenle yapılmış.</h1>
-        <p class="lead">Her gün işine yarayan, sade ve ücretsiz araçlar. Reklam yok, hesap yok, verin bilgisayarında kalır.</p>
+        <p class="lead">Her gün işine yarayan, sade ve ücretsiz araçlar. Reklam yok, hesap zorunlu değil, verin bilgisayarında kalır.</p>
         <div class="cta">
           <a class="btn primary" href="radyo/">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
@@ -137,22 +137,21 @@
       </div>
     </section>
 
-    <section class="wrap" id="liste" aria-labelledby="liste-h">
+    <section class="wrap" id="uyelik" aria-labelledby="uye-h">
       <div class="join">
         <div class="join-text">
-          <h2 class="h2" id="liste-h">Yeni uygulamalardan ilk sen haberdar ol</h2>
-          <p>OA Score ve OA Barkod çıktığında, OA Radyo’ya büyük bir yenilik geldiğinde haber veririz. Ayda en fazla birkaç e-posta, reklam yok.</p>
+          <h2 class="h2" id="uye-h">OA Labs’e üye ol</h2>
+          <p>Ücretsiz ve şifresiz: e-postana gelen kodla giriş yaparsın. Uygulamaları kullanmak için üyelik gerekmez.</p>
+          <ul class="perks">
+            <li>Yeni uygulamalardan ilk sen haberdar ol</li>
+            <li>Beta sürümlere erken erişim</li>
+            <li>Hesabını istediğin an sil</li>
+          </ul>
         </div>
-        <form class="join-form" data-join="anasayfa" novalidate>
-          <div class="join-row">
-            <label class="sr-only" for="join-email-anasayfa">E-posta adresin</label>
-            <input id="join-email-anasayfa" name="email" type="email" autocomplete="email" inputmode="email" placeholder="ornek@eposta.com" required>
-            <button class="btn primary" type="submit">Listeye katıl</button>
-          </div>
-          <div class="hp" aria-hidden="true"><label>Web sitesi <input name="website" tabindex="-1" autocomplete="off"></label></div>
-          <label class="join-consent"><input type="checkbox" name="consent" required><span>OA Labs uygulamalarıyla ilgili duyuruları e-postayla almayı kabul ediyorum. İstediğim zaman tek tıkla ayrılabilirim. <a href="/gizlilik/#liste">Gizlilik politikası</a></span></label>
-          <p class="join-msg" role="status" aria-live="polite"></p>
-        </form>
+        <div class="join-cta">
+          <a class="btn primary" href="uye/" data-guest>Üye ol</a>
+          <a class="btn" href="uye/?giris" data-account>Giriş yap</a>
+        </div>
       </div>
     </section>
 
@@ -161,7 +160,7 @@
         <h2 class="h2" id="ilke-h">Nasıl çalışırız</h2>
         <div class="ways-grid">
           <div><h3>Ücretsiz ve reklamsız</h3><p>Uygulamaların hepsi ücretsiz. Araya reklam sokmayız.</p></div>
-          <div><h3>Verin sende kalır</h3><p>Hesap istemeyiz, seni tanımlayan bir bilgi toplamayız. <a href="gizlilik/">Gizlilik politikası</a></p></div>
+          <div><h3>Verin sende kalır</h3><p>Uygulamalar hesap istemez; üyelik isteğe bağlı. Bilgilerini satmayız, reklam için kullanmayız. <a href="gizlilik/">Gizlilik politikası</a></p></div>
           <div><h3>Kendini günceller</h3><p>Yeni sürümler uygulamanın içinden tek tıkla gelir.</p></div>
         </div>
       </div>
@@ -179,7 +178,7 @@
     </div>
   </footer>
 
-  <script src="abone.js" defer></script>
+  <script src="hesap.js"></script>
   <script>
     fetch('https://raw.githubusercontent.com/oguzhanaydiin1/radyo-app/main/updates/latest.json', { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))

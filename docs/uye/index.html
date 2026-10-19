@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Üye ol — OA Labs</title>
+  <meta name="description" content="OA Labs’e ücretsiz üye ol. Şifre yok: e-postana gelen kodla giriş yaparsın.">
+  <meta name="theme-color" content="#0D0F16">
+  <link rel="canonical" href="https://oalabs.dev/uye/">
+  <link rel="icon" href="../radyo/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../site.css">
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <div class="auth">
+      <h1 id="title">OA Labs’e üye ol</h1>
+      <p class="sub" id="lead">Ücretsiz. Şifre yok: her girişte e-postana 6 haneli bir kod gelir.</p>
+
+      <div class="auth-card">
+        <div class="tabs" role="tablist" aria-label="Üyelik" id="tabs">
+          <button type="button" role="tab" id="tab-register" aria-selected="true" aria-controls="step1">Üye ol</button>
+          <button type="button" role="tab" id="tab-login" aria-selected="false" aria-controls="step1">Giriş yap</button>
+        </div>
+
+        <form id="step1" novalidate>
+          <div class="field" id="f-name">
+            <label for="name">Ad soyad</label>
+            <input id="name" name="name" autocomplete="name" maxlength="80" required>
+          </div>
+          <div class="field">
+            <label for="email">E-posta</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="ornek@eposta.com" required>
+          </div>
+          <div class="hp" aria-hidden="true"><label>Web sitesi <input name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div id="f-consent">
+            <label class="check"><input type="checkbox" name="consent" required><span><a href="/gizlilik/#uyelik" target="_blank">Üyelik aydınlatma metnini</a> okudum; adımın ve e-posta adresimin üyelik için işlenmesini kabul ediyorum.</span></label>
+            <label class="check"><input type="checkbox" name="announce"><span>Yeni uygulamalar ve önemli güncellemeler için e-posta almak istiyorum. (İsteğe bağlı, istediğin zaman kapatabilirsin.)</span></label>
+          </div>
+          <button class="btn primary" type="submit" id="go">Kod gönder</button>
+          <p class="form-msg" id="msg1" role="status" aria-live="polite"></p>
+        </form>
+
+        <form id="step2" novalidate hidden>
+          <p style="margin: 0 0 18px; color: var(--text-2)"><b id="sent-to" style="color: var(--text)"></b> adresine 6 haneli bir kod gönderdik. Gelmediyse gereksiz (spam) klasörüne bak.</p>
+          <div class="field">
+            <label for="code">Kod</label>
+            <input id="code" name="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required>
+            <span class="hint">Kod 10 dakika geçerli.</span>
+          </div>
+          <button class="btn primary" type="submit" id="verify">Onayla</button>
+          <p class="form-msg" id="msg2" role="status" aria-live="polite"></p>
+          <p style="margin: 14px 0 0; font-size: 15px; color: var(--muted)"><button type="button" class="textlink" id="resend">Kodu yeniden gönder</button> · <button type="button" class="textlink" id="back">E-postayı değiştir</button></p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <footer class="site-foot">
+    <div class="wrap foot">
+      <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      <div class="foot-links"><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a><a class="quiet" href="/gizlilik/#uyelik">Gizlilik politikası</a></div>
+    </div>
+  </footer>
+  <script src="../hesap.js"></script>
+  <script>
+    (function () {
+      var $ = function (s) { return document.querySelector(s); };
+      var mode = /giris/.test(location.search + location.hash) ? 'login' : 'register';
+      var email = '';
+      OA.me().then(function (r) { if (r && r.ok) location.replace('/hesabim/'); });
+
+      function setMode(m) {
+        mode = m;
+        var reg = m === 'register';
+        $('#tab-register').setAttribute('aria-selected', String(reg));
+        $('#tab-login').setAttribute('aria-selected', String(!reg));
+        $('#f-name').hidden = !reg;
+        $('#f-consent').hidden = !reg;
+        $('#title').textContent = reg ? 'OA Labs’e üye ol' : 'Giriş yap';
+        $('#lead').textContent = reg ? 'Ücretsiz. Şifre yok: her girişte e-postana 6 haneli bir kod gelir.' : 'E-posta adresini yaz, sana bir giriş kodu gönderelim.';
+        document.title = (reg ? 'Üye ol' : 'Giriş yap') + ' — OA Labs';
+        show('#msg1', '');
+      }
+      function show(sel, text, cls) { var el = $(sel); el.innerHTML = ''; el.className = 'form-msg ' + (cls || ''); if (text) el.append(text); }
+      function busy(btn, on) { btn.disabled = on; }
+
+      $('#tab-register').addEventListener('click', function () { setMode('register'); });
+      $('#tab-login').addEventListener('click', function () { setMode('login'); });
+
+      function send() {
+        var f = $('#step1');
+        email = f.email.value.trim();
+        var body = { mode: mode, email: email, website: f.website.value };
+        if (mode === 'register') {
+          body.name = f.name.value.trim();
+          body.consent = f.consent.checked;
+          body.announce = f.announce.checked;
+          if (body.name.length < 2) { show('#msg1', OA.msg('ad'), 'err'); f.name.focus(); return Promise.resolve(); }
+        }
+        if (!f.email.checkValidity() || !email) { show('#msg1', OA.msg('eposta'), 'err'); f.email.focus(); return Promise.resolve(); }
+        if (mode === 'register' && !body.consent) { show('#msg1', OA.msg('onay'), 'err'); return Promise.resolve(); }
+        busy($('#go'), true);
+        show('#msg1', 'Gönderiliyor…');
+        return OA.call('/v1/auth/start', body).then(function (r) {
+          busy($('#go'), false);
+          if (r.ok) {
+            $('#step1').hidden = true; $('#tabs').hidden = true; $('#step2').hidden = false;
+            $('#sent-to').textContent = email;
+            show('#msg2', '');
+            $('#code').value = ''; $('#code').focus();
+            return;
+          }
+          var text = OA.msg(r.error);
+          var el = document.createElement('span'); el.textContent = text + ' ';
+          if (r.error === 'uye-yok' || r.error === 'uye-var') {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'textlink';
+            b.textContent = r.error === 'uye-yok' ? 'Üye ol' : 'Giriş yap';
+            b.onclick = function () { setMode(r.error === 'uye-yok' ? 'register' : 'login'); $('#email').value = email; };
+            el.append(b);
+          }
+          show('#msg1', el, 'err');
+        });
+      }
+      $('#step1').addEventListener('submit', function (e) { e.preventDefault(); send(); });
+
+      $('#code').addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+        if (this.value.length === 6) $('#step2').requestSubmit();
+      });
+      $('#step2').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var code = $('#code').value;
+        if (code.length !== 6) { show('#msg2', OA.msg('kod'), 'err'); return; }
+        busy($('#verify'), true);
+        show('#msg2', 'Kontrol ediliyor…');
+        OA.call('/v1/auth/verify', { email: email, code: code }).then(function (r) {
+          busy($('#verify'), false);
+          if (r.ok) { show('#msg2', r.created ? 'Üyeliğin açıldı!' : 'Giriş yapıldı!', 'ok'); location.href = '/hesabim/' + (r.created ? '?hosgeldin=1' : ''); return; }
+          show('#msg2', OA.msg(r.error), 'err');
+          $('#code').select();
+        });
+      });
+      $('#resend').addEventListener('click', function () {
+        show('#msg2', 'Gönderiliyor…');
+        OA.call('/v1/auth/start', mode === 'register'
+          ? { mode: mode, email: email, name: $('#name').value.trim(), consent: true, announce: $('#step1').announce.checked }
+          : { mode: mode, email: email }).then(function (r) {
+          show('#msg2', r.ok ? 'Yeni kod gönderildi.' : OA.msg(r.error), r.ok ? 'ok' : 'err');
+        });
+      });
+      $('#back').addEventListener('click', function () {
+        $('#step2').hidden = true; $('#step1').hidden = false; $('#tabs').hidden = false; $('#email').focus();
+      });
+      setMode(mode);
+    })();
+  </script>
+</body>
+</html>
