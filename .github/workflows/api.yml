@@ -1,0 +1,72 @@
+name: Sunucu (api.oalabs.dev)
+
+# server/ klasörü değişince ya da elle başlatılınca sunucuyu Cloudflare'e yükler.
+# Gerekli GitHub "secret"ları (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, OA_ADMIN_KEY, OA_PEPPER
+on:
+  push:
+    branches: [main]
+    paths: ['server/**', '.github/workflows/api.yml']
+  workflow_dispatch:
+
+concurrency: api-deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Cloudflare bilgileri girilmiş mi?
+        id: check
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "Cloudflare secret'ları henüz eklenmemiş; yükleme atlandı."
+            echo "skip=1" >> "$GITHUB_OUTPUT"
+          fi
+        working-directory: .
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.skip != '1'
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.skip != '1'
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+        if: steps.check.outputs.skip != '1'
+
+      - name: Veritabanını bul ya da oluştur
+        if: steps.check.outputs.skip != '1'
+        run: |
+          ID=$(npx wrangler d1 list --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const l=JSON.parse(s);const d=l.find(x=>x.name==='oa-stats');process.stdout.write(d?d.uuid:'')})")
+          if [ -z "$ID" ]; then
+            npx wrangler d1 create oa-stats
+            ID=$(npx wrangler d1 list --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const l=JSON.parse(s);process.stdout.write(l.find(x=>x.name==='oa-stats').uuid)})")
+          fi
+          sed -i "s/00000000-0000-0000-0000-000000000000/$ID/" wrangler.toml
+          npx wrangler d1 execute oa-stats --remote --file schema.sql
+
+      - name: Sunucuyu yükle
+        if: steps.check.outputs.skip != '1'
+        run: npx wrangler deploy
+
+      - name: Gizli değerleri ayarla
+        if: steps.check.outputs.skip != '1'
+        env:
+          OA_ADMIN_KEY: ${{ secrets.OA_ADMIN_KEY }}
+          OA_PEPPER: ${{ secrets.OA_PEPPER }}
+        run: |
+          printf '%s' "$OA_ADMIN_KEY" | npx wrangler secret put ADMIN_KEY
+          printf '%s' "$OA_PEPPER" | npx wrangler secret put PEPPER
+
+      - name: Çalışıyor mu?
+        if: steps.check.outputs.skip != '1'
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS https://api.oalabs.dev/v1/health; then exit 0; fi
+            sleep 10
+          done
+          echo "api.oalabs.dev henüz yanıt vermiyor (alan adı birkaç dakika içinde etkinleşir)."

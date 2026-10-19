@@ -1,12 +1,12 @@
 {
-  "version": "0.8.0",
+  "version": "0.9.0",
   "electron": "44.9.0",
-  "date": "2026-10-19T05:54:53.141Z",
-  "notes": "• Uygulamanın yeni adı: OA Radyo (yayıncı: OA Labs)\n• Favorilerin, ayarların ve kayıtların olduğu gibi duruyor\n• Destek sekmesine gizlilik politikası bağlantısı eklendi",
+  "date": "2026-10-19T06:31:56.901Z",
+  "notes": "• Canlı sohbet: aynı radyoyu dinleyenlerle sohbet et (alt çubuktaki konuşma balonu)\n• İsimsiz kullanım istatistiği: yalnızca izin verirsen; Ayarlar → Gizlilik ve sohbet’ten kapatılabilir",
   "asar": {
-    "file": "app-0.8.0.asar",
-    "size": 990905,
-    "sha256": "cf9e6183231f53cc588e1c6cad49bc70b92f7dbb663e9d146c3721f73794d86f"
+    "file": "app-0.9.0.asar",
+    "size": 1013094,
+    "sha256": "bf3c250604c5661ce8584542d449223c5e14271c5530b9f2d4f14d10247fe641"
   },
   "full": "https://github.com/oguzhanaydiin1/radyo-app/releases/latest"
 }

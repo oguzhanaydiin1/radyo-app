@@ -1,0 +1,12 @@
+{
+  "name": "oa-api",
+  "private": true,
+  "description": "OA Labs sunucusu: isimsiz kullanım sayımı ve canlı sohbet (Cloudflare Workers)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.151.1"
+  }
+}

@@ -1,3 +1,2 @@
-• Uygulamanın yeni adı: OA Radyo (yayıncı: OA Labs)
-• Favorilerin, ayarların ve kayıtların olduğu gibi duruyor
-• Destek sekmesine gizlilik politikası bağlantısı eklendi
+• Canlı sohbet: aynı radyoyu dinleyenlerle sohbet et (alt çubuktaki konuşma balonu)
+• İsimsiz kullanım istatistiği: yalnızca izin verirsen; Ayarlar → Gizlilik ve sohbet’ten kapatılabilir

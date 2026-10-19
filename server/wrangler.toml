@@ -1,0 +1,20 @@
+# OA Labs sunucusu — api.oalabs.dev
+# GitHub Actions (.github/workflows/api.yml) bunu Cloudflare'e yükler.
+name = "oa-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = false
+routes = [{ pattern = "api.oalabs.dev", custom_domain = true }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "oa-stats"
+database_id = "00000000-0000-0000-0000-000000000000" # yayınlarken gerçek kimlikle değiştirilir
+
+[[durable_objects.bindings]]
+name = "CHAT"
+class_name = "ChatRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ChatRoom"]

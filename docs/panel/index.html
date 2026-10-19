@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel — OA Labs</title>
+  <link rel="icon" href="../radyo/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../site.css">
+  <style>
+    main { padding: 40px 0 80px; }
+    h1 { margin: 0 0 6px; font: 800 40px/1.1 var(--display); letter-spacing: -0.02em; }
+    .sub { margin: 0 0 28px; color: var(--muted); }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    input, select { height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--border-2); background: var(--surface); color: var(--text); font: inherit; font-size: 15px; }
+    input:focus, select:focus { outline: 2px solid var(--amber); outline-offset: 1px; }
+    button.btn { cursor: pointer; font-family: inherit; }
+    .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); }
+    .seg button { height: 36px; padding: 0 14px; border: none; border-radius: 10px; background: transparent; color: var(--muted); font: 500 14px var(--body); cursor: pointer; }
+    .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
+    .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 24px 0; }
+    .tile { padding: 18px 20px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); }
+    .tile span { display: block; color: var(--muted); font-size: 14px; }
+    .tile b { display: block; font: 800 32px/1.2 var(--display); margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .card { padding: 20px 22px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); margin-bottom: 16px; }
+    .card h2 { margin: 0 0 14px; font: 700 18px/1.3 var(--display); }
+    .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .chart { position: relative; height: 180px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--border); }
+    .bar { flex: 1; min-width: 0; height: 100%; display: flex; align-items: flex-end; cursor: default; }
+    .bar i { display: block; width: 100%; background: var(--amber); border-radius: 4px 4px 0 0; }
+    .bar:hover i, .bar:focus-visible i { background: var(--amber-hi); }
+    .axis { display: flex; justify-content: space-between; margin-top: 6px; color: var(--faint); font-size: 12px; }
+    .tip { position: absolute; pointer-events: none; padding: 6px 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border-2); font-size: 13px; white-space: nowrap; transform: translate(-50%, -110%); }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { text-align: left; padding: 9px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 500; font-size: 13px; border-top: none; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    th.num { text-align: right; }
+    .mini { display: inline-block; height: 6px; border-radius: 3px; background: var(--amber); vertical-align: middle; margin-right: 8px; }
+    .link { background: none; border: none; color: var(--amber); font: inherit; cursor: pointer; padding: 0; }
+    .msg-actions { display: flex; gap: 8px; }
+    .msg-actions button { height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border-2); background: transparent; color: var(--text); font: 500 13px var(--body); cursor: pointer; }
+    .msg-actions button.danger { color: #F08A73; border-color: #5A2E26; }
+    .note { color: var(--muted); font-size: 14px; }
+    .err { color: #F08A73; }
+    @media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .two { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+      <div class="nav-links"><span style="color: var(--muted)">Panel</span></div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <h1>Panel</h1>
+    <p class="sub">İsimsiz kullanım sayıları ve sohbet yönetimi. Bu sayfa yalnızca yönetici anahtarıyla çalışır.</p>
+
+    <form class="row" id="login">
+      <label class="sr-only" for="key">Yönetici anahtarı</label>
+      <input id="key" type="password" placeholder="Yönetici anahtarı" autocomplete="current-password" style="flex: 1 1 280px; max-width: 420px">
+      <button class="btn primary small" type="submit">Göster</button>
+      <span class="note" id="status"></span>
+    </form>
+
+    <div id="dash" hidden>
+      <div class="row" style="margin-top: 24px; justify-content: space-between">
+        <div class="seg" role="group" aria-label="Dönem">
+          <button type="button" data-days="7" aria-pressed="false">7 gün</button>
+          <button type="button" data-days="30" aria-pressed="true">30 gün</button>
+          <button type="button" data-days="90" aria-pressed="false">90 gün</button>
+          <button type="button" data-days="365" aria-pressed="false">1 yıl</button>
+        </div>
+        <span class="note" id="updated"></span>
+      </div>
+
+      <div class="tiles">
+        <div class="tile"><span>Farklı kullanıcı</span><b id="t-users">—</b></div>
+        <div class="tile"><span>Bugün</span><b id="t-today">—</b></div>
+        <div class="tile"><span>Toplam dinleme</span><b id="t-hours">—</b></div>
+        <div class="tile"><span>Kişi başı günlük</span><b id="t-avg">—</b></div>
+      </div>
+
+      <div class="two">
+        <section class="card" aria-labelledby="c1"><h2 id="c1">Günlük kullanıcı</h2><div class="chart" id="ch-users"></div><div class="axis" id="ax-users"></div></section>
+        <section class="card" aria-labelledby="c2"><h2 id="c2">Günlük dinleme (saat)</h2><div class="chart" id="ch-hours"></div><div class="axis" id="ax-hours"></div></section>
+      </div>
+
+      <section class="card" aria-labelledby="c3">
+        <h2 id="c3">En çok dinlenen radyolar</h2>
+        <table><thead><tr><th>Radyo</th><th class="num">Saat</th><th class="num">Sohbet</th></tr></thead><tbody id="top"></tbody></table>
+      </section>
+
+      <div class="two">
+        <section class="card" aria-labelledby="c4"><h2 id="c4">Sürümler</h2><table><tbody id="versions"></tbody></table></section>
+        <section class="card" aria-labelledby="c5"><h2 id="c5">Dil</h2><table><tbody id="langs"></tbody></table></section>
+      </div>
+
+      <section class="card" aria-labelledby="c6" id="mod">
+        <h2 id="c6">Sohbet yönetimi</h2>
+        <form class="row" id="room-form" style="margin-bottom: 12px">
+          <label class="sr-only" for="room">Oda (radyo kimliği)</label>
+          <input id="room" placeholder="Radyo kimliği ya da yukarıdan “Aç”" style="flex: 1 1 320px">
+          <button class="btn small" type="submit">Mesajları getir</button>
+        </form>
+        <p class="note" id="room-info">Bir oda seç. Silinen mesaj herkesin ekranından kalkar; engellenen kişi o odaya yazamaz.</p>
+        <table><thead><tr><th>Zaman</th><th>Takma ad</th><th>Mesaj</th><th></th></tr></thead><tbody id="msgs"></tbody></table>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const API = 'https://api.oalabs.dev';
+    const $ = (s) => document.querySelector(s);
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    let key = '';
+    try { key = sessionStorage.getItem('oaKey') || ''; } catch { /* yok */ }
+    let days = 30;
+    let room = '';
+
+    const call = (path, opts = {}) => fetch(API + path, { ...opts, headers: { Authorization: 'Bearer ' + key, ...(opts.body ? { 'Content-Type': 'application/json' } : {}) } })
+      .then((r) => { if (r.status === 401) throw new Error('Anahtar yanlış.'); if (!r.ok) throw new Error('Sunucu yanıt vermedi (' + r.status + ').'); return r.json(); });
+
+    const fmt = (n) => Number(n || 0).toLocaleString('tr-TR');
+    const hours = (min) => (min / 60).toLocaleString('tr-TR', { maximumFractionDigits: min < 600 ? 1 : 0 });
+
+    function fill(from, to) {
+      const out = [];
+      for (let d = new Date(from + 'T00:00:00Z'); d.toISOString().slice(0, 10) <= to; d.setUTCDate(d.getUTCDate() + 1)) out.push(d.toISOString().slice(0, 10));
+      return out;
+    }
+
+    function bars(el, axis, series, label) {
+      const max = Math.max(1, ...series.map((x) => x.v));
+      el.innerHTML = series.map((x) => `<div class="bar" tabindex="0" data-tip="${esc(x.d)} · ${esc(label(x.v))}" aria-label="${esc(x.d)}: ${esc(label(x.v))}"><i style="height:${x.v ? Math.max(1.5, (x.v / max) * 100) : 0}%"></i></div>`).join('');
+      const f = (d) => new Date(d + 'T00:00:00Z').toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+      axis.innerHTML = series.length ? `<span>${f(series[0].d)}</span><span>en yüksek: ${esc(label(max))}</span><span>${f(series[series.length - 1].d)}</span>` : '';
+    }
+    // Çubukların üzerine gelince değer.
+    document.addEventListener('pointerover', (e) => showTip(e.target.closest('.bar')));
+    document.addEventListener('focusin', (e) => showTip(e.target.closest('.bar')));
+    document.addEventListener('pointerout', (e) => { if (e.target.closest('.bar')) hideTip(); });
+    function showTip(bar) {
+      hideTip();
+      if (!bar) return;
+      const chart = bar.parentElement;
+      const t = document.createElement('div');
+      t.className = 'tip';
+      t.textContent = bar.dataset.tip;
+      const r = bar.getBoundingClientRect(), c = chart.getBoundingClientRect();
+      t.style.left = `${Math.min(c.width - 60, Math.max(60, r.left - c.left + r.width / 2))}px`;
+      t.style.top = `${r.top - c.top + (r.height - bar.firstElementChild.offsetHeight)}px`;
+      chart.appendChild(t);
+    }
+    function hideTip() { document.querySelectorAll('.tip').forEach((t) => t.remove()); }
+
+    async function load() {
+      $('#status').textContent = 'Yükleniyor…';
+      try {
+        const s = await call(`/v1/stats?app=radyo&days=${days}`);
+        $('#status').textContent = '';
+        $('#dash').hidden = false;
+        try { sessionStorage.setItem('oaKey', key); } catch { /* yok */ }
+        const today = new Date().toISOString().slice(0, 10);
+        const daysList = fill(s.from, today);
+        const u = Object.fromEntries(s.daily.map((x) => [x.day, x.users]));
+        const m = Object.fromEntries(s.minutes.map((x) => [x.day, x.minutes]));
+        const totalMin = s.minutes.reduce((a, x) => a + x.minutes, 0);
+        const userDays = s.daily.reduce((a, x) => a + x.users, 0);
+        $('#t-users').textContent = fmt(s.users);
+        $('#t-today').textContent = fmt(u[today] || 0);
+        $('#t-hours').textContent = hours(totalMin) + ' sa';
+        $('#t-avg').textContent = userDays ? Math.round(totalMin / userDays) + ' dk' : '—';
+        bars($('#ch-users'), $('#ax-users'), daysList.map((d) => ({ d, v: u[d] || 0 })), (v) => fmt(v) + ' kişi');
+        bars($('#ch-hours'), $('#ax-hours'), daysList.map((d) => ({ d, v: m[d] || 0 })), (v) => hours(v) + ' sa');
+        const topMax = Math.max(1, ...s.top.map((x) => x.minutes));
+        $('#top').innerHTML = s.top.length ? s.top.map((x) => `<tr><td><span class="mini" style="width:${Math.round((x.minutes / topMax) * 80)}px"></span>${esc(x.name || (x.station === 'kendi-eklenen' ? 'Kullanıcının eklediği istasyonlar' : x.station))}</td><td class="num">${hours(x.minutes)}</td><td class="num">${x.station === 'kendi-eklenen' ? '' : `<button class="link" type="button" data-room="${esc(x.station)}">Aç</button>`}</td></tr>`).join('') : '<tr><td colspan="3" class="note">Bu dönemde veri yok.</td></tr>';
+        const rows = (list, k) => list.length ? list.map((x) => `<tr><td>${esc(x[k] || '—')}</td><td class="num">${fmt(x.users)} kişi</td></tr>`).join('') : '<tr><td class="note">Veri yok.</td></tr>';
+        $('#versions').innerHTML = rows(s.versions, 'version');
+        $('#langs').innerHTML = rows(s.langs.map((x) => ({ ...x, lang: x.lang === 'tr' ? 'Türkçe' : x.lang === 'en' ? 'İngilizce' : x.lang })), 'lang');
+        $('#updated').textContent = 'Güncellendi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      } catch (err) {
+        $('#status').innerHTML = `<span class="err">${esc(err.message === 'Failed to fetch' ? 'Sunucuya ulaşılamadı.' : err.message)}</span>`;
+      }
+    }
+
+    async function loadRoom() {
+      if (!room) return;
+      $('#room-info').textContent = 'Yükleniyor…';
+      try {
+        const r = await call(`/v1/admin/chat/${encodeURIComponent(room)}`);
+        $('#room-info').textContent = `${room} · şu an ${r.online} kişi bağlı · son ${r.messages.length} mesaj`;
+        $('#msgs').innerHTML = r.messages.length ? r.messages.map((x) => `<tr><td style="white-space: nowrap">${new Date(x.ts).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</td><td>${esc(x.nick)}</td><td>${esc(x.text)}</td>
+          <td><div class="msg-actions"><button type="button" data-del="${x.id}">Sil</button><button type="button" class="danger" data-ban="${esc(x.uid)}" data-nick="${esc(x.nick)}">Engelle</button></div></td></tr>`).join('') : '<tr><td colspan="4" class="note">Bu odada mesaj yok.</td></tr>';
+      } catch (err) {
+        $('#room-info').innerHTML = `<span class="err">${esc(err.message)}</span>`;
+      }
+    }
+
+    $('#login').addEventListener('submit', (e) => { e.preventDefault(); key = $('#key').value.trim(); load(); });
+    document.querySelector('.seg').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-days]');
+      if (!b) return;
+      days = Number(b.dataset.days);
+      document.querySelectorAll('.seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      load();
+    });
+    $('#room-form').addEventListener('submit', (e) => { e.preventDefault(); room = $('#room').value.trim(); loadRoom(); });
+    document.addEventListener('click', async (e) => {
+      const open = e.target.closest('[data-room]');
+      if (open) { room = open.dataset.room; $('#room').value = room; loadRoom(); $('#mod').scrollIntoView({ behavior: 'smooth' }); return; }
+      const del = e.target.closest('[data-del]');
+      if (del) { await call(`/v1/admin/chat/${encodeURIComponent(room)}`, { method: 'POST', body: JSON.stringify({ action: 'delete', id: Number(del.dataset.del) }) }).catch(() => {}); loadRoom(); return; }
+      const ban = e.target.closest('[data-ban]');
+      if (ban) {
+        if (ban.dataset.confirm !== '1') { ban.dataset.confirm = '1'; ban.textContent = `${ban.dataset.nick} engellensin mi?`; return; }
+        await call(`/v1/admin/chat/${encodeURIComponent(room)}`, { method: 'POST', body: JSON.stringify({ action: 'ban', uid: ban.dataset.ban }) }).catch(() => {});
+        loadRoom();
+      }
+    });
+    if (key) { $('#key').value = key; load(); }
+  </script>
+</body>
+</html>

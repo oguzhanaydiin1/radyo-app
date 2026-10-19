@@ -191,10 +191,27 @@ const LANG = (() => {
     'Oy verilemedi.': 'Couldn’t vote.', 'Oy verilemedi, internet bağlantını kontrol et.': 'Couldn’t vote; check your internet connection.',
     'Geçersiz dil seçimi.': 'Invalid language.', 'Geçersiz ülke seçimi.': 'Invalid country.', 'Geçersiz seçim.': 'Invalid selection.',
     'Adsız istasyon': 'Untitled station', 'İnternete bağlanılamadı': 'No internet connection', 'Liste yüklenemedi.': 'The list couldn’t be loaded.',
+
+    // Sohbet ve kullanım sayımı
+    'Sohbet': 'Chat', 'Bu radyoyu dinleyenlerle sohbet et': 'Chat with people listening to this station', 'Canlı sohbet': 'Live chat',
+    'Sohbeti kapat': 'Close chat', 'Takma adın': 'Your nickname', 'Örn. Gece Kuşu': 'e.g. Night Owl', 'Bir şey yaz…': 'Write something…',
+    'Mesaj': 'Message', 'Gönder': 'Send', 'Bu mesajı bildir': 'Report this message', 'Şu an yalnızsın': 'You’re the only one here',
+    'Bağlantı yok': 'Not connected', 'Bağlanıyor…': 'Connecting…', 'Sohbet etmek için bir radyo aç.': 'Play a station to chat.',
+    'Henüz mesaj yok. İlk merhabayı sen de.': 'No messages yet. Say hello first.',
+    'Saygılı ol. Bağlantı paylaşılamaz; kaba sözler yıldızlanır. Takma adın ve mesajların bu odadaki herkese görünür.': 'Be kind. Links aren’t allowed; rude words are masked. Your nickname and messages are visible to everyone in this room.',
+    'Önce 2–20 harflik bir takma ad yaz.': 'First enter a nickname of 2–20 characters.', 'Bağlantı yok, birkaç saniye sonra tekrar dene.': 'Not connected, try again in a few seconds.',
+    'Bu odada mesaj gönderemezsin.': 'You can’t post in this room.', 'Takma ad 2–20 harf ya da rakam olmalı.': 'Nickname must be 2–20 letters or digits.',
+    'Sohbette bağlantı paylaşılamıyor.': 'Links can’t be shared in chat.', 'Biraz yavaş: birkaç saniye sonra tekrar yaz.': 'Slow down: try again in a few seconds.',
+    'İsimsiz kullanım istatistiği': 'Anonymous usage statistics', 'OA Radyo’yu geliştirmemize yardım eder misin?': 'Will you help us improve OA Radyo?',
+    'Kaç kişinin kullandığını ve toplam ne kadar dinlendiğini isimsiz olarak sayarız. Seni tanımlayan bir bilgi gönderilmez; istediğin zaman Ayarlar’dan kapatabilirsin.': 'We anonymously count how many people use it and how much is listened in total. Nothing that identifies you is sent; you can turn it off in Settings anytime.',
+    'Hayır': 'No', 'Paylaş': 'Share', 'Gizlilik ve sohbet': 'Privacy and chat', 'İsimsiz kullanım istatistiği paylaş': 'Share anonymous usage statistics',
+    'Kaç kişinin kullandığı ve toplam dinleme süresi sayılır; seni tanımlayan bilgi gönderilmez.': 'Counts how many people use the app and total listening time; nothing that identifies you is sent.',
+    'Sohbet takma adı:': 'Chat nickname:', 'Değiştir': 'Change', 'Sohbette bir sonraki mesajında yeni takma adını yazabilirsin.': 'You can enter a new nickname with your next chat message.',
   };
 
   // Sayı ya da ad içeren metinler: [kalıp, çeviri].
   const P = [
+    [/^(\d+) kişi burada$/, '$1 people here'],
     [/^([\d.,]+) istasyon$/, '$1 stations'],
     [/^“(.+)” için sonuçlar$/, 'Results for “$1”'],
     [/^Liste güncellendi: (.+)$/, (m, a) => `List updated: ${tx(a)}`],

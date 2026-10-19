@@ -44,15 +44,15 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 19 Ekim 2026 · Geçerli olduğu uygulama: OA Radyo (Windows)</p>
+      <p class="date">Son güncelleme: 19 Ekim 2026 (sohbet ve kullanım sayımı eklendi) · Geçerli olduğu uygulama: OA Radyo (Windows)</p>
 
-      <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam ya da takip aracı içermez. Favorilerin, ayarların ve dinleme geçmişin yalnızca senin bilgisayarında durur.</p>
+      <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam içermez. Favorilerin, ayarların ve dinleme geçmişin bilgisayarında durur. Yalnızca izin verirsen isimsiz kullanım sayıları gönderilir; sohbete yazdıkların o odadaki herkese görünür.</p>
 
       <h2>Toplamadığımız şeyler</h2>
       <ul>
         <li>Adın, e-posta adresin, telefon numaran ya da konumun.</li>
-        <li>Hangi radyoları ne kadar dinlediğin. İstatistikler ekranındaki bilgiler sadece senin bilgisayarında hesaplanır, bize gönderilmez.</li>
-        <li>Kullanım ölçümü, reklam kimliği, çerez ya da benzeri takip araçları.</li>
+        <li>Senin hangi radyoları ne kadar dinlediğin. İstatistikler ekranındaki bilgiler senin bilgisayarında hesaplanır.</li>
+        <li>Reklam kimliği, çerez ya da seni internette izleyen takip araçları.</li>
       </ul>
 
       <h2>Bilgisayarında tutulanlar</h2>
@@ -67,6 +67,12 @@
         <li><strong>GitHub:</strong> yeni sürüm denetimi, güncelleme dosyaları ve ek istasyon listesi buradan indirilir.</li>
         <li><strong>Google Fonts:</strong> uygulamanın yazı tipleri.</li>
       </ul>
+
+      <h2>İsimsiz kullanım sayımı (yalnızca izin verirsen)</h2>
+      <p>Uygulama ilk açılışta izin ister; Ayarlar → Gizlilik ve sohbet’ten istediğin zaman kapatabilirsin. İzin verirsen 15 dakikada bir sunucumuza (api.oalabs.dev) şunlar gönderilir: uygulamanın rastgele ürettiği bir kurulum kimliği, uygulama sürümü, arayüz dili ve son dakikalarda hangi radyonun kaç dakika dinlendiği. Kendi eklediğin istasyonların adı gönderilmez. Kurulum kimliği sunucuda tek yönlü olarak özetlenip saklanır; adın, e-postan ya da IP adresin kaydedilmez. Bu sayılar yalnızca toplu olarak (kaç kişi, toplam kaç saat, en çok dinlenen radyolar) görüntülenir.</p>
+
+      <h2>Canlı sohbet</h2>
+      <p>Sohbet panelini açtığında o radyonun sohbet odasına bağlanırsın; panel kapalıyken bağlantı kurulmaz. Yazdığın takma ad ve mesajlar o odadaki herkese görünür ve odada son 100 mesaj saklanır, eskileri silinir. Kötüye kullanımı (spam, hakaret) önlemek için IP adresinin tek yönlü bir özeti mesajla birlikte tutulur; IP adresinin kendisi saklanmaz. Kurallara aykırı mesajlar silinebilir, yazan kişi o odadan engellenebilir. Kişisel bilgilerini (telefon, adres gibi) sohbette paylaşmamanı öneririz. Bir mesajı bildirmek ya da kendi mesajının silinmesini istemek için destek@oalabs.dev’e yazabilirsin.</p>
 
       <h2>Senin açtığın özellikler</h2>
       <ul>
@@ -93,6 +99,10 @@
         <p>Favourites, history, added stations, alarms, schedules, settings, equalizer choices, listening statistics, recent songs and cached station logos are kept in <span class="muted">%APPDATA%\Radyo</span>. Recordings are saved to “Radyo Kayıtları” in your Music folder.</p>
         <h2>Services the app connects to</h2>
         <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and Google Fonts. As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
+        <h2>Anonymous usage counts (only with your permission)</h2>
+        <p>If you allow it (you can turn it off in Settings), every 15 minutes the app sends our server (api.oalabs.dev) a random install ID, the app version, the interface language and how many minutes each station was played. Names of stations you added yourself are not sent. The install ID is stored only as a one-way hash; no name, email or IP address is stored. The numbers are only viewed in aggregate.</p>
+        <h2>Live chat</h2>
+        <p>Opening the chat panel connects you to that station’s room; nothing connects while it is closed. Your nickname and messages are visible to everyone in the room, and the last 100 messages are kept. A one-way hash of your IP address is stored with each message to prevent abuse; the IP address itself is not stored. Messages that break the rules may be deleted and their authors blocked from the room. To report a message or ask for yours to be removed, write to destek@oalabs.dev.</p>
         <h2>Features you turn on</h2>
         <p>Sync writes your lists to a file in a folder you choose (such as OneDrive). Discord status sends the current station and song to the Discord app on your computer. Search, share and “report” buttons open your browser or email app; you see and send the content yourself.</p>
         <h2>Contact</h2>

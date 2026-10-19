@@ -102,6 +102,7 @@ renderer/index.html    Ana ekranın iskeleti
 renderer/info.js       Geliştirici ve destek bilgileri
 renderer/app.js        Arayüz, oynatıcı, listeler
 renderer/features.js   Tepsi/mini bağlantısı, alarm, zamanlama, ayarlar, öneriler
+renderer/chat.js       Canlı sohbet ve isimsiz kullanım sayımı
 renderer/extras.js     Ekolayzır, şarkılar, şehirler, klasörler, istatistik, tema, paylaşma
 src/logos.js           Logo indirme ve önbellek (radyo-logo://)
 src/discord.js         Discord durumu
@@ -109,3 +110,17 @@ renderer/mini.*        Mini oynatıcı
 renderer/styles.css    Görünüm
 assets/, build/        İkonlar
 ```
+
+## Sunucu (api.oalabs.dev)
+
+`server/` klasöründe Cloudflare Workers üzerinde çalışan küçük bir sunucu var:
+
+- **İsimsiz kullanım sayımı** (`POST /v1/ping`): yalnızca kullanıcı izin verirse; kurulum kimliği (tek yönlü özet), sürüm, dil ve istasyon başına dinleme dakikası. Veritabanı: Cloudflare D1 (`oa-stats`).
+- **Canlı sohbet** (`/v1/chat/<radyo>` WebSocket): her radyo için bir oda (Durable Object). Hız sınırı, bağlantı engeli, kaba söz yıldızlama, son 100 mesaj.
+- **Panel**: https://oalabs.dev/panel — yönetici anahtarıyla istatistikler ve sohbet yönetimi.
+
+`server/` değişince `.github/workflows/api.yml` sunucuyu Cloudflare'e yükler. Gerekli GitHub secret'ları:
+`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `OA_ADMIN_KEY`, `OA_PEPPER`.
+
+Yerelde denemek: `cd server && npm install && npx wrangler d1 execute oa-stats --local --file schema.sql && npx wrangler dev`
+(`.dev.vars` dosyasına `ADMIN_KEY=` ve `PEPPER=` yaz).

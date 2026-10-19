@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src * data: blob: radyo-logo:; media-src * data: blob:; connect-src *;">
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src * data: blob: radyo-logo:; media-src * data: blob:; connect-src * https://api.oalabs.dev wss://api.oalabs.dev http://127.0.0.1:* ws://127.0.0.1:*;">
   <title>OA Radyo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -295,5 +295,6 @@
   <script src="app.js"></script>
   <script src="features.js"></script>
   <script src="extras.js"></script>
+  <script src="chat.js"></script>
 </body>
 </html>
