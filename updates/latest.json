@@ -1,7 +1,7 @@
 {
   "version": "0.8.0",
   "electron": "44.9.0",
-  "date": "2026-10-19T05:48:47.339Z",
+  "date": "2026-10-19T05:54:53.141Z",
   "notes": "• Uygulamanın yeni adı: OA Radyo (yayıncı: OA Labs)\n• Favorilerin, ayarların ve kayıtların olduğu gibi duruyor\n• Destek sekmesine gizlilik politikası bağlantısı eklendi",
   "asar": {
     "file": "app-0.8.0.asar",
