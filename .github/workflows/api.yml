@@ -23,7 +23,14 @@ jobs:
     steps:
       - name: Cloudflare bilgileri girilmiş mi?
         id: check
+        env:
+          HAS_ADMIN: ${{ secrets.OA_ADMIN_KEY != '' }}
+          HAS_PEPPER: ${{ secrets.OA_PEPPER != '' }}
         run: |
+          echo "CLOUDFLARE_API_TOKEN: $([ -n "$CLOUDFLARE_API_TOKEN" ] && echo var || echo YOK)"
+          echo "CLOUDFLARE_ACCOUNT_ID: $([ -n "$CLOUDFLARE_ACCOUNT_ID" ] && echo var || echo YOK)"
+          echo "OA_ADMIN_KEY: $([ "$HAS_ADMIN" = true ] && echo var || echo YOK)"
+          echo "OA_PEPPER: $([ "$HAS_PEPPER" = true ] && echo var || echo YOK)"
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "Cloudflare secret'ları henüz eklenmemiş; yükleme atlandı."
             echo "skip=1" >> "$GITHUB_OUTPUT"
