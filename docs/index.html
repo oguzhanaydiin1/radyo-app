@@ -3,125 +3,159 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OA Labs — Oğuzhan Aydın'ın uygulamaları</title>
-  <meta name="description" content="OA Labs: Oğuzhan Aydın'ın geliştirdiği ücretsiz ve sade uygulamalar. Radyo ve yakında daha fazlası.">
+  <title>OA Labs — küçük uygulamalar, özenle yapılmış</title>
+  <meta name="description" content="OA Labs: Oğuzhan Aydın'ın geliştirdiği ücretsiz, reklamsız ve sade uygulamalar. OA Radyo ve yakında daha fazlası.">
+  <meta name="theme-color" content="#0D0F16">
   <meta property="og:title" content="OA Labs">
-  <meta property="og:description" content="Oğuzhan Aydın'ın geliştirdiği ücretsiz ve sade uygulamalar.">
+  <meta property="og:description" content="Küçük uygulamalar, özenle yapılmış. Ücretsiz, reklamsız, verin sende kalır.">
   <meta property="og:image" content="https://oalabs.dev/radyo/img/app-kesfet.webp">
   <link rel="canonical" href="https://oalabs.dev/">
   <link rel="icon" href="radyo/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
   <style>
-    :root {
-      --bg: #12131A; --surface: #1C1E28; --border: #2A2C38;
-      --text: #F2EFE8; --muted: #A9ABB8; --faint: #6F7283; --accent: #F2A541;
-      --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
-      --body: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
-      color-scheme: dark;
+    .hero { padding: 96px 0 88px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center; }
+    .hero-text { flex: 1 1 440px; min-width: 0; }
+    .kicker { margin: 0 0 20px; color: var(--muted); font-size: 16px; }
+    .hero h1 { margin: 0 0 24px; font: 800 clamp(48px, 6.4vw, 76px)/0.98 var(--display); letter-spacing: -0.035em; }
+    .hero .lead { margin: 0 0 36px; color: var(--text-2); font-size: 20px; max-width: 30em; }
+    .cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .hero-shot { flex: 1 1 520px; min-width: 0; position: relative; }
+    .frame { border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 8px var(--bg-2); }
+    .badge { position: absolute; left: -22px; bottom: -26px; display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--border-2); box-shadow: 0 16px 40px rgba(0,0,0,.5); line-height: 1.3; }
+    .badge img { width: 40px; height: 40px; border-radius: 11px; }
+    .badge b { display: block; font-weight: 600; font-size: 15px; }
+    .badge span { color: var(--muted); font-size: 13px; }
+
+    .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .app { border-radius: 20px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+    .app-top { height: 150px; position: relative; overflow: hidden; }
+    .app-top svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .app-icon { position: absolute; left: 24px; top: 24px; width: 56px; height: 56px; border-radius: 15px; display: grid; place-items: center; font: 800 24px/1 var(--display); }
+    .app-icon.img { box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .app-body { padding: 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .app-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .app h3 { margin: 0; font: 800 26px/1.2 var(--display); }
+    .state { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .state.live { color: var(--amber); }
+    .app p { margin: 0; color: var(--text-2); font-size: 16px; flex: 1; }
+    .app.soon p { color: var(--muted); }
+    .app .btn { align-self: flex-start; }
+
+    .ways { border-top: 1px solid var(--line); padding-top: 56px; display: flex; flex-wrap: wrap; gap: 48px; }
+    .ways .h2 { flex: 1 1 280px; margin: 0; }
+    .ways-grid { flex: 2 1 600px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+    .ways-grid h3 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
+    .ways-grid p { margin: 0; color: var(--muted); font-size: 16px; }
+
+    @media (max-width: 960px) {
+      .apps, .ways-grid { grid-template-columns: minmax(0, 1fr); }
+      .badge { left: 12px; bottom: -22px; }
     }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #F6F4EF; --surface: #FFFFFF; --border: #DCD7CC;
-        --text: #1D1E25; --muted: #5D606C; --faint: #8D909C; --accent: #D9862A;
-        color-scheme: light;
-      }
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
-    a { color: inherit; }
-    .wrap { width: min(980px, 100% - 32px); margin-inline: auto; }
-    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
-
-    .top { padding: 28px 0; display: flex; align-items: center; justify-content: space-between; }
-    .word { font: 800 20px/1 var(--display); letter-spacing: -0.01em; text-decoration: none; }
-    .word span { color: var(--accent); }
-    .top a.mail { color: var(--muted); font-size: 15px; text-decoration: none; }
-    .top a.mail:hover { color: var(--text); }
-
-    /* İmza: dev OA harfleri */
-    .mark { padding: 40px 0 56px; }
-    .mono {
-      font: 800 clamp(120px, 28vw, 300px)/0.8 var(--display);
-      letter-spacing: -0.06em; margin: 0 0 0 -0.04em;
-      display: flex; align-items: flex-end;
-    }
-    .mono i { font-style: normal; width: 0.13em; height: 0.13em; border-radius: 50%; background: var(--accent); margin: 0 0 0.04em 0.05em; flex: none; }
-    .intro { max-width: 30em; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.5; color: var(--muted); margin: 28px 0 0; }
-    .intro strong { color: var(--text); font-weight: 600; }
-
-    .apps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
-    .app { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--border); }
-    .app img, .app .ph { width: 64px; height: 64px; border-radius: 16px; }
-    .app .ph { display: grid; place-items: center; border: 1px dashed var(--border); color: var(--faint); font: 800 20px var(--display); }
-    .app h2 { margin: 0; font: 800 26px/1.15 var(--display); letter-spacing: -0.015em; }
-    .app p { margin: 4px 0 0; color: var(--muted); font-size: 16px; }
-    .app .go {
-      display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 22px; border-radius: 23px;
-      background: var(--accent); color: #12131A; text-decoration: none; font-weight: 600; white-space: nowrap;
-    }
-    .app .go:hover { filter: brightness(1.06); }
-    .app.soon h2, .app.soon p { color: var(--faint); }
-    .app .tag { font-size: 14px; color: var(--faint); white-space: nowrap; }
-
-    footer { padding: 56px 0 48px; color: var(--muted); font-size: 15px; display: flex; flex-wrap: wrap; gap: 8px 28px; }
-    footer a { color: var(--text); }
-
-    @media (max-width: 560px) {
-      .app { grid-template-columns: 52px minmax(0, 1fr); gap: 14px; }
-      .app img, .app .ph { width: 52px; height: 52px; border-radius: 13px; }
-      .app .go, .app .tag { grid-column: 2; justify-self: start; }
-      .app h2 { font-size: 22px; }
+    @media (max-width: 760px) {
+      .hero { padding: 48px 0 64px; gap: 40px; }
+      .hero .lead { font-size: 18px; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="top">
-      <a class="word" href="/">OA Labs<span>.</span></a>
-      <a class="mail" href="mailto:destek@oalabs.dev">İletişim</a>
-    </header>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+      <div class="nav-links">
+        <a href="#uygulamalar">Uygulamalar</a>
+        <a href="#ilkeler">Nasıl çalışırız</a>
+        <a href="#iletisim">İletişim</a>
+      </div>
+      <a class="btn primary small" href="radyo/">OA Radyo’yu indir</a>
+    </nav>
+  </header>
 
-    <main>
-      <section class="mark" aria-labelledby="t">
-        <h1 class="mono" id="t" aria-label="OA Labs">OA<i aria-hidden="true"></i></h1>
-        <p class="intro"><strong>OA Labs</strong>, Oğuzhan Aydın’ın geliştirdiği uygulamaların evi. Hepsi ücretsiz, sade ve günlük işe yarayan şeyler.</p>
-      </section>
+  <main>
+    <section class="wrap hero">
+      <div class="hero-text">
+        <p class="kicker">Oğuzhan Aydın’ın yazılım atölyesi</p>
+        <h1>Küçük uygulamalar, özenle yapılmış.</h1>
+        <p class="lead">Her gün işine yarayan, sade ve ücretsiz araçlar. Reklam yok, hesap yok, verin bilgisayarında kalır.</p>
+        <div class="cta">
+          <a class="btn primary" href="radyo/">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
+            OA Radyo’yu indir
+          </a>
+          <a class="btn" href="#uygulamalar">Bütün uygulamalar</a>
+        </div>
+      </div>
+      <div class="hero-shot">
+        <div class="frame"><img src="radyo/img/app-kesfet.webp" width="1280" height="820" alt="OA Radyo uygulamasının ana ekranı: çalan radyo, istasyon bilgisi ve radyo kartları"></div>
+        <div class="badge">
+          <img src="radyo/img/icon.png" alt="" width="40" height="40">
+          <div><b id="badge-ver">OA Radyo</b><span>Windows 10 ve 11 · Ücretsiz</span></div>
+        </div>
+      </div>
+    </section>
 
-      <ul class="apps" aria-label="Uygulamalar">
-        <li class="app">
-          <img src="radyo/img/icon.png" alt="" width="64" height="64">
-          <div>
-            <h2>OA Radyo</h2>
-            <p>Türkiye’nin ve dünyanın radyoları tek uygulamada. Windows için.</p>
+    <section class="wrap" id="uygulamalar" aria-labelledby="apps-h">
+      <h2 class="h2" id="apps-h">Uygulamalar</h2>
+      <p class="lead-2">Her biri tek bir işi iyi yapmak için. Hepsi aynı imzayla: OA.</p>
+      <div class="apps">
+        <article class="app">
+          <div class="app-top" style="background: var(--amber)">
+            <svg aria-hidden="true" viewBox="0 0 360 150" preserveAspectRatio="none"><g stroke="#14110A" stroke-opacity=".22" stroke-width="2"><path d="M20 110v20M40 120v10M60 120v10M80 100v30M100 120v10M120 120v10M140 110v20M160 120v10M180 90v40M200 120v10M220 120v10M240 110v20M260 120v10M280 120v10M300 100v30M320 120v10M340 120v10"/></g><path d="M178 20v115" stroke="#14110A" stroke-width="3"/></svg>
+            <img class="app-icon img" src="radyo/img/icon.png" alt="" width="56" height="56">
           </div>
-          <a class="go" href="radyo/">OA Radyo’ya git</a>
-        </li>
-        <li class="app soon">
-          <span class="ph" aria-hidden="true">S</span>
-          <div>
-            <h2>OA Score</h2>
+          <div class="app-body">
+            <div class="app-title"><h3>OA Radyo</h3><span class="state live">Yayında</span></div>
+            <p>Türkiye’nin ve dünyanın radyoları tek uygulamada. Kayıt, alarm, ekolayzır, şarkı adı.</p>
+            <a class="btn primary small" href="radyo/">İncele ve indir</a>
+          </div>
+        </article>
+        <article class="app soon">
+          <div class="app-top" style="background: #1D3A2C"><span class="app-icon" aria-hidden="true" style="background: var(--green); color: #0F2A1C">S</span></div>
+          <div class="app-body">
+            <div class="app-title"><h3>OA Score</h3><span class="state">Yakında</span></div>
             <p>Hazırlanıyor.</p>
           </div>
-          <span class="tag">Yakında</span>
-        </li>
-        <li class="app soon">
-          <span class="ph" aria-hidden="true">B</span>
-          <div>
-            <h2>OA Barkod</h2>
+        </article>
+        <article class="app soon">
+          <div class="app-top" style="background: #1B2A45"><span class="app-icon" aria-hidden="true" style="background: var(--blue); color: #0E1A30">B</span></div>
+          <div class="app-body">
+            <div class="app-title"><h3>OA Barkod</h3><span class="state">Yakında</span></div>
             <p>Hazırlanıyor.</p>
           </div>
-          <span class="tag">Yakında</span>
-        </li>
-      </ul>
-    </main>
+        </article>
+      </div>
+    </section>
 
-    <footer>
-      <span>© 2026 OA Labs · Oğuzhan Aydın</span>
-      <span>Destek: <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></span>
-      <span><a href="/gizlilik/">Gizlilik politikası</a></span>
-    </footer>
-  </div>
+    <section class="wrap" id="ilkeler" aria-labelledby="ilke-h">
+      <div class="ways">
+        <h2 class="h2" id="ilke-h">Nasıl çalışırız</h2>
+        <div class="ways-grid">
+          <div><h3>Ücretsiz ve reklamsız</h3><p>Uygulamaların hepsi ücretsiz. Araya reklam sokmayız.</p></div>
+          <div><h3>Verin sende kalır</h3><p>Hesap istemeyiz, seni tanımlayan bir bilgi toplamayız. <a href="gizlilik/">Gizlilik politikası</a></p></div>
+          <div><h3>Kendini günceller</h3><p>Yeni sürümler uygulamanın içinden tek tıkla gelir.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot" id="iletisim">
+    <div class="wrap foot">
+      <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="gizlilik/">Gizlilik politikası</a>
+        <a class="quiet" href="radyo/">OA Radyo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    fetch('https://raw.githubusercontent.com/oguzhanaydiin1/radyo-app/main/updates/latest.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j && j.version) document.getElementById('badge-ver').textContent = 'OA Radyo ' + j.version; })
+      .catch(() => {});
+  </script>
 </body>
 </html>
