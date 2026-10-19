@@ -43,6 +43,7 @@
     .app p { margin: 0; color: var(--text-2); font-size: 16px; flex: 1; }
     .app.soon p { color: var(--muted); }
     .app .btn { align-self: flex-start; }
+    .app-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .ways { border-top: 1px solid var(--line); padding-top: 56px; display: flex; flex-wrap: wrap; gap: 48px; }
     .ways .h2 { flex: 1 1 280px; margin: 0; }
@@ -84,6 +85,10 @@
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
             OA Radyo’yu indir
           </a>
+          <a class="btn" href="dinle/">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+            Web’de dinle
+          </a>
           <a class="btn" href="#uygulamalar">Bütün uygulamalar</a>
         </div>
       </div>
@@ -108,7 +113,10 @@
           <div class="app-body">
             <div class="app-title"><h3>OA Radyo</h3><span class="state live">Yayında</span></div>
             <p>Türkiye’nin ve dünyanın radyoları tek uygulamada. Kayıt, alarm, ekolayzır, şarkı adı.</p>
-            <a class="btn primary small" href="radyo/">İncele ve indir</a>
+            <div class="app-actions">
+              <a class="btn primary small" href="radyo/">İncele ve indir</a>
+              <a class="btn small" href="dinle/"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg> Web’de dinle</a>
+            </div>
           </div>
         </article>
         <article class="app soon">
