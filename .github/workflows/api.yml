@@ -100,7 +100,7 @@ jobs:
           printf '%s' "$OA_ADMIN_KEY" | npx wrangler secret put ADMIN_KEY
           printf '%s' "$OA_PEPPER" | npx wrangler secret put PEPPER
           # E-posta gönderimi (isteğe bağlı): GitHub'a RESEND_API_KEY eklenince etkinleşir.
-          if [ -n "$RESEND_API_KEY" ]; then printf '%s' "$RESEND_API_KEY" | npx wrangler secret put RESEND_API_KEY; fi
+          if [ -n "$RESEND_API_KEY" ]; then printf '%s' "$RESEND_API_KEY" | tr -d '[:space:]' | npx wrangler secret put RESEND_API_KEY; fi
 
       - name: Resend anahtarı çalışıyor mu?
         if: steps.check.outputs.skip != '1' && env.RESEND_SET == 'true'

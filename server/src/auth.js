@@ -71,7 +71,7 @@ async function sendMail(env, to, m) {
   if (env.MAIL_DEV === '1') { console.log(`[deneme e-postası] ${to}: ${m.subject}`); return { ok: true }; } // yalnızca yerel deneme
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${String(env.RESEND_API_KEY).trim()}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${String(env.RESEND_API_KEY).replace(/\s+/g, "")}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from: env.MAIL_FROM || 'OA Labs <hesap@oalabs.dev>', to: [to], reply_to: 'destek@oalabs.dev', subject: m.subject, html: m.html, text: m.text }),
   });
   if (res.ok) return { ok: true };
