@@ -1,12 +1,12 @@
 {
-  "version": "0.9.0",
+  "version": "0.9.1",
   "electron": "44.9.0",
-  "date": "2026-10-19T06:31:56.901Z",
-  "notes": "• Canlı sohbet: aynı radyoyu dinleyenlerle sohbet et (alt çubuktaki konuşma balonu)\n• İsimsiz kullanım istatistiği: yalnızca izin verirsen; Ayarlar → Gizlilik ve sohbet’ten kapatılabilir",
+  "date": "2026-10-20T06:08:45.062Z",
+  "notes": "• Yeni kategori: “En çok dinlenen 20” — Türkiye’nin en çok dinlenen 20 radyosu, sıra numarasıyla (Keşfet’te “Tümü”nün yanında)",
   "asar": {
-    "file": "app-0.9.0.asar",
-    "size": 1013094,
-    "sha256": "bf3c250604c5661ce8584542d449223c5e14271c5530b9f2d4f14d10247fe641"
+    "file": "app-0.9.1.asar",
+    "size": 1015628,
+    "sha256": "25abfdfc12bc5fc602d840c71aa80b54f87fe26187e2c4288cd2b77a45a0ac84"
   },
   "full": "https://github.com/oguzhanaydiin1/radyo-app/releases/latest"
 }

@@ -12,6 +12,7 @@ const hook = (name, ...args) => (typeof hooks[name] === 'function' ? hooks[name]
    (Türkçe karakterler ve büyük/küçük harf fark etmez). */
 const CATEGORIES = [
   { label: 'Tümü', keys: null },
+  { label: 'En çok dinlenen 20', top: true },
   { label: 'Pop', keys: ['pop'] },
   { label: 'Haber', keys: ['news', 'haber', 'talk', 'gundem'] },
   { label: 'Türkü', keys: ['turku', 'halk', 'folk', 'thm', 'anadolu'] },
@@ -24,6 +25,48 @@ const CATEGORIES = [
   { label: 'Spor', keys: ['sport', 'spor'] },
   { label: 'Eklediklerim', custom: true },
 ];
+/* "En çok dinlenen": Türkiye'nin en çok dinlenen 20 radyosu, sırasıyla.
+   İlk altısı RİAK radyo erişim araştırmalarının (2025–2026) açıklanan sıralamasından;
+   gerisi ulusal yayın yapan büyük radyoların internetteki dinlenme sayılarına göre (Radio Browser, Ekim 2026).
+   Kimlik bulunamazsa adla eşleştirilir. */
+const TOP20 = [
+  ['948408f4-0060-44fa-a26c-bf313f6c774d', 'Kral FM'],
+  ['1e090517-d381-49f4-bb54-9b18ea649b41', 'Kral Pop', 'Kral Pop'], // Radio Browser'daki diğer "KRAL POP" kaydı Kral FM yayınını çalıyor
+  ['0a2c3506-a136-40f2-b008-38daf2b12fd6', 'TRT FM'],
+  ['43061315-2893-46fa-ae1e-96e767d5bce3', 'Power Türk'],
+  ['97f3bb39-24a0-461d-b282-b0ccae5a12c4', 'Slow Türk'],
+  ['837f9f9d-dcae-44a9-acc8-9bd6be8de720', 'Best FM'],
+  ['159e4625-43d8-4cda-b98c-819edfad8667', 'Süper FM'],
+  ['960969eb-0601-11e8-ae97-52543be04c81', 'Virgin Radio'],
+  ['0012c08a-31e7-48c6-87a9-7f64736e0a38', 'Metro FM'],
+  ['4e758ac3-15ad-11e9-a80b-52543be04c81', 'Alem FM'],
+  ['df369586-40fc-11e9-aa55-52543be04c81', 'Radyo 7'],
+  ['2a372113-4b74-41aa-a1e8-3dcb5d66de61', 'Joy Türk'],
+  ['b3e6320b-0ffc-4d4e-a999-2467897b17e6', 'Radyo Fenomen'],
+  ['de28a78a-6cee-453d-b9df-13557334dfdb', 'Radyo Seymen'],
+  ['f3dfbec0-8ddb-457c-94cd-368631337c0f', 'Damar Türk'],
+  ['960c341d-0601-11e8-ae97-52543be04c81', 'NTV Radyo'],
+  ['4a59d1f8-8496-4197-b4b4-37febe87cf9b', 'TRT Türkü'],
+  ['a31ff324-2ae1-11e9-a35e-52543be04c81', 'Radyo Voyage'],
+  ['dd307ed2-052d-4373-85c6-24f15f96d89c', 'Power FM'],
+  ['c7dadc87-3c43-46f5-aa24-91e0fa9a7643', 'Joy FM'],
+];
+let TOP_RANK = new Map();
+function topList(all) {
+  const byId = new Map(all.map((s) => [s.id, s]));
+  const used = new Set();
+  const out = [];
+  for (const [id, name, show] of TOP20) {
+    let s = byId.get(id);
+    if (!s) {
+      const n = norm(name).replace(/\s+/g, '');
+      s = all.find((x) => !used.has(x.id) && norm(x.name).replace(/\s+/g, '') === n);
+    }
+    if (s && !used.has(s.id)) { if (show) s.name = show; used.add(s.id); out.push(s); }
+  }
+  TOP_RANK = new Map(out.map((s, i) => [s.id, i + 1]));
+  return out;
+}
 const PAGE = 60;
 const TINTS = ['#F2A541', '#A897F0', '#E8735C', '#4FB3A9', '#D9C7A3'];
 const PLAY_ERROR = 'Bu yayın şu an açılamadı. Başka bir istasyon dene.';
@@ -254,12 +297,12 @@ function langName(name) {
 function filtered() {
   if (state.section === 'world') return filteredWorld();
   const cat = CATEGORIES[state.categoryIndex] || CATEGORIES[0];
-  let list = cat.custom ? state.custom : state.custom.concat(state.all);
+  let list = cat.custom ? state.custom : cat.top ? topList(state.all) : state.custom.concat(state.all);
   if (cat.keys) list = list.filter((s) => cat.keys.some((k) => hay(s).includes(k)));
   if (state.city) list = list.filter((s) => hook('cityOf', s) === state.city);
   const words = norm(state.query).split(/\s+/).filter(Boolean);
   if (words.length) list = list.filter((s) => words.every((w) => hay(s).includes(w)));
-  if (state.sort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+  if (state.sort === 'az' && !cat.top) list = [...list].sort((a, b) => a.name.localeCompare(b.name, 'tr'));
   return list;
 }
 
@@ -523,6 +566,7 @@ function heroHTML(s) {
 }
 
 function cardHTML(s) {
+  const rank = state.section === 'discover' && (CATEGORIES[state.categoryIndex] || {}).top ? TOP_RANK.get(s.id) : 0;
   const cls = isCurrent(s.id) ? ` current${state.playing ? ' is-playing' : ''}` : '';
   const own = isCustom(s);
   const remove = own
@@ -535,7 +579,7 @@ function cardHTML(s) {
       <span class="card-actions">${remove}${favHTML(s)}</span>
     </div>
     <div class="card-bottom">
-      <div class="card-name">${esc(s.name)}</div>
+      <div class="card-name">${rank ? `<span class="rank">${rank}.</span>` : ''}${esc(s.name)}</div>
       <div class="card-sub">${esc(subtitle(s))}</div>
       <div class="card-q">${s.country && s.country !== 'TR' ? `<span class="cc-badge" title="${esc(countryName(s.country))}">${esc(s.country)}</span>` : ''}${esc(quality(s))}${own ? '<span class="own-badge">EKLEDİĞİN</span>' : ''}</div>
     </div>

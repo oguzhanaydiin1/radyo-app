@@ -33,7 +33,7 @@ const LANG = (() => {
     'Destek': 'Support', 'Ayarlar': 'Settings', 'FAVORİ İSTASYONLAR': 'FAVOURITE STATIONS', 'Ana menü': 'Main menu',
     'Bir istasyonun kalbine bastığında burada görünür.': 'Tap the heart on a station and it shows up here.',
     'İstasyon ara': 'Search stations', 'İstasyon ara   (Ctrl+F)': 'Search stations   (Ctrl+F)', 'Aramayı temizle': 'Clear search',
-    'Keşfet': 'Discover', 'Kategoriler': 'Categories', 'Tümü': 'All', 'Pop': 'Pop', 'Haber': 'News', 'Türkü': 'Turkish folk',
+    'Keşfet': 'Discover', 'Kategoriler': 'Categories', 'Tümü': 'All', 'En çok dinlenen 20': 'Top 20', 'Pop': 'Pop', 'Haber': 'News', 'Türkü': 'Turkish folk',
     'Arabesk': 'Arabesque', 'Türk Sanat': 'Turkish classical', 'Rock': 'Rock', 'Caz': 'Jazz', 'Klasik': 'Classical', 'Dini': 'Religious',
     'Spor': 'Sports', 'Eklediklerim': 'Added by me', 'Yükleniyor': 'Loading', 'Aranıyor': 'Searching', 'Bağlanıyor': 'Connecting',
     'Tamam': 'OK', 'Vazgeç': 'Cancel', 'Kaydet': 'Save', 'Kapat': 'Close', 'Sil': 'Delete', 'Düzenle': 'Edit', 'Aç': 'Open',

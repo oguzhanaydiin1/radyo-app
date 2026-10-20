@@ -1,7 +1,7 @@
 {
   "name": "radyo",
   "productName": "OA Radyo",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "OA Radyo — canlı radyo dinleme uygulaması",
   "main": "boot.js",
   "private": true,

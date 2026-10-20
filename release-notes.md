@@ -1,2 +1,1 @@
-• Canlı sohbet: aynı radyoyu dinleyenlerle sohbet et (alt çubuktaki konuşma balonu)
-• İsimsiz kullanım istatistiği: yalnızca izin verirsen; Ayarlar → Gizlilik ve sohbet’ten kapatılabilir
+• Yeni kategori: “En çok dinlenen 20” — Türkiye’nin en çok dinlenen 20 radyosu, sıra numarasıyla (Keşfet’te “Tümü”nün yanında)
