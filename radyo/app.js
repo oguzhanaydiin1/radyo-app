@@ -28,7 +28,7 @@ const CATEGORIES = [
    Kimlik bulunamazsa adla eşleştirilir. */
 const TOP20 = [
   ['948408f4-0060-44fa-a26c-bf313f6c774d', 'Kral FM'],
-  ['f9fe2c7e-6f2f-4780-a682-8317604fe0ce', 'Kral Pop'],
+  ['1e090517-d381-49f4-bb54-9b18ea649b41', 'Kral Pop', 'Kral Pop'], // Radio Browser'daki diğer "KRAL POP" kaydı Kral FM yayınını çalıyor
   ['0a2c3506-a136-40f2-b008-38daf2b12fd6', 'TRT FM'],
   ['43061315-2893-46fa-ae1e-96e767d5bce3', 'Power Türk'],
   ['97f3bb39-24a0-461d-b282-b0ccae5a12c4', 'Slow Türk'],
@@ -53,13 +53,13 @@ function topList(all) {
   const byId = new Map(all.map((s) => [s.id, s]));
   const used = new Set();
   const out = [];
-  for (const [id, name] of TOP20) {
+  for (const [id, name, show] of TOP20) {
     let s = byId.get(id);
     if (!s) {
       const n = norm(name).replace(/\s+/g, '');
       s = all.find((x) => !used.has(x.id) && norm(x.name).replace(/\s+/g, '') === n);
     }
-    if (s && !used.has(s.id)) { used.add(s.id); out.push(s); }
+    if (s && !used.has(s.id)) { if (show) s.name = show; used.add(s.id); out.push(s); }
   }
   TOP_RANK = new Map(out.map((s, i) => [s.id, i + 1]));
   return out;
