@@ -9,101 +9,438 @@
   <link rel="icon" href="../radyo/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../site.css">
   <style>
-    .info { margin: 0 0 22px; padding: 0; list-style: none; color: var(--text-2); font-size: 15px; }
-    .info li { padding: 4px 0; }
-    .info b { color: var(--text); font-weight: 600; }
-    .danger-zone { margin-top: 20px; }
-    .danger-zone summary { cursor: pointer; color: var(--muted); font-size: 15px; }
+    body { font-size: 16px; line-height: 1.55; }
+    .crumbs { font-size: 14px; color: var(--faint); margin: 28px 0 24px; }
+    .crumbs a { color: var(--muted); text-decoration: none; }
+    .crumbs a:hover { color: var(--text); }
+    .acc { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; padding-bottom: 72px; }
+    .side { flex: 1 1 260px; max-width: 300px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); padding: 10px; }
+    .side .acct-who { padding: 14px 12px 16px; margin-bottom: 8px; }
+    .side .grp { margin: 8px 12px 6px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+    .side .mi { color: var(--text-2); }
+    .side .mi[aria-current="page"] { color: var(--text); }
+    .content { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+    .stack-v { display: flex; flex-direction: column; gap: 20px; padding: 0; }
+    .box { border-radius: 20px; background: var(--surface); border: 1px solid var(--border); padding: 28px; }
+    .box h2 { margin: 0 0 4px; font: 700 22px/1.3 var(--display); }
+    .box .lead { margin: 0 0 22px; color: var(--muted); font-size: 15px; }
+    .hello { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+    .hello h1 { margin: 0 0 4px; font: 800 34px/1.1 var(--display); letter-spacing: -0.02em; }
+    .hello p { margin: 0; color: var(--text-2); font-size: 15px; }
+    .hello > div { flex: 1 1 260px; min-width: 0; }
+    .ok-tag { color: var(--green); font-weight: 600; }
+    .tiles3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .tile3 { display: block; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); padding: 20px; color: var(--text); text-decoration: none; }
+    .tile3:hover { border-color: var(--border-2); color: var(--text); }
+    .tile3 span { display: block; font-size: 14px; color: var(--muted); }
+    .tile3 b { display: block; font: 800 28px/1.2 var(--display); margin: 4px 0 2px; }
+    .tile3 b.on { color: var(--green); }
+    .tile3 em { display: block; font-style: normal; font-size: 14px; color: var(--text-2); }
+    .form2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+    .form2 .wide { grid-column: 1 / -1; }
+    .field .row2 { display: flex; gap: 10px; flex-wrap: wrap; }
+    .field .row2 input { flex: 1 1 240px; min-width: 0; }
+    .field input[readonly] { background: var(--bg-2); color: var(--text-2); border-color: var(--border); }
+    .btn.sm { height: 42px; padding: 0 16px; font-size: 14px; border-radius: 21px; cursor: pointer; font-family: inherit; }
+    .btn.field-btn { height: 52px; border-radius: 14px; cursor: pointer; font-family: inherit; }
+    .save-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+    .save-row .btn { width: auto; margin: 0; cursor: pointer; font-family: inherit; }
+    .save-row .form-msg { margin: 0; }
+    .applist > div { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
+    .applist .ic { width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; font: 800 20px/1 var(--display); flex: none; }
+    .applist .nm { flex: 1 1 220px; min-width: 0; }
+    .applist .nm b { display: block; font-weight: 600; }
+    .applist .nm span { display: block; font-size: 14px; color: var(--muted); }
+    .btn.sm[aria-pressed="true"] { color: var(--green); }
+    .switch { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); }
+    .switch:first-of-type { border-top: none; padding-top: 0; }
+    .switch > div { flex: 1; min-width: 0; }
+    .switch b { display: block; font-weight: 600; }
+    .switch span { display: block; font-size: 14px; color: var(--muted); }
+    .tog { position: relative; width: 52px; height: 30px; flex: none; border-radius: 15px; border: 1px solid var(--border-2); background: var(--bg); cursor: pointer; padding: 0; }
+    .tog::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--muted); transition: transform .15s, background .15s; }
+    .tog[aria-checked="true"] { background: var(--amber); border-color: var(--amber); }
+    .tog[aria-checked="true"]::after { transform: translateX(22px); background: var(--amber-ink); }
+    .sess > div { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
+    .sess .dev { width: 44px; height: 44px; border-radius: 12px; background: var(--surface-2); display: grid; place-items: center; color: var(--text-2); flex: none; }
+    .sess .dev svg { width: 22px; height: 22px; }
+    .sess .nm { flex: 1 1 220px; min-width: 0; }
+    .sess .nm b { display: block; font-weight: 600; }
+    .sess .nm span { display: block; font-size: 14px; color: var(--muted); }
+    .sess .here { font-size: 13px; font-weight: 600; color: var(--green); }
     .btn.danger { color: #F08A7E; border-color: #5A2E26; }
-    .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-    .actions .btn { margin-top: 0; }
+    .help a { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); color: var(--text); text-decoration: none; }
+    .help a:first-child { border-top: none; }
+    .help a span { flex: 1; }
+    .help a small { display: block; color: var(--muted); font-size: 14px; }
+    .quiet-line { margin: 4px 0 0; font-size: 14px; color: var(--faint); }
+    .quiet-line a { color: #F08A7E; }
+    @media (max-width: 760px) {
+      .side { display: none; } /* telefonda menü sağ üstteki Hesabım düğmesinde */
+      .tiles3 { grid-template-columns: minmax(0, 1fr); }
+      .form2 { grid-template-columns: minmax(0, 1fr); }
+      .box { padding: 22px 18px; }
+      .hello h1 { font-size: 28px; }
+      .crumbs { margin: 20px 0 16px; }
+    }
   </style>
 </head>
 <body>
   <header class="site-head">
     <nav class="wrap nav" aria-label="Site">
       <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+      <div class="nav-links">
+        <a href="/#uygulamalar">Uygulamalar</a>
+        <a href="/dinle/">Web’de dinle</a>
+        <a href="/#iletisim">İletişim</a>
+      </div>
+      <div class="acct" data-account-slot></div>
     </nav>
   </header>
-  <main class="wrap">
-    <div class="auth" id="loading"><p class="sub">Yükleniyor…</p></div>
 
-    <div class="auth" id="account" hidden>
-      <h1 id="hello">Hesabım</h1>
-      <p class="sub" id="welcome"></p>
-      <div class="auth-card">
-        <ul class="info">
-          <li>E-posta: <b id="u-email"></b></li>
-          <li>Üyelik tarihi: <b id="u-date"></b></li>
-        </ul>
-        <form id="profile" novalidate>
-          <div class="field">
-            <label for="name">Ad soyad</label>
-            <input id="name" name="name" autocomplete="name" maxlength="80" required>
-          </div>
-          <label class="check"><input type="checkbox" name="announce" id="announce"><span>Yeni uygulamalar ve önemli güncellemeler için e-posta almak istiyorum.</span></label>
-          <button class="btn primary" type="submit" id="save">Kaydet</button>
-          <p class="form-msg" id="msg" role="status" aria-live="polite"></p>
-        </form>
-        <div class="actions">
-          <button class="btn" type="button" id="logout">Çıkış yap</button>
+  <main class="wrap">
+    <p class="sub" id="loading" style="margin: 56px 0">Yükleniyor…</p>
+
+    <div id="page" hidden>
+      <nav class="crumbs" aria-label="Konum"><a href="/">Ana sayfa</a> › <a href="#profil">Hesabım</a> › <span id="crumb" style="color: var(--text)">Profilim</span></nav>
+      <div class="acc">
+        <aside class="side" aria-label="Hesabım menüsü">
+          <div class="acct-who"><span class="ava on lg" aria-hidden="true" id="s-ava"></span><div><b id="s-name"></b><span id="s-since"></span></div></div>
+          <p class="grp">Hesabım</p>
+          <div id="side-links"></div>
+        </aside>
+
+        <div class="content">
+          <!-- Profilim -->
+          <section data-view="profil" class="stack-v">
+            <div class="box hello">
+              <span class="ava on xl" aria-hidden="true" data-ava></span>
+              <div>
+                <h1 id="hello">Merhaba</h1>
+                <p><span data-email></span> · <span class="ok-tag">Doğrulandı</span> · <span data-since></span></p>
+              </div>
+              <a class="btn small" href="#bilgiler">Bilgilerimi düzenle</a>
+            </div>
+            <div class="tiles3">
+              <a class="tile3" href="#uygulamalar"><span>Uygulamalarım</span><b>1</b><em>OA Radyo</em></a>
+              <a class="tile3" href="#bildirimler"><span>Duyuru e-postaları</span><b id="t-ann">—</b><em>Ayda en fazla birkaç e-posta</em></a>
+              <a class="tile3" href="#guvenlik"><span>Açık oturumlar</span><b id="t-sess">—</b><em id="t-sess-sub">Giriş yaptığın cihazlar</em></a>
+            </div>
+            <div class="box" data-info-form="p"></div>
+            <div class="box"><h2>Uygulamalarım</h2><div class="applist" data-apps style="margin-top: 14px"></div></div>
+            <p class="quiet-line">Hesabını kapatmak mı istiyorsun? <a href="#bilgiler" data-goto-delete>Hesabımı sil</a></p>
+          </section>
+
+          <!-- Kullanıcı bilgilerim -->
+          <section data-view="bilgiler" class="stack-v" hidden>
+            <div class="box" data-info-form="b"></div>
+            <div class="box" id="delete-box">
+              <h2>Hesabımı sil</h2>
+              <p class="lead">Hesabın, bilgilerin ve bütün oturumların kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
+              <button class="btn danger" type="button" id="delete" style="cursor: pointer; font-family: inherit">Hesabımı kalıcı olarak sil</button>
+              <p class="form-msg" id="del-msg" role="status" aria-live="polite"></p>
+            </div>
+          </section>
+
+          <!-- Uygulamalarım -->
+          <section data-view="uygulamalar" class="box" hidden>
+            <h2>Uygulamalarım</h2>
+            <p class="lead">OA Labs uygulamaları. Henüz çıkmamış olanlar için “Çıkınca haber ver” diyebilirsin.</p>
+            <div class="applist" data-apps></div>
+          </section>
+
+          <!-- Bildirim tercihleri -->
+          <section data-view="bildirimler" class="box" hidden>
+            <h2>Bildirim tercihleri</h2>
+            <p class="lead">Sana yalnızca istediğin konularda e-posta göndeririz.</p>
+            <div class="switch">
+              <div><b id="ann-l">Duyurular</b><span>Yeni uygulamalar ve önemli güncellemeler. Ayda en fazla birkaç e-posta.</span></div>
+              <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="ann-l" id="tog-ann"></button>
+            </div>
+            <div class="switch">
+              <div><b id="sc-l">OA Score çıkınca haber ver</b><span>Uygulama yayına girdiğinde tek bir e-posta.</span></div>
+              <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="sc-l" data-notify="score"></button>
+            </div>
+            <div class="switch">
+              <div><b id="bk-l">OA Barkod çıkınca haber ver</b><span>Uygulama yayına girdiğinde tek bir e-posta.</span></div>
+              <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="bk-l" data-notify="barkod"></button>
+            </div>
+            <div class="switch">
+              <div><b>Güvenlik e-postaları</b><span>Giriş kodları ve hesabınla ilgili önemli bildirimler. Kapatılamaz.</span></div>
+              <button class="tog" type="button" role="switch" aria-checked="true" disabled aria-label="Güvenlik e-postaları her zaman açık" style="opacity: .5; cursor: not-allowed"></button>
+            </div>
+            <p class="form-msg" id="n-msg" role="status" aria-live="polite"></p>
+          </section>
+
+          <!-- Güvenlik ve oturumlar -->
+          <section data-view="guvenlik" class="box" hidden>
+            <h2>Güvenlik ve oturumlar</h2>
+            <p class="lead">Hesabına giriş yapılmış cihazlar. Tanımadığın bir cihaz görürsen oturumu kapat. Şifre olmadığı için yeniden giriş ancak e-postana gelen kodla yapılabilir.</p>
+            <div class="sess" id="sess"></div>
+            <div class="save-row" style="margin-top: 16px">
+              <button class="btn small" type="button" id="sess-others" style="cursor: pointer; font-family: inherit">Bu cihaz dışındaki tüm oturumları kapat</button>
+              <p class="form-msg" id="s-msg" role="status" aria-live="polite"></p>
+            </div>
+          </section>
+
+          <!-- Yardım ve destek -->
+          <section data-view="yardim" class="box help" hidden>
+            <h2 style="margin-bottom: 16px">Yardım ve destek</h2>
+            <div>
+              <a href="mailto:destek@oalabs.dev"><span>Bize yaz<small>destek@oalabs.dev · Genelde bir gün içinde cevap veririz.</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+              <a href="/radyo/#sss"><span>OA Radyo sık sorulan sorular<small>Kurulum, güncelleme ve kayıtlarla ilgili cevaplar.</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+              <a href="/gizlilik/#uyelik"><span>Gizlilik ve üyelik aydınlatma metni<small>Hangi bilgilerini neden tuttuğumuz.</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+            </div>
+          </section>
         </div>
-        <details class="danger-zone">
-          <summary>Hesabımı sil</summary>
-          <p style="color: var(--text-2); font-size: 15px">Hesabın ve bütün bilgilerin kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
-          <button class="btn danger" type="button" id="delete">Hesabımı kalıcı olarak sil</button>
-        </details>
       </div>
     </div>
   </main>
+
   <footer class="site-foot">
     <div class="wrap foot">
       <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
       <div class="foot-links"><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a><a class="quiet" href="/gizlilik/#uyelik">Gizlilik politikası</a></div>
     </div>
   </footer>
+
   <script src="../hesap.js"></script>
   <script>
     (function () {
-      var $ = function (s) { return document.querySelector(s); };
-      function show(text, cls) { $('#msg').textContent = text; $('#msg').className = 'form-msg ' + (cls || ''); }
-      function render(u) {
-        $('#hello').textContent = 'Merhaba, ' + (u.name.split(' ')[0] || '') ;
-        $('#u-email').textContent = u.email;
-        $('#u-date').textContent = new Date(u.created).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
-        $('#name').value = u.name;
-        $('#announce').checked = !!u.announce;
+      var $ = function (s, r) { return (r || document).querySelector(s); };
+      var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+      var esc = OA.esc;
+      var user = null;
+      var radyoVer = '';
+      var APPS = [
+        { id: 'radyo', name: 'OA Radyo', live: true },
+        { id: 'score', name: 'OA Score', letter: 'S', bg: '#5BC48C', ink: '#0F2A1C' },
+        { id: 'barkod', name: 'OA Barkod', letter: 'B', bg: '#6EA8FE', ink: '#0E1A30' },
+      ];
+      var month = function (d) { return new Date(d).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' }); };
+      var when = function (d) {
+        var m = Math.round((Date.now() - Date.parse(d)) / 60000);
+        if (m < 15) return 'şu an etkin';
+        if (m < 60) return m + ' dakika önce';
+        if (m < 1440) return Math.round(m / 60) + ' saat önce';
+        return new Date(d).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+      };
+      function splitName(n) {
+        var p = String(n || '').trim().split(/\s+/);
+        return p.length > 1 ? [p.slice(0, -1).join(' '), p[p.length - 1]] : [p[0] || '', ''];
       }
-      OA.me().then(function (r) {
-        if (!r || !r.ok) { location.replace('/uye/?giris'); return; }
-        $('#loading').hidden = true; $('#account').hidden = false;
-        if (/hosgeldin/.test(location.search)) $('#welcome').textContent = 'OA Labs’e hoş geldin! Üyeliğin açıldı.';
-        render(r.user);
+      function say(el, text, cls) { el.textContent = text || ''; el.className = 'form-msg ' + (cls || ''); }
+
+      // ---- Görünümler (adres çubuğundaki #bölüm) ----
+      var TITLES = {};
+      OA.sections.forEach(function (s) { TITLES[s.id] = s.label; });
+      function show() {
+        var id = (location.hash || '#profil').slice(1);
+        if (!TITLES[id]) id = 'profil';
+        $$('[data-view]').forEach(function (v) { v.hidden = v.getAttribute('data-view') !== id; });
+        $$('#side-links .mi').forEach(function (a) { if (a.dataset.sec === id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+        $('#crumb').textContent = TITLES[id];
+        document.title = TITLES[id] + ' — Hesabım — OA Labs';
+        if (id === 'guvenlik') loadSessions();
+      }
+      window.addEventListener('hashchange', function () { show(); window.scrollTo(0, 0); });
+
+      function sideMenu() {
+        $('#side-links').innerHTML = OA.sections.map(function (s) {
+          return '<a class="mi" href="#' + s.id + '" data-sec="' + s.id + '">' + OA.icons[s.icon] + '<span>' + s.label + '</span></a>';
+        }).join('') + '<div class="mi-sep"><button class="mi out" type="button" id="side-out">' + OA.icons.out + '<span>Çıkış yap</span></button></div>';
+        $('#side-out').addEventListener('click', OA.logout);
+      }
+
+      // ---- Üye bilgilerini sayfaya yaz ----
+      function paint() {
+        var ini = OA.initials(user.name);
+        $('#s-ava').textContent = ini;
+        $$('[data-ava]').forEach(function (e) { e.textContent = ini; });
+        $('#s-name').textContent = user.name;
+        $('#s-since').textContent = month(user.created) + '’dan beri üye';
+        $('#hello').textContent = 'Merhaba, ' + OA.firstName(user.name);
+        $$('[data-email]').forEach(function (e) { e.textContent = user.email; });
+        $$('[data-since]').forEach(function (e) { e.textContent = month(user.created) + '’dan beri üye'; });
+        $('#t-ann').textContent = user.announce ? 'Açık' : 'Kapalı';
+        $('#t-ann').className = user.announce ? 'on' : '';
+        $('#t-sess').textContent = user.sessions || 1;
+        $('#t-sess-sub').textContent = (user.sessions || 1) > 1 ? 'Bu cihaz ve ' + ((user.sessions || 1) - 1) + ' cihaz daha' : 'Yalnızca bu cihaz';
+        $('#tog-ann').setAttribute('aria-checked', String(!!user.announce));
+        $$('[data-notify]').forEach(function (b) { b.setAttribute('aria-checked', String((user.notify || []).indexOf(b.dataset.notify) >= 0)); });
+        $$('[data-info-form]').forEach(fillForm);
+        $$('[data-apps]').forEach(renderApps);
+      }
+
+      // ---- Kullanıcı bilgilerim formu (Profilim ve Kullanıcı bilgilerim'de aynı) ----
+      function buildForm(box) {
+        var k = box.getAttribute('data-info-form');
+        box.innerHTML =
+          '<h2>Kullanıcı bilgilerim</h2><p class="lead">Bu bilgiler yalnızca hesabın için kullanılır, kimseyle paylaşılmaz.</p>' +
+          '<form class="form2" novalidate>' +
+            '<div class="field"><label for="ad-' + k + '">Ad</label><input id="ad-' + k + '" name="ad" autocomplete="given-name" maxlength="60" required></div>' +
+            '<div class="field"><label for="soyad-' + k + '">Soyad</label><input id="soyad-' + k + '" name="soyad" autocomplete="family-name" maxlength="40"></div>' +
+            '<div class="field wide"><label for="ep-' + k + '">E-posta</label><div class="row2"><input id="ep-' + k + '" name="eposta" readonly><button class="btn field-btn" type="button" data-change>Değiştir</button></div>' +
+              '<span class="hint">Değiştirirsen yeni adresine bir doğrulama kodu göndeririz.</span></div>' +
+            '<div class="wide" data-change-box hidden style="margin: 0 0 16px; padding: 18px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg-2)">' +
+              '<div data-step1><div class="field" style="margin-bottom: 10px"><label for="ne-' + k + '">Yeni e-posta adresi</label><input id="ne-' + k + '" type="email" autocomplete="email" inputmode="email"></div>' +
+                '<div class="save-row"><button class="btn primary sm" type="button" data-send>Kod gönder</button><button class="btn sm" type="button" data-cancel>Vazgeç</button></div></div>' +
+              '<div data-step2 hidden><p style="margin: 0 0 10px; color: var(--text-2); font-size: 15px"><b data-new style="color: var(--text)"></b> adresine 6 haneli bir kod gönderdik.</p>' +
+                '<div class="field" style="margin-bottom: 10px"><label for="nc-' + k + '">Kod</label><input id="nc-' + k + '" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></div>' +
+                '<div class="save-row"><button class="btn primary sm" type="button" data-confirm>Onayla</button><button class="btn sm" type="button" data-cancel>Vazgeç</button></div></div>' +
+              '<p class="form-msg" data-cmsg role="status" aria-live="polite"></p>' +
+            '</div>' +
+            '<div class="save-row wide"><button class="btn primary" type="submit">Kaydet</button><p class="form-msg" data-msg role="status" aria-live="polite"></p></div>' +
+          '</form>';
+        var f = $('form', box), cb = $('[data-change-box]', box), cm = $('[data-cmsg]', box), newMail = '';
+        f.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var name = (f.ad.value.trim() + ' ' + f.soyad.value.trim()).trim();
+          var m = $('[data-msg]', box);
+          if (f.ad.value.trim().length < 2) { say(m, 'Adını yaz.', 'err'); f.ad.focus(); return; }
+          say(m, 'Kaydediliyor…');
+          OA.call('/v1/me', { name: name }).then(function (r) {
+            if (!r.ok) { say(m, OA.msg(r.error), 'err'); return; }
+            user = r.user; paint(); refreshHeader();
+            say($('[data-msg]', box), 'Değişiklikler kaydedildi.', 'ok');
+          });
+        });
+        function reset() { cb.hidden = true; $('[data-step1]', box).hidden = false; $('[data-step2]', box).hidden = true; say(cm, ''); }
+        $('[data-change]', box).addEventListener('click', function () { cb.hidden = false; $('#ne-' + k).value = ''; $('#ne-' + k).focus(); });
+        $$('[data-cancel]', box).forEach(function (b) { b.addEventListener('click', reset); });
+        $('[data-send]', box).addEventListener('click', function () {
+          newMail = $('#ne-' + k).value.trim();
+          say(cm, 'Gönderiliyor…');
+          OA.call('/v1/me/email/start', { email: newMail }).then(function (r) {
+            if (!r.ok) { say(cm, OA.msg(r.error), 'err'); return; }
+            say(cm, '');
+            $('[data-step1]', box).hidden = true; $('[data-step2]', box).hidden = false;
+            $('[data-new]', box).textContent = newMail; $('#nc-' + k).value = ''; $('#nc-' + k).focus();
+          });
+        });
+        $('[data-confirm]', box).addEventListener('click', function () {
+          say(cm, 'Kontrol ediliyor…');
+          OA.call('/v1/me/email/verify', { email: newMail, code: $('#nc-' + k).value }).then(function (r) {
+            if (!r.ok) { say(cm, OA.msg(r.error), 'err'); return; }
+            user.email = r.email; paint(); refreshHeader(); reset();
+            say($('[data-msg]', box), 'E-posta adresin değiştirildi.', 'ok');
+          });
+        });
+      }
+      function fillForm(box) {
+        var f = $('form', box), n = splitName(user.name);
+        if (document.activeElement && box.contains(document.activeElement)) return;
+        f.ad.value = n[0]; f.soyad.value = n[1]; f.eposta.value = user.email;
+      }
+
+      // ---- Uygulamalarım ----
+      function renderApps(box) {
+        box.innerHTML = APPS.map(function (a) {
+          var on = (user.notify || []).indexOf(a.id) >= 0;
+          var ic = a.live
+            ? '<img class="ic" src="/radyo/img/icon.png" alt="" width="48" height="48">'
+            : '<span class="ic" aria-hidden="true" style="background:' + a.bg + ';color:' + a.ink + '">' + a.letter + '</span>';
+          var sub = a.live ? 'Windows' + (radyoVer ? ' · Son sürüm ' + esc(radyoVer) : '') : (on ? 'Yakında · Çıkınca sana haber vereceğiz' : 'Yakında');
+          var act = a.live
+            ? '<a class="btn sm" href="/dinle/">Web’de dinle</a><a class="btn primary sm" href="/radyo/">İndir</a>'
+            : '<button class="btn sm" type="button" aria-pressed="' + on + '" data-app-notify="' + a.id + '">' + (on ? '✓ Haber verilecek' : 'Çıkınca haber ver') + '</button>';
+          return '<div>' + ic + '<div class="nm"><b>' + a.name + '</b><span>' + sub + '</span></div>' + act + '</div>';
+        }).join('');
+      }
+      document.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-app-notify]');
+        if (!b) return;
+        var app = b.dataset.appNotify, on = b.getAttribute('aria-pressed') !== 'true', n = {};
+        n[app] = on;
+        b.disabled = true;
+        OA.call('/v1/me', { notify: n }).then(function (r) { if (r.ok) { user = r.user; paint(); } else b.disabled = false; });
       });
-      $('#profile').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name = $('#name').value.trim();
-        if (name.length < 2) { show(OA.msg('ad'), 'err'); return; }
-        $('#save').disabled = true;
-        OA.call('/v1/me', { name: name, announce: $('#announce').checked }).then(function (r) {
-          $('#save').disabled = false;
-          if (r.ok) { render(r.user); show('Kaydedildi.', 'ok'); } else show(OA.msg(r.error), 'err');
+
+      // ---- Bildirim tercihleri ----
+      $('#tog-ann').addEventListener('click', function () {
+        var on = this.getAttribute('aria-checked') !== 'true';
+        this.setAttribute('aria-checked', String(on));
+        OA.call('/v1/me', { announce: on }).then(function (r) {
+          if (r.ok) { user = r.user; paint(); say($('#n-msg'), on ? 'Duyurular açıldı.' : 'Duyurular kapatıldı.', 'ok'); } else say($('#n-msg'), OA.msg(r.error), 'err');
         });
       });
-      $('#logout').addEventListener('click', function () {
-        OA.call('/v1/auth/logout', {}).then(function () { location.href = '/'; });
+      $$('[data-notify]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var on = b.getAttribute('aria-checked') !== 'true', n = {};
+          b.setAttribute('aria-checked', String(on));
+          n[b.dataset.notify] = on;
+          OA.call('/v1/me', { notify: n }).then(function (r) {
+            if (r.ok) { user = r.user; paint(); say($('#n-msg'), 'Tercihin kaydedildi.', 'ok'); } else say($('#n-msg'), OA.msg(r.error), 'err');
+          });
+        });
       });
+
+      // ---- Güvenlik ve oturumlar ----
+      var ICON_PC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>';
+      var ICON_PH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg>';
+      function renderSessions(list) {
+        $('#sess').innerHTML = list.map(function (s) {
+          var phone = /iPhone|Android/.test(s.device);
+          return '<div><span class="dev">' + (phone ? ICON_PH : ICON_PC) + '</span><div class="nm"><b>' + esc(s.device) + '</b><span>' +
+            (s.current ? 'Bu cihaz · ' : '') + 'Son etkinlik: ' + esc(when(s.lastSeen)) + ' · Giriş: ' + esc(new Date(s.created).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })) + '</span></div>' +
+            (s.current ? '<span class="here">Bu cihaz</span>' : '<button class="btn sm danger" type="button" data-revoke="' + esc(s.id) + '">Oturumu kapat</button>') + '</div>';
+        }).join('');
+        $('#sess-others').hidden = list.length < 2;
+        user.sessions = list.length; paint();
+      }
+      function loadSessions() {
+        OA.call('/v1/me/sessions').then(function (r) { if (r.ok) renderSessions(r.sessions); else say($('#s-msg'), OA.msg(r.error), 'err'); });
+      }
+      $('#sess').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-revoke]');
+        if (!b) return;
+        b.disabled = true;
+        OA.call('/v1/me/sessions', { id: b.dataset.revoke }).then(function (r) { if (r.ok) { renderSessions(r.sessions); say($('#s-msg'), 'Oturum kapatıldı.', 'ok'); } });
+      });
+      $('#sess-others').addEventListener('click', function () {
+        OA.call('/v1/me/sessions', { others: true }).then(function (r) { if (r.ok) { renderSessions(r.sessions); say($('#s-msg'), 'Diğer bütün oturumlar kapatıldı.', 'ok'); } });
+      });
+
+      // ---- Hesabı sil ----
+      $('[data-goto-delete]').addEventListener('click', function () { setTimeout(function () { $('#delete-box').scrollIntoView({ behavior: 'smooth' }); }, 50); });
       $('#delete').addEventListener('click', function () {
         var b = this;
         if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Emin misin? Silmek için tekrar bas'; return; }
         b.disabled = true;
         OA.call('/v1/me/delete', {}).then(function (r) {
-          if (r.ok) { location.href = '/?hesap=silindi'; } else { b.disabled = false; show(OA.msg(r.error), 'err'); }
+          if (r.ok) location.href = '/?hesap=silindi';
+          else { b.disabled = false; say($('#del-msg'), OA.msg(r.error), 'err'); }
         });
       });
+
+      // Sağ üstteki menüyü yeni ad/e-postayla yenile.
+      function refreshHeader() {
+        var slot = $('[data-account-slot]');
+        if (!slot) return;
+        var ava = $('.acct-btn .ava', slot), b = $('.acct-btn .lbl b', slot), who = $('.acct-who b', slot), mail = $('.acct-who span', slot), ava2 = $('.acct-who .ava', slot);
+        if (ava) ava.textContent = OA.initials(user.name);
+        if (ava2) ava2.textContent = OA.initials(user.name);
+        if (b) b.textContent = OA.firstName(user.name);
+        if (who) who.textContent = user.name;
+        if (mail) mail.textContent = user.email;
+      }
+
+      sideMenu();
+      $$('[data-info-form]').forEach(buildForm);
+      OA.me().then(function (r) {
+        if (!r || !r.ok) { location.replace('/uye/?giris'); return; }
+        user = r.user;
+        $('#loading').hidden = true; $('#page').hidden = false;
+        paint(); show();
+        if (/hosgeldin/.test(location.search)) $('#hello').textContent = 'Hoş geldin, ' + OA.firstName(user.name) + '!';
+      });
+      fetch('https://raw.githubusercontent.com/oguzhanaydiin1/radyo-app/main/updates/latest.json', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { if (j && j.version) { radyoVer = j.version; if (user) $$('[data-apps]').forEach(renderApps); } })
+        .catch(function () {});
     })();
   </script>
 </body>

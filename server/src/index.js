@@ -12,7 +12,7 @@
  * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
 
-import { start, verify, logout, me, deleteMe, adminUsers } from './auth.js';
+import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify } from './auth.js';
 
 const APPS = new Set(['radyo']);
 const ROOM_RE = /^[A-Za-z0-9_-]{3,80}$/;
@@ -160,6 +160,12 @@ export default {
       if (url.pathname === '/v1/auth/logout' && req.method === 'POST') return send(await logout(req, env, secure));
       if (url.pathname === '/v1/me' && (req.method === 'GET' || req.method === 'POST')) return send(await me(req, env, secure));
       if (url.pathname === '/v1/me/delete' && req.method === 'POST') return send(await deleteMe(req, env, secure));
+      if (url.pathname === '/v1/me/sessions' && (req.method === 'GET' || req.method === 'POST')) return send(await mySessions(req, env));
+      if (url.pathname === '/v1/me/email/start' && req.method === 'POST') {
+        const ip = await sha(`${env.PEPPER || 'oa'}:ip:${req.headers.get('CF-Connecting-IP') || ''}`);
+        return send(await emailStart(req, env, ip));
+      }
+      if (url.pathname === '/v1/me/email/verify' && req.method === 'POST') return send(await emailVerify(req, env));
       if (url.pathname === '/v1/admin/users') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
         return json(await adminUsers(req, url, env), 200, h);

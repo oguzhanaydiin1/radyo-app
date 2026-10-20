@@ -7,6 +7,10 @@
  *   GET  /v1/me             Giriş yapmış üyenin bilgileri
  *   POST /v1/me             { name?, announce? } bilgileri güncelle
  *   POST /v1/me/delete      Hesabı ve oturumları tamamen sil
+ *   GET  /v1/me/sessions    Açık oturumlar (cihaz, son görülme)
+ *   POST /v1/me/sessions    { id } o oturumu kapat | { others: true } bu cihaz dışındakileri kapat
+ *   POST /v1/me/email/start { email }        yeni adrese kod gönder
+ *   POST /v1/me/email/verify { email, code } yeni adresi onayla
  *   GET  /v1/admin/users    Üye sayıları ve listesi (yönetici)
  *   POST /v1/admin/users    { action: "remove", id } (yönetici)
  *
@@ -36,6 +40,16 @@ async function hash(env, text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${env.PEPPER || 'oa'}:auth:${text}`));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
+const NOTIFY_APPS = new Set(['score', 'barkod']);
+
+// Tarayıcı bilgisinden kısa bir cihaz adı: "Chrome · Windows"
+function deviceName(req) {
+  const ua = req.headers.get('User-Agent') || '';
+  const b = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
+  const o = /Windows/.test(ua) ? 'Windows' : /iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Mac OS X/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'Bilinmeyen cihaz';
+  return `${b} · ${o}`;
+}
+
 const cleanName = (v) => (typeof v === 'string' ? v.replace(/[\u0000-\u001f\u007f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80) : '');
 
 function cookie(value, maxAge, secure) {
@@ -49,10 +63,12 @@ function readCookie(req) {
 }
 
 function codeMail(code, mode) {
-  const title = mode === 'register' ? 'OA Labs üyeliğini tamamla' : 'OA Labs giriş kodun';
+  const title = mode === 'register' ? 'OA Labs üyeliğini tamamla' : mode === 'change' ? 'OA Labs e-posta değişikliği' : 'OA Labs giriş kodun';
   const lead = mode === 'register'
     ? 'OA Labs’e üye olmak için bu kodu sayfaya yaz:'
-    : 'OA Labs hesabına girmek için bu kodu sayfaya yaz:';
+    : mode === 'change'
+      ? 'OA Labs hesabının e-posta adresini bu adresle değiştirmek için bu kodu sayfaya yaz:'
+      : 'OA Labs hesabına girmek için bu kodu sayfaya yaz:';
   const html = `<!doctype html><html lang="tr"><body style="margin:0;background:#0D0F16;padding:32px 16px;font-family:Segoe UI,Arial,sans-serif;color:#EEEAE2">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
 <table role="presentation" width="100%" style="max-width:480px;background:#151824;border:1px solid #262B3D;border-radius:16px" cellpadding="0" cellspacing="0"><tr><td style="padding:32px">
@@ -145,6 +161,7 @@ export async function verify(req, env, secure) {
   if (!user) {
     if (!row.pending) return fail('uye-yok', 404);
     const p = JSON.parse(row.pending);
+    if (!p.name) return fail('sure'); // e-posta değiştirme kodu girişte kullanılamaz
     user = { id: rand(10) };
     stmts.push(env.DB.prepare(
       'INSERT INTO users (id, email, name, created, last_login, announce, consent) VALUES (?1, ?2, ?3, ?4, ?4, ?5, ?6)',
@@ -153,49 +170,171 @@ export async function verify(req, env, secure) {
     stmts.push(env.DB.prepare('UPDATE users SET last_login = ?1 WHERE id = ?2').bind(now(), user.id));
   }
   const token = rand(32);
+  const th = await hash(env, `s:${token}`);
+  stmts.push(env.DB.prepare('DELETE FROM session_info WHERE token IN (SELECT token FROM sessions WHERE expires < ?1)').bind(now()));
   stmts.push(env.DB.prepare('DELETE FROM sessions WHERE expires < ?1').bind(now()));
   stmts.push(env.DB.prepare('INSERT INTO sessions (token, user_id, created, expires) VALUES (?1, ?2, ?3, ?4)')
-    .bind(await hash(env, `s:${token}`), user.id, now(), new Date(Date.now() + SESSION_DAYS * 86400e3).toISOString()));
+    .bind(th, user.id, now(), new Date(Date.now() + SESSION_DAYS * 86400e3).toISOString()));
+  stmts.push(env.DB.prepare('INSERT OR REPLACE INTO session_info (token, device, last_seen) VALUES (?1, ?2, ?3)').bind(th, deviceName(req), now()));
   await env.DB.batch(stmts);
-  return { status: 200, data: { ok: true, created: !!row.pending }, cookie: cookie(token, SESSION_DAYS * 86400, secure) };
+  return { status: 200, data: { ok: true, created: !!(row.pending && JSON.parse(row.pending).name) }, cookie: cookie(token, SESSION_DAYS * 86400, secure) };
 }
 
 async function sessionUser(req, env) {
   const t = readCookie(req);
   if (!t) return null;
   return env.DB.prepare(
-    'SELECT u.id, u.email, u.name, u.created, u.announce, s.token AS sid FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?1 AND s.expires > ?2',
+    'SELECT u.id, u.email, u.name, u.created, u.announce, s.token AS sid, i.last_seen FROM sessions s JOIN users u ON u.id = s.user_id LEFT JOIN session_info i ON i.token = s.token WHERE s.token = ?1 AND s.expires > ?2',
   ).bind(await hash(env, `s:${t}`), now()).first();
 }
 
 export async function logout(req, env, secure) {
   const t = readCookie(req);
-  if (t) await env.DB.prepare('DELETE FROM sessions WHERE token = ?1').bind(await hash(env, `s:${t}`)).run();
+  if (t) {
+    const th = await hash(env, `s:${t}`);
+    await env.DB.batch([
+      env.DB.prepare('DELETE FROM sessions WHERE token = ?1').bind(th),
+      env.DB.prepare('DELETE FROM session_info WHERE token = ?1').bind(th),
+    ]);
+  }
   return { status: 200, data: { ok: true }, cookie: cookie('', 0, secure) };
 }
 
 export async function me(req, env, secure) {
   const u = await sessionUser(req, env);
   if (!u) return fail('giris', 401);
+  const stmts = [];
+  if (!u.last_seen || Date.now() - Date.parse(u.last_seen) > 10 * 60e3) {
+    stmts.push(env.DB.prepare('INSERT INTO session_info (token, device, last_seen) VALUES (?1, ?2, ?3) ON CONFLICT (token) DO UPDATE SET last_seen = excluded.last_seen')
+      .bind(u.sid, deviceName(req), now()));
+  }
   if (req.method === 'POST') {
     let b;
     try { b = await req.json(); } catch { b = {}; }
     const name = b.name === undefined ? u.name : cleanName(b.name);
     if (name.length < 2) return fail('ad');
     const announce = b.announce === undefined ? u.announce : (b.announce ? 1 : 0);
-    await env.DB.prepare('UPDATE users SET name = ?1, announce = ?2 WHERE id = ?3').bind(name, announce, u.id).run();
+    stmts.push(env.DB.prepare('UPDATE users SET name = ?1, announce = ?2 WHERE id = ?3').bind(name, announce, u.id));
     Object.assign(u, { name, announce });
+    for (const [app, on] of Object.entries((b && b.notify) || {})) {
+      if (!NOTIFY_APPS.has(app)) continue;
+      stmts.push(on
+        ? env.DB.prepare('INSERT OR IGNORE INTO app_notify (user_id, app, created) VALUES (?1, ?2, ?3)').bind(u.id, app, now())
+        : env.DB.prepare('DELETE FROM app_notify WHERE user_id = ?1 AND app = ?2').bind(u.id, app));
+    }
   }
-  return { status: 200, data: { ok: true, user: { email: u.email, name: u.name, created: u.created, announce: !!u.announce } } };
+  if (stmts.length) await env.DB.batch(stmts);
+  const [notify, count] = await env.DB.batch([
+    env.DB.prepare('SELECT app FROM app_notify WHERE user_id = ?1').bind(u.id),
+    env.DB.prepare('SELECT COUNT(*) AS n FROM sessions WHERE user_id = ?1 AND expires > ?2').bind(u.id, now()),
+  ]);
+  return {
+    status: 200,
+    data: {
+      ok: true,
+      user: {
+        email: u.email, name: u.name, created: u.created, announce: !!u.announce,
+        notify: notify.results.map((r) => r.app), sessions: count.results[0].n,
+      },
+    },
+  };
+}
+
+export async function mySessions(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  if (req.method === 'POST') {
+    let b;
+    try { b = await req.json(); } catch { b = {}; }
+    const { results } = await env.DB.prepare('SELECT token FROM sessions WHERE user_id = ?1').bind(u.id).all();
+    const drop = results.map((r) => r.token).filter((t) => t !== u.sid && (b.others || (b.id && t.startsWith(String(b.id)) && String(b.id).length >= 12)));
+    if (drop.length) {
+      await env.DB.batch(drop.flatMap((t) => [
+        env.DB.prepare('DELETE FROM sessions WHERE token = ?1').bind(t),
+        env.DB.prepare('DELETE FROM session_info WHERE token = ?1').bind(t),
+      ]));
+    }
+  }
+  const { results } = await env.DB.prepare(
+    'SELECT s.token, s.created, i.device, i.last_seen FROM sessions s LEFT JOIN session_info i ON i.token = s.token WHERE s.user_id = ?1 AND s.expires > ?2 ORDER BY COALESCE(i.last_seen, s.created) DESC',
+  ).bind(u.id, now()).all();
+  return {
+    status: 200,
+    data: {
+      ok: true,
+      sessions: results.map((r) => ({ id: r.token.slice(0, 16), device: r.device || 'Bilinmeyen cihaz', created: r.created, lastSeen: r.last_seen || r.created, current: r.token === u.sid })),
+    },
+  };
+}
+
+export async function emailStart(req, env, ipHash) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  let b;
+  try { b = await req.json(); } catch { return fail('istek'); }
+  const email = String(b.email || '').trim().toLowerCase();
+  if (email.length > 200 || !EMAIL_RE.test(email)) return fail('eposta');
+  if (email === u.email) return fail('ayni');
+  const [taken, perIp, last] = await env.DB.batch([
+    env.DB.prepare('SELECT id FROM users WHERE email = ?1').bind(email),
+    env.DB.prepare('SELECT COUNT(*) AS n FROM login_codes WHERE ip = ?1 AND created > ?2').bind(ipHash, ago(3600e3)),
+    env.DB.prepare('SELECT created FROM login_codes WHERE email = ?1').bind(email),
+  ]);
+  if (taken.results[0]) return fail('uye-var', 409);
+  if (perIp.results[0].n >= 10) return fail('cok', 429);
+  if (last.results[0] && Date.now() - Date.parse(last.results[0].created) < 60e3) return fail('bekle', 429);
+  const code = code6();
+  await env.DB.prepare(
+    `INSERT INTO login_codes (email, code, expires, attempts, created, ip, pending) VALUES (?1, ?2, ?3, 0, ?4, ?5, ?6)
+     ON CONFLICT (email) DO UPDATE SET code = excluded.code, expires = excluded.expires, attempts = 0, created = excluded.created, ip = excluded.ip, pending = excluded.pending`,
+  ).bind(email, await hash(env, `${email}:${code}`), new Date(Date.now() + CODE_MIN * 60e3).toISOString(), now(), ipHash, JSON.stringify({ changeFor: u.id })).run();
+  const sent = await sendMail(env, email, codeMail(code, 'change'));
+  if (!sent.ok) {
+    await env.DB.prepare('DELETE FROM login_codes WHERE email = ?1').bind(email).run();
+    return { status: 502, data: { ok: false, error: 'gonderilemedi', resend: sent.status || 0, detail: sent.detail || '' } };
+  }
+  return { status: 200, data: { ok: true } };
+}
+
+export async function emailVerify(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  let b;
+  try { b = await req.json(); } catch { return fail('istek'); }
+  const email = String(b.email || '').trim().toLowerCase();
+  const code = String(b.code || '').replace(/\D/g, '');
+  if (!EMAIL_RE.test(email) || code.length !== 6) return fail('kod');
+  const row = await env.DB.prepare('SELECT * FROM login_codes WHERE email = ?1').bind(email).first();
+  let p = {};
+  try { p = JSON.parse((row && row.pending) || '{}'); } catch {}
+  if (!row || row.expires < now() || p.changeFor !== u.id) return fail('sure');
+  if (row.attempts >= 5) return fail('deneme', 429);
+  if ((await hash(env, `${email}:${code}`)) !== row.code) {
+    await env.DB.prepare('UPDATE login_codes SET attempts = attempts + 1 WHERE email = ?1').bind(email).run();
+    return fail('kod');
+  }
+  const taken = await env.DB.prepare('SELECT id FROM users WHERE email = ?1').bind(email).first();
+  if (taken) return fail('uye-var', 409);
+  await env.DB.batch([
+    env.DB.prepare('DELETE FROM login_codes WHERE email = ?1').bind(email),
+    env.DB.prepare('UPDATE users SET email = ?1 WHERE id = ?2').bind(email, u.id),
+  ]);
+  return { status: 200, data: { ok: true, email } };
+}
+
+async function removeUser(env, id) {
+  await env.DB.batch([
+    env.DB.prepare('DELETE FROM session_info WHERE token IN (SELECT token FROM sessions WHERE user_id = ?1)').bind(id),
+    env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(id),
+    env.DB.prepare('DELETE FROM app_notify WHERE user_id = ?1').bind(id),
+    env.DB.prepare('DELETE FROM users WHERE id = ?1').bind(id),
+  ]);
 }
 
 export async function deleteMe(req, env, secure) {
   const u = await sessionUser(req, env);
   if (!u) return fail('giris', 401);
-  await env.DB.batch([
-    env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(u.id),
-    env.DB.prepare('DELETE FROM users WHERE id = ?1').bind(u.id),
-  ]);
+  await removeUser(env, u.id);
   return { status: 200, data: { ok: true }, cookie: cookie('', 0, secure) };
 }
 
@@ -204,20 +343,18 @@ export async function adminUsers(req, url, env) {
     let b;
     try { b = await req.json(); } catch { b = {}; }
     if (b.action === 'remove' && b.id) {
-      await env.DB.batch([
-        env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(String(b.id)),
-        env.DB.prepare('DELETE FROM users WHERE id = ?1').bind(String(b.id)),
-      ]);
+      await removeUser(env, String(b.id));
       return { ok: true };
     }
     return { ok: false, error: 'işlem' };
   }
   const days = Math.min(400, Math.max(1, parseInt(url.searchParams.get('days'), 10) || 30));
   const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
-  const [counts, daily, rows] = await env.DB.batch([
+  const [counts, daily, rows, notify] = await env.DB.batch([
     env.DB.prepare('SELECT COUNT(*) AS total, SUM(announce) AS announce, SUM(last_login >= ?1) AS active FROM users').bind(ago(30 * 86400e3)),
     env.DB.prepare('SELECT substr(created, 1, 10) AS day, COUNT(*) AS n FROM users WHERE created >= ?1 GROUP BY day ORDER BY day').bind(from),
     env.DB.prepare('SELECT id, email, name, created, last_login, announce FROM users ORDER BY created DESC LIMIT 2000'),
+    env.DB.prepare('SELECT app, COUNT(*) AS n FROM app_notify GROUP BY app'),
   ]);
   const c = counts.results[0] || {};
   return {
@@ -226,5 +363,6 @@ export async function adminUsers(req, url, env) {
     counts: { total: c.total || 0, announce: c.announce || 0, active: c.active || 0 },
     daily: daily.results,
     rows: rows.results,
+    notify: Object.fromEntries(notify.results.map((r) => [r.app, r.n])),
   };
 }

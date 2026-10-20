@@ -48,3 +48,16 @@ CREATE TABLE IF NOT EXISTS sessions (
   expires TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS sessions_user ON sessions (user_id);
+-- Oturumların cihaz bilgisi (Güvenlik ve oturumlar sayfası için).
+CREATE TABLE IF NOT EXISTS session_info (
+  token TEXT PRIMARY KEY,
+  device TEXT,
+  last_seen TEXT
+);
+-- "Çıkınca haber ver": üyenin haber almak istediği uygulamalar.
+CREATE TABLE IF NOT EXISTS app_notify (
+  user_id TEXT NOT NULL,
+  app TEXT NOT NULL,
+  created TEXT NOT NULL,
+  PRIMARY KEY (user_id, app)
+);
