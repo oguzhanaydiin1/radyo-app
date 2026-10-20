@@ -68,14 +68,18 @@ function codeMail(code, mode) {
 }
 
 async function sendMail(env, to, m) {
-  if (env.MAIL_DEV === '1') { console.log(`[deneme e-postası] ${to}: ${m.subject}`); return true; } // yalnızca yerel deneme
+  if (env.MAIL_DEV === '1') { console.log(`[deneme e-postası] ${to}: ${m.subject}`); return { ok: true }; } // yalnızca yerel deneme
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${String(env.RESEND_API_KEY).trim()}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from: env.MAIL_FROM || 'OA Labs <hesap@oalabs.dev>', to: [to], reply_to: 'destek@oalabs.dev', subject: m.subject, html: m.html, text: m.text }),
   });
-  if (!res.ok) console.error('Resend', res.status, (await res.text()).slice(0, 300));
-  return res.ok;
+  if (res.ok) return { ok: true };
+  // Resend'in hata nedenini (anahtar içermez) teşhis için kısaca geri ver.
+  let detail = '';
+  try { const j = await res.json(); detail = String(j.message || j.name || '').slice(0, 160); } catch {}
+  console.error('Resend', res.status, detail);
+  return { ok: false, status: res.status, detail };
 }
 
 const fail = (error, status = 400) => ({ status, data: { ok: false, error } });
@@ -114,7 +118,11 @@ export async function start(req, env, ipHash) {
        ON CONFLICT (email) DO UPDATE SET code = excluded.code, expires = excluded.expires, attempts = 0, created = excluded.created, ip = excluded.ip, pending = excluded.pending`,
     ).bind(email, await hash(env, `${email}:${code}`), new Date(Date.now() + CODE_MIN * 60e3).toISOString(), now(), ipHash, pending),
   ]);
-  if (!(await sendMail(env, email, codeMail(code, mode)))) return fail('gonderilemedi', 502);
+  const sent = await sendMail(env, email, codeMail(code, mode));
+  if (!sent.ok) {
+    await env.DB.prepare('DELETE FROM login_codes WHERE email = ?1').bind(email).run();
+    return { status: 502, data: { ok: false, error: 'gonderilemedi', resend: sent.status || 0, detail: sent.detail || '' } };
+  }
   return { status: 200, data: { ok: true } };
 }
 

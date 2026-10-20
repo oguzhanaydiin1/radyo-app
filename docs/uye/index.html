@@ -117,7 +117,7 @@
             $('#code').value = ''; $('#code').focus();
             return;
           }
-          var text = OA.msg(r.error);
+          var text = OA.msg(r.error) + (r.error === 'gonderilemedi' && (r.resend || r.detail) ? ' (Hata ' + (r.resend || '') + (r.detail ? ': ' + r.detail : '') + ')' : '');
           var el = document.createElement('span'); el.textContent = text + ' ';
           if (r.error === 'uye-yok' || r.error === 'uye-var') {
             var b = document.createElement('button'); b.type = 'button'; b.className = 'textlink';

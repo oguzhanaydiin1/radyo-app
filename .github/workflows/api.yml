@@ -102,6 +102,18 @@ jobs:
           # E-posta gönderimi (isteğe bağlı): GitHub'a RESEND_API_KEY eklenince etkinleşir.
           if [ -n "$RESEND_API_KEY" ]; then printf '%s' "$RESEND_API_KEY" | npx wrangler secret put RESEND_API_KEY; fi
 
+      - name: Resend anahtarı çalışıyor mu?
+        if: steps.check.outputs.skip != '1' && env.RESEND_SET == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          K=$(printf '%s' "$RESEND_API_KEY" | tr -d '[:space:]')
+          echo "::notice title=resend::Anahtar uzunluğu ${#K}, başı ${K:0:3}"
+          CODE=$(curl -s -o r.json -w '%{http_code}' https://api.resend.com/domains -H "Authorization: Bearer $K")
+          MSG=$(node -e "try{const j=require('./r.json');console.log(j.message||(j.data||[]).map(d=>d.name+'='+d.status).join(', '))}catch{console.log('')}")
+          echo "::notice title=resend::HTTP $CODE — $MSG"
+          rm -f r.json
+        working-directory: .
       - name: Çalışıyor mu?
         if: steps.check.outputs.skip != '1'
         run: |
