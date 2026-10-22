@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oğuzhan Aydın — OA Labs</title>
+<meta name="description" content="OA Labs, Oğuzhan Aydın’ın yazılım atölyesi. Ücretsiz ve reklamsız uygulamalar: OA Radyo ve yakında daha fazlası.">
+<meta name="theme-color" content="#07080C">
+<link rel="canonical" href="https://oguzhanaydin.com.tr/">
+<meta property="og:title" content="Oğuzhan Aydın — OA Labs">
+<meta property="og:description" content="Küçük uygulamalar, özenle yapılmış.">
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07080C}
+a{color:#F2A541}a:hover{color:#F7BF6E}
+html{scroll-behavior:smooth}
+.pg{background:#07080C;color:#EEEAE2;font-family:'DM Sans',system-ui,sans-serif;font-size:18px;line-height:1.6;overflow-x:clip}
+.dsp{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-0.035em}
+.top{position:sticky;top:0;z-index:20;background:rgba(7,8,12,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
+.hero{min-height:100vh;box-sizing:border-box;display:grid;place-items:center;text-align:center;padding:80px 24px}
+.hero h1{margin:0;font-size:clamp(88px,17vw,260px);line-height:.86}
+.hero h1 span{color:#F2A541}
+.story{max-width:1000px;margin:0 auto;padding:120px 32px}
+.story p{margin:0 0 .35em;font-size:clamp(32px,4.6vw,64px);line-height:1.1}
+.cols{max-width:1200px;margin:0 auto;padding:40px 32px 120px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{border-radius:28px;background:#11131C;border:1px solid #1E2232;padding:32px}
+.card .n{font-size:64px;line-height:1;color:#F2A541}
+.card h3{margin:20px 0 8px;font-size:26px;line-height:1.15}
+.card p{margin:0;color:#9EA2B3;font-size:16px}
+.apps{max-width:1200px;margin:0 auto;padding:0 32px 120px}
+.app-row{display:flex;align-items:center;gap:20px;padding:22px 0;border-top:1px solid #1E2232;flex-wrap:wrap}
+.app-row .ic{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;flex:none}
+.go{padding:120px 24px 160px;text-align:center}
+.cue{display:inline-flex;flex-direction:column;align-items:center;gap:6px;margin-top:48px;color:#7E8296;font-size:14px}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-wrap{height:190vh;view-timeline:--h block}
+    .hero{position:sticky;top:0;height:100vh;min-height:0}
+    .hero-in{animation:shrink linear both;animation-timeline:--h;animation-range:contain 0% contain 80%}
+    @keyframes shrink{to{opacity:0;transform:scale(.6) translateY(-6vh);filter:blur(6px)}}
+    .story p{animation:lit linear both;animation-timeline:view();animation-range:entry 20% cover 45%}
+    @keyframes lit{from{opacity:.1;transform:translateY(40px)}to{opacity:1;transform:none}}
+    .card,.app-row{animation:up linear both;animation-timeline:view();animation-range:entry 5% cover 30%}
+    @keyframes up{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
+    .go h2{animation:pop linear both;animation-timeline:view();animation-range:entry 0% cover 45%}
+    @keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+    .cue svg{animation:bob 1.6s ease-in-out infinite}
+    @keyframes bob{50%{transform:translateY(6px)}}
+  }
+}
+@media (max-width: 800px){ .cols{grid-template-columns:minmax(0,1fr)} .story{padding:90px 20px} }
+</style>
+</head>
+<body>
+<div class="pg">
+
+  <header class="top">
+    <nav aria-label="Site" style="max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 24px">
+      <a href="/" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #EEEAE2; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">
+        <span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 8px; background: #EEEAE2; color: #07080C; display: grid; place-items: center; font-size: 12px; letter-spacing: -0.04em">OA</span>
+        Oğuzhan Aydın
+      </a>
+      <div style="flex: 1; display: flex; justify-content: flex-end; gap: 24px; font-size: 15px">
+        <a href="#hakkimizda" style="color: #B7BACA; text-decoration: none">Hakkımızda</a>
+        <a href="#uygulamalar" style="color: #B7BACA; text-decoration: none">Uygulamalar</a>
+        <a href="#iletisim" style="color: #B7BACA; text-decoration: none">İletişim</a>
+      </div>
+      <a href="https://oalabs.dev/uye/?giris" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 6px; border-radius: 22px; border: 1px solid #2A2F43; background: #11131C; color: #EEEAE2; text-decoration: none">
+        <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: #1C2030; display: grid; place-items: center; color: #B7BACA">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+        </span>
+        <span style="display: flex; flex-direction: column; line-height: 1.15"><span style="font-size: 14px; font-weight: 600">Giriş yap</span><span style="font-size: 12px; color: #9EA2B3">veya üye ol</span></span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Açılış: dev "OA Labs." yazısı; kaydırınca küçülüp silinir -->
+  <div class="hero-wrap">
+    <section class="hero" aria-labelledby="h1">
+      <div class="hero-in">
+        <p style="margin: 0 0 20px; color: #9EA2B3; font-size: 20px">Oğuzhan Aydın’ın yazılım atölyesi</p>
+        <h1 id="h1" class="dsp">OA Labs<span>.</span></h1>
+        <p class="dsp" style="margin: 26px auto 0; max-width: 18em; font-size: clamp(24px, 3vw, 40px); line-height: 1.15; color: #B7BACA; letter-spacing: -0.02em">Küçük uygulamalar, özenle yapılmış.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 40px">
+          <a href="https://oalabs.dev" style="display: inline-flex; align-items: center; gap: 10px; height: 60px; padding: 0 32px; border-radius: 30px; background: #F2A541; color: #14110A; text-decoration: none; font-weight: 600; font-size: 19px">
+            oalabs.dev’e git
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a href="#hakkimizda" style="display: inline-flex; align-items: center; height: 60px; padding: 0 28px; border-radius: 30px; border: 1px solid #2A2F43; color: #EEEAE2; text-decoration: none; font-weight: 600; font-size: 19px">Hakkımızda</a>
+        </div>
+        <div class="cue" aria-hidden="true">Kaydır<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Hakkımızda: satırlar kaydırdıkça aydınlanır -->
+  <section class="story dsp" id="hakkimizda" aria-label="Hakkımızda">
+    <p>OA Labs, Oğuzhan Aydın’ın kurduğu küçük bir yazılım atölyesi.</p>
+    <p style="color: #B7BACA">Her gün işine yarayan, sade uygulamalar yapıyoruz.</p>
+    <p>Her biri tek bir işi iyi yapsın diye.</p>
+    <p style="color: #F2A541">Hepsi aynı imzayla: OA.</p>
+  </section>
+
+  <section aria-labelledby="ilke-h">
+    <h2 id="ilke-h" class="dsp" style="max-width: 1200px; margin: 0 auto 32px; padding: 0 32px; font-size: clamp(36px, 4.4vw, 60px); line-height: 1">Nasıl çalışırız</h2>
+    <div class="cols">
+      <div class="card"><span class="dsp n">0 ₺</span><h3 class="dsp">Ücretsiz ve reklamsız</h3><p>Uygulamalarımızın hepsi ücretsiz. Araya reklam sokmayız.</p></div>
+      <div class="card"><span class="n" aria-hidden="true"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#F2A541" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span><h3 class="dsp">Verin sende kalır</h3><p>Uygulamalar hesap istemez. Bilgilerini satmayız, reklam için kullanmayız.</p></div>
+      <div class="card"><span class="n" aria-hidden="true"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#F2A541" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"></path><path d="M20 4v5h-5"></path></svg></span><h3 class="dsp">Kendini günceller</h3><p>Yeni sürümler uygulamanın içinden tek tıkla gelir.</p></div>
+    </div>
+  </section>
+
+  <section class="apps" id="uygulamalar" aria-labelledby="app-h">
+    <h2 id="app-h" class="dsp" style="margin: 0 0 24px; font-size: clamp(36px, 4.4vw, 60px); line-height: 1">Uygulamalarımız</h2>
+    <div class="app-row">
+      <img class="ic" src="/icon.png" alt="">
+      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Radyo <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #F2A541; letter-spacing: 0">Yayında</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Türkiye’nin ve dünyanın radyoları tek uygulamada. Windows ve web.</p></div>
+      <a href="https://oalabs.dev/radyo/" style="display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 23px; border: 1px solid #2A2F43; color: #EEEAE2; text-decoration: none; font-weight: 600; font-size: 15px">İncele</a>
+    </div>
+    <div class="app-row">
+      <span class="ic" aria-hidden="true" style="background: #5BC48C; color: #0F2A1C">S</span>
+      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Score <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #9EA2B3; letter-spacing: 0">Yakında</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Canlı skorlar, istatistikler ve maç haberleri.</p></div>
+    </div>
+    <div class="app-row" style="border-bottom: 1px solid #1E2232">
+      <span class="ic" aria-hidden="true" style="background: #6EA8FE; color: #0E1A30">B</span>
+      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Barkod <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #9EA2B3; letter-spacing: 0">Yakında</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Hazırlanıyor.</p></div>
+    </div>
+  </section>
+
+  <!-- Kapanış: oalabs.dev'e yönlendiren büyük düğme -->
+  <section class="go" id="iletisim" aria-labelledby="go-h">
+    <h2 id="go-h" class="dsp" style="margin: 0; font-size: clamp(56px, 9vw, 140px); line-height: 0.92">Uygulamalara<br>göz at.</h2>
+    <a href="https://oalabs.dev" style="display: inline-flex; align-items: center; gap: 12px; height: 68px; padding: 0 40px; margin-top: 44px; border-radius: 34px; background: #F2A541; color: #14110A; text-decoration: none; font-weight: 700; font-size: 21px">
+      oalabs.dev’e git
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+    </a>
+    <p style="margin: 28px 0 0; color: #9EA2B3">Soru, öneri ya da iş birliği için: <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
+  </section>
+
+  <footer style="border-top: 1px solid #1E2232">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 32px 32px 44px; display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; font-size: 14px; color: #7E8296">
+      <span>© 2026 Oğuzhan Aydın · OA Labs</span>
+      <span><a href="https://oalabs.dev">oalabs.dev</a> · <a href="https://oalabs.dev/gizlilik/" style="color: #9EA2B3">Gizlilik politikası</a></span>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

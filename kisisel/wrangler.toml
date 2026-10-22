@@ -1,0 +1,13 @@
+# oguzhanaydin.com.tr — OA Labs tanıtım sayfası (yalnızca sabit dosyalar).
+# GitHub Actions (.github/workflows/kisisel.yml) bunu Cloudflare'e yükler.
+name = "oa-kisisel"
+compatibility_date = "2026-09-01"
+workers_dev = false
+routes = [
+  { pattern = "oguzhanaydin.com.tr", custom_domain = true },
+  { pattern = "www.oguzhanaydin.com.tr", custom_domain = true },
+]
+
+[assets]
+directory = "./public"
+not_found_handling = "single-page-application"
