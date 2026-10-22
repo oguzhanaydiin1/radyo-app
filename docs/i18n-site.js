@@ -126,6 +126,7 @@
     'Yeni e-posta adresi': 'New email address', 'Vazgeç': 'Cancel', 'Kaydet': 'Save',
     'Değişiklikler kaydedildi.': 'Changes saved.', 'E-posta adresin değiştirildi.': 'Your email address has been changed.',
     'OA Labs uygulamaları. Henüz çıkmamış olanlar için “Çıkınca haber ver” diyebilirsin.': 'OA Labs apps. For the ones not out yet, you can ask us to let you know.',
+    'Beta’yı indir': 'Download beta', 'Windows · Beta · Android yakında': 'Windows · Beta · Android coming soon',
     'İndir': 'Download', 'Yakında': 'Coming soon', 'Yakında · Çıkınca sana haber vereceğiz': 'Coming soon · We’ll let you know when it’s out',
     'Çıkınca haber ver': 'Notify me', '✓ Haber verilecek': '✓ You’ll be notified', 'Hazırlanıyor.': 'In the works.',
     'Sana yalnızca istediğin konularda e-posta göndeririz.': 'We only email you about the things you choose.',
