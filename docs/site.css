@@ -71,7 +71,7 @@ section { padding: 72px 0; }
 @media (max-width: 760px) {
   .wrap { width: min(1200px, 100% - 32px); }
   .nav { height: auto; min-height: 64px; flex-wrap: wrap; gap: 12px 20px; padding: 12px 0; }
-  .nav-links { order: 3; flex-basis: 100%; gap: 20px; }
+  .nav-links { order: 3; flex-basis: 100%; gap: 20px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; justify-content: flex-start !important; }
   section { padding: 56px 0; }
   .h2 { font-size: 34px; }
 }

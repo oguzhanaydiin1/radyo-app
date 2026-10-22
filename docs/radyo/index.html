@@ -16,40 +16,60 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../site.css">
   <style>
-    .hero { padding: 88px 0 0; text-align: center; }
-    .hero h1 { margin: 0 auto 22px; max-width: 13em; font: 800 clamp(46px, 7vw, 80px)/0.98 var(--display); letter-spacing: -0.035em; }
-    .hero .lead { margin: 0 auto 36px; max-width: 34em; color: var(--text-2); font-size: 20px; }
-    .cta { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+    body { overflow-x: clip; }
+    .dsp { font-family: var(--display); font-weight: 800; letter-spacing: -0.035em; }
     .meta { margin: 16px 0 0; color: var(--faint); font-size: 14px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
 
-    .showcase { padding: 64px 0 0; }
-    .dial { position: relative; height: 96px; border-radius: 16px 16px 0 0; background: var(--surface); border: 1px solid var(--border); border-bottom: none; overflow: hidden; }
-    .dial svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .dial .freq { position: absolute; left: 24px; top: 18px; font: 700 15px/1 var(--display); color: var(--amber); }
-    .dial .now { position: absolute; right: 24px; top: 18px; color: var(--faint); font-size: 14px; }
-    .needle { transform-box: fill-box; animation: tune 2.2s cubic-bezier(.5,0,.2,1) .4s both; }
-    @keyframes tune { 0% { transform: translateX(-420px); } 60% { transform: translateX(160px); } 80% { transform: translateX(-40px); } 100% { transform: translateX(0); } }
-    .screen { border-radius: 0 0 18px 18px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 50px 120px rgba(0,0,0,.6); }
-
-    .features { padding-top: 112px; }
-    .features .h2 { max-width: 14em; margin-bottom: 40px; font-size: 48px; }
-    .feat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; }
-    .feat { padding: 24px 0; border-top: 1px solid var(--line); }
-    .feat h3 { margin: 0 0 6px; font-size: 19px; font-weight: 600; }
-    .feat p { margin: 0; color: var(--muted); font-size: 16px; }
-
-    .split { display: flex; flex-wrap: wrap; gap: 48px; align-items: center; }
-    .split-text { flex: 1 1 340px; min-width: 0; }
-    .split-text .h2 { font-size: 40px; margin-bottom: 14px; }
-    .split-text p { margin: 0; color: var(--muted); max-width: 26em; }
-    .split-img { flex: 1.4 1 520px; min-width: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+    /* Temel görünüm: kaydırma animasyonu olmayan tarayıcılarda da düzgün */
+    .hero { padding: 96px 0 24px; text-align: center; }
+    .hero .kick { margin: 0 0 18px; color: var(--amber); font-weight: 600; font-size: 20px; }
+    .hero h1 { margin: 0; font-size: clamp(64px, 11vw, 168px); line-height: .92; }
+    .hero .tag { margin: 22px auto 0; font-size: clamp(26px, 3.4vw, 46px); line-height: 1.1; color: var(--text-2); letter-spacing: -0.02em; }
+    .hero .cta { margin-top: 36px; }
+    .hero-shot { display: block; width: min(1100px, 100%); height: auto; margin: 56px auto 0; border-radius: 18px; border: 1px solid var(--border); box-shadow: 0 60px 140px rgba(0,0,0,.7); }
+    .cue { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 36px; color: var(--faint); font-size: 14px; }
+    .say { max-width: 1100px; margin: 0 auto; padding: 160px 32px; }
+    .say p { margin: 0 0 .18em; font-size: clamp(40px, 6.4vw, 92px); line-height: 1.04; }
+    .tour-pin { max-width: 1200px; margin: 0 auto; padding: 80px 32px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
+    .tour-pin h2 { margin: 0 0 22px; font-size: clamp(34px, 4.4vw, 60px); line-height: 1; }
+    .tour-bar { height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; margin-bottom: 8px; }
+    .tour-device { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-2); aspect-ratio: 1280 / 820; box-shadow: 0 50px 120px rgba(0,0,0,.6); }
+    .tour-device img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+    .tour-device img.s1 { opacity: 1; }
+    .step { padding: 22px 0; border-top: 1px solid var(--line); }
+    .step h3 { margin: 0 0 6px; font-size: 26px; line-height: 1.15; }
+    .step p { margin: 0; color: var(--muted); font-size: 17px; }
+    .more { max-width: 1200px; margin: 0 auto; padding: 40px 32px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; }
+    .more div { padding: 24px 0; border-top: 1px solid var(--line); }
+    .more h3 { margin: 0 0 6px; font-size: 19px; font-weight: 600; }
+    .more p { margin: 0; color: var(--muted); font-size: 16px; }
+    .wipe-pin { max-width: 1200px; margin: 0 auto; padding: 120px 32px 80px; text-align: center; }
+    .wipe-pin h2 { margin: 0; font-size: clamp(40px, 5.6vw, 80px); line-height: 1; }
+    .wipe-frame { position: relative; margin: 48px auto 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 1280 / 820; max-width: 1100px; }
+    .wipe-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .wipe-frame .light { clip-path: inset(0 0 0 50%); }
+    .wipe-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--amber); box-shadow: 0 0 24px rgba(242,165,65,.6); }
+    .top20 { padding: 140px 0 120px; overflow: hidden; }
+    .top20 h2 { margin: 0; max-width: 12em; font-size: clamp(40px, 5.6vw, 80px); line-height: 1; }
+    .marq { display: flex; gap: 14px; width: max-content; padding: 0 32px; }
+    .marq + .marq { margin-top: 14px; }
+    .rk { display: flex; align-items: center; gap: 14px; height: 76px; padding: 0 28px 0 12px; border-radius: 38px; background: var(--bg-2); border: 1px solid var(--line); white-space: nowrap; font-size: 22px; font-weight: 600; }
+    .rk b { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 26px; background: var(--amber); color: var(--amber-ink); font: 800 22px/1 var(--display); }
+    .vals { max-width: 1200px; margin: 0 auto; padding: 40px 32px 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .val { border-radius: 28px; background: var(--bg-2); border: 1px solid var(--line); padding: 36px 32px 32px; min-height: 240px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .val .big { font-size: 96px; line-height: .9; color: var(--amber); }
+    .val h3 { margin: 18px 0 6px; font-size: 28px; }
+    .val p { margin: 0; color: var(--muted); font-size: 16px; }
+    .end { padding: 120px 24px 80px; text-align: center; }
+    .end img { width: 96px; height: 96px; border-radius: 24px; box-shadow: 0 20px 60px rgba(242,165,65,.25); }
+    .end h2 { margin: 28px 0 40px; font-size: clamp(56px, 9vw, 140px); line-height: .92; }
 
     .steps { list-style: none; margin: 36px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; counter-reset: s; }
     .steps li { padding: 24px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); counter-increment: s; }
     .steps li::before { content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); font: 800 18px/1 var(--display); margin-bottom: 16px; }
     .steps h3 { margin: 0 0 6px; font-size: 19px; font-weight: 600; }
     .steps p { margin: 0; color: var(--muted); font-size: 16px; }
-
     .faq { max-width: 820px; margin-inline: auto; }
     .faq .h2 { margin-bottom: 24px; }
     details { border-top: 1px solid var(--line); padding: 18px 0; }
@@ -60,16 +80,74 @@
     details[open] summary::after { content: '–'; }
     details p { margin: 10px 0 0; color: var(--muted); }
 
-    @media (max-width: 960px) { .feat-grid, .steps { grid-template-columns: minmax(0, 1fr); } }
-    @media (max-width: 760px) {
-      .hero { padding-top: 48px; }
-      .hero .lead { font-size: 18px; }
-      .features { padding-top: 72px; }
-      .features .h2 { font-size: 36px; }
-      .dial { height: 72px; }
-      .dial text { display: none; }
+    /* Kaydırdıkça oynayan sahneler (Chrome, Edge, Safari 26+) */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .hero { height: 250vh; padding: 0; view-timeline: --hero block; }
+        .hero-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; }
+        .hero-text, .hero-shot { grid-area: 1 / 1; }
+        .hero-text { animation: heroOut linear both; animation-timeline: --hero; animation-range: contain 0% contain 38%; }
+        .hero-shot { margin: 0; width: min(1100px, 86vw, 128vh); animation: shotIn linear both; animation-timeline: --hero; animation-range: contain 4% contain 70%; }
+        @keyframes heroOut { to { opacity: 0; transform: scale(.86) translateY(-8vh); visibility: hidden; } }
+        @keyframes shotIn { from { transform: translateY(80vh) scale(.72); } to { transform: translateY(0) scale(1); } }
+
+        .say p { animation: sayIn linear both; animation-timeline: view(); animation-range: entry 20% cover 42%; }
+        @keyframes sayIn { from { opacity: .1; transform: translateY(48px); } to { opacity: 1; transform: none; } }
+
+        .tour { height: 460vh; view-timeline: --tour block; }
+        .tour-pin { position: sticky; top: 0; height: 100vh; box-sizing: border-box; padding-top: 96px; padding-bottom: 24px; }
+        .tour-device img, .step { animation: linear both; animation-timeline: --tour; }
+        .tour-device img.s1 { animation-name: out1; animation-range: contain 21% contain 29%; }
+        .tour-device img.s2 { animation-name: mid; animation-range: contain 21% contain 54%; }
+        .tour-device img.s3 { animation-name: mid; animation-range: contain 46% contain 79%; }
+        .tour-device img.s4 { animation-name: in1; animation-range: contain 71% contain 79%; }
+        .step { opacity: .28; }
+        .step.t1 { opacity: 1; animation-name: out2; animation-range: contain 21% contain 29%; }
+        .step.t2 { animation-name: mid2; animation-range: contain 21% contain 54%; }
+        .step.t3 { animation-name: mid2; animation-range: contain 46% contain 79%; }
+        .step.t4 { animation-name: in2; animation-range: contain 71% contain 79%; }
+        .tour-bar i { display: block; height: 100%; background: var(--amber); transform-origin: left; animation: grow linear both; animation-timeline: --tour; animation-range: contain 0% contain 100%; }
+        @keyframes out1 { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes in1 { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes mid { 0% { opacity: 0; } 24% { opacity: 1; } 76% { opacity: 1; } 100% { opacity: 0; } }
+        @keyframes out2 { from { opacity: 1; } to { opacity: .28; } }
+        @keyframes in2 { from { opacity: .28; } to { opacity: 1; } }
+        @keyframes mid2 { 0% { opacity: .28; } 24% { opacity: 1; } 76% { opacity: 1; } 100% { opacity: .28; } }
+        @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+        .more div { animation: up linear both; animation-timeline: view(); animation-range: entry 5% cover 30%; }
+
+        .wipe { height: 280vh; view-timeline: --wipe block; }
+        .wipe-pin { position: sticky; top: 0; height: 100vh; box-sizing: border-box; padding-top: 104px; padding-bottom: 32px; display: flex; flex-direction: column; }
+        .wipe-frame { flex: 1 1 auto; min-height: 0; width: min(1100px, 100%, calc((100vh - 320px) * 1.56)); aspect-ratio: auto; }
+        .wipe-frame .light { animation: reveal linear both; animation-timeline: --wipe; animation-range: contain 12% contain 88%; }
+        .wipe-line { animation: line linear both; animation-timeline: --wipe; animation-range: contain 12% contain 88%; }
+        @keyframes reveal { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+        @keyframes line { from { left: 100%; } to { left: 0%; } }
+
+        .marq { animation: slideL linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+        .marq.rev { animation-name: slideR; }
+        @keyframes slideL { from { transform: translateX(6%); } to { transform: translateX(-38%); } }
+        @keyframes slideR { from { transform: translateX(-40%); } to { transform: translateX(4%); } }
+
+        .val { animation: up linear both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
+        @keyframes up { from { opacity: 0; transform: translateY(80px) scale(.96); } to { opacity: 1; transform: none; } }
+        .end h2 { animation: pop linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+        @keyframes pop { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: none; } }
+        .cue svg { animation: bob 1.6s ease-in-out infinite; }
+        @keyframes bob { 50% { transform: translateY(6px); } }
+      }
     }
-    @media (prefers-reduced-motion: reduce) { .needle { animation: none; } }
+    @media (max-width: 960px) { .steps, .more, .vals { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 800px) {
+      .tour-pin { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-left: 16px; padding-right: 16px; }
+      .tour-device { order: -1; }
+      .step { padding: 12px 0; } .step h3 { font-size: 20px; } .step p { font-size: 15px; }
+      .val { min-height: 180px; } .val .big { font-size: 72px; }
+      .rk { height: 60px; font-size: 18px; } .rk b { width: 42px; height: 42px; font-size: 18px; }
+      .say { padding: 110px 20px; }
+      .more, .vals { padding-left: 16px; padding-right: 16px; }
+    }
   </style>
   <script type="application/ld+json">
 {
@@ -111,6 +189,7 @@
       <span class="crumb-app"><img src="img/icon.png" alt="" width="30" height="30">OA Radyo</span>
       <div class="nav-links" style="justify-content: flex-end">
         <a href="#ozellikler">Özellikler</a>
+        <a href="#top20">En çok dinlenenler</a>
         <a href="#kurulum">Kurulum</a>
         <a href="#sss">Sorular</a>
         <a href="/dinle/">Web’de dinle</a>
@@ -120,54 +199,102 @@
   </header>
 
   <main>
-    <section class="wrap hero">
-      <h1>Bütün radyolar tek uygulamada.</h1>
-      <p class="lead">Türkiye’deki ve dünyadaki binlerce radyo. Çalan şarkının adı, kayıt, alarm ve ekolayzır. Ücretsiz, reklamsız, Windows için.</p>
+    <!-- 1. Açılış: başlık kaybolurken uygulama aşağıdan büyüyerek gelir -->
+    <section class="hero" aria-labelledby="h1">
+      <div class="hero-pin">
+        <div class="hero-text">
+          <p class="kick">Windows için ücretsiz</p>
+          <h1 id="h1" class="dsp">OA Radyo.</h1>
+          <p class="tag dsp">Bütün radyolar. Tek pencere.</p>
+          <div class="cta">
+            <a class="btn primary big" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest/download/Radyo-Setup.exe"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Windows için indir</a>
+            <a class="btn big" href="/dinle/"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Web’de dinle</a>
+          </div>
+          <p class="meta" data-meta>Windows 10 ve 11 · 64 bit</p>
+          <div class="cue" aria-hidden="true">Kaydır<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+        </div>
+        <img class="hero-shot" src="img/app-kesfet.webp" width="1280" height="820" alt="OA Radyo’nun Keşfet ekranı: çalan radyo, kategoriler ve radyo kartları">
+      </div>
+    </section>
+
+    <!-- 2. Büyük cümleler -->
+    <section class="say dsp" aria-label="OA Radyo kısaca">
+      <p>Türkiye’nin bütün radyoları.</p>
+      <p style="color: var(--text-2)">Dünyadan binlercesi.</p>
+      <p>Çalan şarkının adı ekranda.</p>
+      <p style="color: var(--amber)">Hepsi ücretsiz.</p>
+    </section>
+
+    <!-- 3. Sabit ekran turu -->
+    <section class="tour" id="ozellikler" aria-labelledby="oz-h">
+      <div class="tour-pin">
+        <div>
+          <h2 id="oz-h" class="dsp">Radyoyu aç.<br>Gerisini o halletsin.</h2>
+          <div class="tour-bar" aria-hidden="true"><i></i></div>
+          <article class="step t1"><h3 class="dsp">Keşfet</h3><p>Türe, şehre ve en çok dinlenenlere göre. Bir karta dokun, çalsın.</p></article>
+          <article class="step t2"><h3 class="dsp">Ekolayzır</h3><p>Bas, Konuşma, Araba gibi hazır ayarlar. Radyo değişince ses birden yükselmez.</p></article>
+          <article class="step t3"><h3 class="dsp">Favori klasörleri</h3><p>Radyolarını klasörlere ayır, sürükleyerek sırala, bilgisayarlar arasında eşitle.</p></article>
+          <article class="step t4"><h3 class="dsp">İstatistikler</h3><p>Ne kadar, neyi dinlediğin. Hepsi bilgisayarında hesaplanır, bir yere gönderilmez.</p></article>
+        </div>
+        <div class="tour-device">
+          <img class="s1" src="img/app-kesfet.webp" width="1280" height="820" alt="Keşfet ekranı">
+          <img class="s2" src="img/app-ekolayzir.webp" width="1280" height="820" loading="lazy" alt="Ekolayzır ayarları">
+          <img class="s3" src="img/app-favoriler.webp" width="1280" height="820" loading="lazy" alt="Favori klasörleri">
+          <img class="s4" src="img/app-istatistik.webp" width="1280" height="820" loading="lazy" alt="İstatistikler ekranı">
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Diğer özellikler">
+      <div class="more">
+        <div><h3>Çalan şarkı</h3><p>Şarkının adı ekranda; tek tıkla YouTube ya da Spotify’da aç. Son çalanlar da saklanır.</p></div>
+        <div><h3>Kayıt ve alarm</h3><p>Yayını kaydet, belli saatte otomatik kayıt kur ya da sabahları radyoyla uyan.</p></div>
+        <div><h3>Arka planda</h3><p>Pencereyi kapatınca saatin yanında çalmaya devam eder. Mini oynatıcı ve kısayollar.</p></div>
+      </div>
+    </section>
+
+    <!-- 4. Koyu → açık tema perdesi -->
+    <section class="wipe" aria-labelledby="wipe-h">
+      <div class="wipe-pin">
+        <h2 id="wipe-h" class="dsp">Gece de, gündüz de.</h2>
+        <p style="margin: 12px auto 0; max-width: 30em; color: var(--muted)">Koyu ve açık tema. Windows’un ayarını kendiliğinden izler.</p>
+        <div class="wipe-frame">
+          <img src="img/app-kesfet.webp" width="1280" height="820" loading="lazy" alt="Koyu tema">
+          <img class="light" src="img/app-acik-tema.webp" width="1280" height="820" loading="lazy" alt="Açık tema">
+          <span class="wipe-line" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. En çok dinlenen 20 -->
+    <section class="top20" id="top20" aria-labelledby="top-h">
+      <div class="wrap" style="margin-bottom: 56px">
+        <h2 id="top-h" class="dsp">Türkiye’nin en çok dinlenen 20 radyosu.</h2>
+        <p style="margin: 14px 0 0; color: var(--muted)">Keşfet’te tek dokunuşla.</p>
+      </div>
+      <div class="marq" aria-label="1 ile 10 arası"><span class="rk"><b>1</b>Kral FM</span><span class="rk"><b>2</b>Kral Pop</span><span class="rk"><b>3</b>TRT FM</span><span class="rk"><b>4</b>Power Türk</span><span class="rk"><b>5</b>Slow Türk</span><span class="rk"><b>6</b>Best FM</span><span class="rk"><b>7</b>Süper FM</span><span class="rk"><b>8</b>Virgin Radio</span><span class="rk"><b>9</b>Metro FM</span><span class="rk"><b>10</b>Alem FM</span></div>
+      <div class="marq rev" aria-label="11 ile 20 arası"><span class="rk"><b>11</b>Radyo 7</span><span class="rk"><b>12</b>Joy Türk</span><span class="rk"><b>13</b>Radyo Fenomen</span><span class="rk"><b>14</b>Radyo Seymen</span><span class="rk"><b>15</b>Damar Türk</span><span class="rk"><b>16</b>NTV Radyo</span><span class="rk"><b>17</b>TRT Türkü</span><span class="rk"><b>18</b>Radyo Voyage</span><span class="rk"><b>19</b>Power FM</span><span class="rk"><b>20</b>Joy FM</span></div>
+    </section>
+
+    <!-- 6. Üç söz -->
+    <section aria-label="OA Radyo’nun sözleri">
+      <div class="vals">
+        <div class="val"><span class="dsp big">0 ₺</span><h3 class="dsp">Tamamen ücretsiz.</h3><p>Abonelik yok, gizli ücret yok.</p></div>
+        <div class="val"><span class="dsp big">0</span><h3 class="dsp">Reklam.</h3><p>Araya biz reklam sokmayız.</p></div>
+        <div class="val"><span class="dsp big">1 dk</span><h3 class="dsp">Kurulum.</h3><p>Hesap gerekmez. İndir, aç, dinle.</p></div>
+      </div>
+    </section>
+
+    <!-- 7. Kapanış -->
+    <section class="end" id="indir" aria-labelledby="end-h">
+      <img src="img/icon.png" width="96" height="96" alt="">
+      <h2 id="end-h" class="dsp">Dinlemeye başla.</h2>
       <div class="cta">
-        <a class="btn primary big" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest/download/Radyo-Setup.exe">
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
-          Windows için indir
-        </a>
-        <a class="btn big" href="/dinle/">
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
-          Web’de dinle
-        </a>
+        <a class="btn primary big" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest/download/Radyo-Setup.exe"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Windows için indir</a>
+        <a class="btn big" href="/dinle/"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Web’de dinle</a>
         <a class="btn big" id="zip" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest">Kurulumsuz zip</a>
       </div>
-      <p class="meta" id="meta">Windows 10 ve 11 · 64 bit</p>
-    </section>
-
-    <section class="wrap showcase" aria-label="Uygulamanın görünümü">
-      <div class="dial" aria-hidden="true">
-        <svg viewBox="0 0 1136 96" preserveAspectRatio="none">
-          <g stroke="#3A3F55" stroke-width="1.5"><path d="M40 70v14M68 76v8M96 76v8M124 76v8M152 62v22M180 76v8M208 76v8M236 76v8M264 70v14M292 76v8M320 76v8M348 76v8M376 62v22M404 76v8M432 76v8M460 76v8M488 70v14M516 76v8M544 76v8M572 76v8M600 62v22M628 76v8M656 76v8M684 76v8M712 70v14M740 76v8M768 76v8M796 76v8M824 62v22M852 76v8M880 76v8M908 76v8M936 70v14M964 76v8M992 76v8M1020 76v8M1048 62v22M1076 76v8M1096 76v8"/></g>
-          <g fill="#7E8296" font-family="DM Sans, sans-serif" font-size="13" text-anchor="middle"><text x="152" y="50">90</text><text x="376" y="50">94</text><text x="600" y="50">98</text><text x="824" y="50">102</text><text x="1048" y="50">106</text></g>
-          <rect class="needle" x="543" y="10" width="3" height="80" rx="1.5" fill="#F2A541"/>
-        </svg>
-        <span class="freq">97.0 MHz</span>
-        <span class="now">şimdi çalıyor</span>
-      </div>
-      <div class="screen"><img src="img/app-kesfet.webp" width="1280" height="820" alt="OA Radyo ana ekranı: çalan radyo, istasyon bilgisi, kategoriler ve radyo kartları"></div>
-    </section>
-
-    <section class="wrap features" id="ozellikler" aria-labelledby="oz-h">
-      <h2 class="h2" id="oz-h">Radyoyu aç, gerisini o halletsin.</h2>
-      <div class="feat-grid">
-        <div class="feat"><h3>Türkiye ve dünya</h3><p>Türkiye’nin bütün radyoları; türe ve şehre göre. Dünyadan binlercesi dile ve ülkeye göre.</p></div>
-        <div class="feat"><h3>Çalan şarkı</h3><p>Şarkının adı ekranda; tek tıkla YouTube ya da Spotify’da aç. Son çalanlar da saklanır.</p></div>
-        <div class="feat"><h3>Kayıt ve alarm</h3><p>Yayını kaydet, belli saatte otomatik kayıt kur ya da sabahları radyoyla uyan.</p></div>
-        <div class="feat"><h3>Ekolayzır ve ses dengeleme</h3><p>Bas, Konuşma, Araba gibi hazır ayarlar. Radyo değiştirince ses birden yükselmez.</p></div>
-        <div class="feat"><h3>Favori klasörleri</h3><p>Radyolarını klasörlere ayır, sürükleyerek sırala, bilgisayarların arasında eşitle.</p></div>
-        <div class="feat"><h3>Arka planda</h3><p>Pencereyi kapatınca saatin yanında çalmaya devam eder. Mini oynatıcı ve kısayollar.</p></div>
-      </div>
-    </section>
-
-    <section class="wrap split" aria-labelledby="ist-h">
-      <div class="split-text">
-        <h2 class="h2" id="ist-h">Ne kadar dinlediğini gör.</h2>
-        <p>Günlük dinleme süresi ve en çok dinlediğin radyolar. Hepsi senin bilgisayarında hesaplanır, bir yere gönderilmez.</p>
-      </div>
-      <div class="split-img"><img src="img/app-istatistik.webp" width="1280" height="820" loading="lazy" alt="İstatistikler ekranı: toplam dinleme süresi, günlük grafik ve en çok dinlenen radyolar"></div>
+      <p class="meta" data-meta>Windows 10 ve 11 · 64 bit</p>
     </section>
 
     <section class="wrap" id="kurulum" aria-labelledby="kur-h">
@@ -178,7 +305,6 @@
         <li><h3>Dinle</h3><p>OA Radyo açılır, istasyonlar kendiliğinden iner. Bir karta tıkla.</p></li>
       </ol>
     </section>
-
     <section class="wrap faq" id="sss" aria-labelledby="sss-h">
       <h2 class="h2" id="sss-h">Sorular</h2>
       <details open><summary>Ücretli mi, reklam var mı?</summary><p>Hayır. OA Radyo tamamen ücretsiz ve reklamsız. Radyoların kendi yayınlarındaki reklamlar yayının parçası.</p></details>
@@ -214,7 +340,7 @@
         if (v) parts.push('Sürüm ' + v);
         parts.push('Windows 10 ve 11 · 64 bit');
         if (exe) parts.push(Math.round(exe.size / 1e6) + ' MB');
-        document.getElementById('meta').textContent = parts.join(' · ');
+        document.querySelectorAll('[data-meta]').forEach((el) => { el.textContent = parts.join(' · '); });
         if (zip) document.getElementById('zip').href = zip.browser_download_url;
       })
       .catch(() => {});
