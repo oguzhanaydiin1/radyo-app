@@ -18,6 +18,22 @@ CREATE TABLE IF NOT EXISTS listen_daily (
 );
 CREATE INDEX IF NOT EXISTS listen_day ON listen_daily (day);
 
+-- Uygulama hata raporları (Harrier Cleaner). Kişiyi tanımlayan bilgi tutulmaz:
+-- "install" uygulamanın rastgele kimliğinin tuzlanmış özeti; yollar ve kullanıcı adı uygulamada temizlenir.
+CREATE TABLE IF NOT EXISTS error_reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created TEXT NOT NULL,
+  app TEXT NOT NULL,
+  version TEXT,
+  os TEXT,
+  lang TEXT,
+  install TEXT NOT NULL,
+  message TEXT NOT NULL,
+  stack TEXT
+);
+CREATE INDEX IF NOT EXISTS error_reports_app ON error_reports (app, created);
+CREATE INDEX IF NOT EXISTS error_reports_install ON error_reports (install, created);
+
 -- Üyelik (şifresiz, e-posta koduyla giriş).
 DROP TABLE IF EXISTS subscribers;
 CREATE TABLE IF NOT EXISTS users (

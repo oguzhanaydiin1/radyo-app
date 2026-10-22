@@ -2,6 +2,8 @@
  * OA Labs sunucusu (Cloudflare Workers) — api.oalabs.dev
  *
  *   POST /v1/ping              İsimsiz kullanım sayımı (uygulama, izin verildiyse)
+ *   POST /v1/report            Uygulama hata raporu (isimsiz, kullanıcı kapatabilir)
+ *   GET  /v1/admin/errors      Son hata raporları (yönetici)
  *   GET  /v1/stats             Toplu istatistikler (yalnızca yönetici anahtarıyla)
  *   GET  /v1/chat/:oda         Canlı sohbet (WebSocket), her radyo için bir oda
  *   GET  /v1/admin/chat/:oda   Odanın son mesajları, kimlik özetleriyle (yönetici)
@@ -15,6 +17,7 @@
 import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify } from './auth.js';
 
 const APPS = new Set(['radyo']);
+const REPORT_APPS = new Set(['harrier']);
 const ROOM_RE = /^[A-Za-z0-9_-]{3,80}$/;
 const PANEL_ORIGINS = new Set(['https://oalabs.dev', 'https://www.oalabs.dev']);
 
@@ -62,6 +65,49 @@ function isAdmin(req, env) {
 
 const today = () => new Date().toISOString().slice(0, 10);
 const clean = (v, max) => (typeof v === 'string' ? v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max) : '');
+
+// ---------- Hata raporları ----------
+
+async function report(req, env) {
+  let b;
+  try { b = await req.json(); } catch { return json({ ok: false }, 400); }
+  const app = clean(b && b.app, 20);
+  const id = clean(b && b.id, 64);
+  const message = clean(b && b.msg, 500);
+  if (!REPORT_APPS.has(app) || !/^[0-9a-f]{16,64}$/i.test(id) || !message) return json({ ok: false }, 400);
+  // Yığın izinde satır sonları korunur; yalnızca kontrol karakterleri ayıklanır.
+  const stack = typeof b.stack === 'string' ? b.stack.replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').slice(0, 4000) : '';
+  const install = await sha(`${env.PEPPER || 'oa'}:${app}:${id}`);
+  const since = new Date(Date.now() - 86400e3).toISOString();
+  const [mine, all] = await env.DB.batch([
+    env.DB.prepare('SELECT COUNT(*) AS n FROM error_reports WHERE install = ?1 AND created > ?2').bind(install, since),
+    env.DB.prepare('SELECT COUNT(*) AS n FROM error_reports WHERE created > ?1').bind(since),
+  ]);
+  // Bir kurulumdan günde en fazla 20, toplamda günde en fazla 5000 rapor.
+  if (mine.results[0].n >= 20 || all.results[0].n >= 5000) return json({ ok: true, skipped: true });
+  const stmts = [
+    env.DB.prepare('INSERT INTO error_reports (created, app, version, os, lang, install, message, stack) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
+      .bind(new Date().toISOString(), app, clean(b.v, 20), clean(b.os, 120), clean(b.lang, 5), install, message, stack),
+  ];
+  // Ara sıra 90 günden eski raporları sil.
+  if (Math.random() < 0.02) {
+    stmts.push(env.DB.prepare('DELETE FROM error_reports WHERE created < ?1').bind(new Date(Date.now() - 90 * 86400e3).toISOString()));
+  }
+  await env.DB.batch(stmts);
+  return json({ ok: true });
+}
+
+async function adminErrors(url, env) {
+  const app = REPORT_APPS.has(url.searchParams.get('app')) ? url.searchParams.get('app') : 'harrier';
+  const limit = Math.min(500, Math.max(1, parseInt(url.searchParams.get('limit'), 10) || 100));
+  const since = new Date(Date.now() - 7 * 86400e3).toISOString();
+  const [rows, top] = await env.DB.batch([
+    env.DB.prepare('SELECT id, created, version, os, lang, install, message, stack FROM error_reports WHERE app = ?1 ORDER BY id DESC LIMIT ?2').bind(app, limit),
+    env.DB.prepare(`SELECT message, COUNT(*) AS n, COUNT(DISTINCT install) AS installs, MAX(created) AS last
+                    FROM error_reports WHERE app = ?1 AND created > ?2 GROUP BY message ORDER BY n DESC LIMIT 20`).bind(app, since),
+  ]);
+  return { ok: true, app, reports: rows.results, top: top.results };
+}
 
 // ---------- Kullanım sayımı ----------
 
@@ -142,6 +188,16 @@ export default {
       if (url.pathname === '/v1/ping' && req.method === 'POST') {
         const r = await ping(req, env);
         return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
+      }
+
+      if (url.pathname === '/v1/report' && req.method === 'POST') {
+        const r = await report(req, env);
+        return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
+      }
+
+      if (url.pathname === '/v1/admin/errors' && req.method === 'GET') {
+        if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
+        return json(await adminErrors(url, env), 200, h);
       }
 
       if (url.pathname === '/v1/stats' && req.method === 'GET') {

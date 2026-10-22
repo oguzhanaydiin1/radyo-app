@@ -129,6 +129,13 @@
         <section class="card" aria-labelledby="c5"><h2 id="c5">Dil</h2><table><tbody id="langs"></tbody></table></section>
       </div>
 
+      <section class="card" aria-labelledby="c8" id="errors">
+        <h2 id="c8">Harrier Cleaner hata raporları</h2>
+        <p class="note" id="err-info">Son 7 günde en sık görülen hatalar. Raporlar isimsizdir; kullanıcı adı ve klasör yolları uygulamada temizlenir.</p>
+        <table><thead><tr><th>Hata</th><th class="num">Sayı</th><th class="num">Kurulum</th><th class="num">Son</th></tr></thead><tbody id="err-top"></tbody></table>
+        <details style="margin-top: 14px"><summary>Son 50 rapor (sürüm, sistem ve yığın izi)</summary><div id="err-list" style="margin-top: 10px"></div></details>
+      </section>
+
       <section class="card" aria-labelledby="c6" id="mod">
         <h2 id="c6">Sohbet yönetimi</h2>
         <form class="row" id="room-form" style="margin-bottom: 12px">
@@ -266,10 +273,26 @@
         const rows = (list, k) => list.length ? list.map((x) => `<tr><td>${esc(x[k] || '—')}</td><td class="num">${fmt(x.users)} kişi</td></tr>`).join('') : '<tr><td class="note">Veri yok.</td></tr>';
         $('#versions').innerHTML = rows(s.versions, 'version');
         $('#langs').innerHTML = rows(s.langs.map((x) => ({ ...x, lang: x.lang === 'tr' ? 'Türkçe' : x.lang === 'en' ? 'İngilizce' : x.lang })), 'lang');
+        loadErrors();
         loadUsers();
         $('#updated').textContent = 'Güncellendi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
         $('#status').innerHTML = `<span class="err">${esc(err.message === 'Failed to fetch' ? 'Sunucuya ulaşılamadı.' : err.message)}</span>`;
+      }
+    }
+
+    async function loadErrors() {
+      try {
+        const r = await call('/v1/admin/errors?app=harrier&limit=50');
+        const when = (d) => new Date(d).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        $('#err-top').innerHTML = r.top.length
+          ? r.top.map((x) => `<tr><td>${esc(x.message)}</td><td class="num">${fmt(x.n)}</td><td class="num">${fmt(x.installs)}</td><td class="num">${esc(when(x.last))}</td></tr>`).join('')
+          : '<tr><td colspan="4" class="note">Son 7 günde hata raporu yok.</td></tr>';
+        $('#err-list').innerHTML = r.reports.length
+          ? r.reports.map((x) => `<div style="padding: 10px 0; border-top: 1px solid var(--line, #2A2F43)"><div><b>${esc(x.message)}</b></div><div class="note">${esc(when(x.created))} · ${esc(x.version || '?')} · ${esc(x.os || '?')} · ${esc(x.lang || '?')}</div><pre style="white-space: pre-wrap; font-size: 12px; margin: 6px 0 0; opacity: .85">${esc(x.stack || '')}</pre></div>`).join('')
+          : '<p class="note">Henüz rapor yok.</p>';
+      } catch (err) {
+        $('#err-top').innerHTML = `<tr><td colspan="4" class="note">${esc(err.message)}</td></tr>`;
       }
     }
 

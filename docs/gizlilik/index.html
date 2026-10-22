@@ -44,7 +44,7 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 20 Ekim 2026 (üyelik eklendi) · Geçerli olduğu yerler: OA Radyo (Windows) ve oalabs.dev</p>
+      <p class="date">Son güncelleme: 22 Ekim 2026 (Harrier Cleaner eklendi) · Geçerli olduğu yerler: OA Radyo (Windows), Harrier Cleaner ve oalabs.dev</p>
 
       <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam içermez. Favorilerin, ayarların ve dinleme geçmişin bilgisayarında durur. Yalnızca izin verirsen isimsiz kullanım sayıları gönderilir; sohbete yazdıkların o odadaki herkese görünür.</p>
 
@@ -92,6 +92,18 @@
         <li><strong>YouTube / Spotify’da ara, paylaş, “Çalışmıyor, bildir”:</strong> bu düğmeler tarayıcını ya da e-posta uygulamanı açar. Ne gönderileceğini sen görür, sen gönderirsin.</li>
       </ul>
 
+      <h2 id="harrier">Harrier Cleaner</h2>
+      <p class="short">Kısaca: Harrier Cleaner bilgisayarını tamamen kendi üzerinde tarar ve temizler. Dosyalarının adı, içeriği ya da fotoğrafların hiçbir yere gönderilmez. İnternete yalnızca yeni sürüm denetimi ve, kapatmadıysan, isimsiz hata raporları için bağlanır.</p>
+      <ul>
+        <li><b>Dosyaların:</b> Gereksiz dosya, kopya dosya, disk haritası, fotoğraf küçültme ve konum temizleme işlemlerinin hepsi bilgisayarında yapılır. Hiçbir dosya, dosya adı ya da klasör listesi gönderilmez. Sildiğin kopya dosyalar ve küçültülen fotoğrafların orijinalleri Geri Dönüşüm Kutusu’na taşınır.</li>
+        <li><b>Bilgisayarında tutulanlar:</b> Ayarlar, temizlik geçmişi, eklediğin ve hariç tuttuğun klasörler ve rastgele bir kurulum kimliği <span class="muted">%APPDATA%\HarrierCleaner</span> klasöründe; uygulamadaki hataların kaydı aynı klasördeki errors.log dosyasında tutulur. Uygulamayı kaldırıp bu klasörü silersen hepsi silinir.</li>
+        <li><b>İzin Kontrolü ve Sistem Bilgisi:</b> Hangi uygulamanın kamera, mikrofon ve konumunu kullandığı, donanım bilgileri ve çalışan programlar Windows’un kendi kayıtlarından okunur ve yalnızca ekranında gösterilir; hiçbir yere gönderilmez.</li>
+        <li><b>Güncelleme denetimi:</b> Uygulama açılırken oalabs.dev’deki sürüm bilgisine bakar; yeni sürümü kurmayı seçersen kurulum dosyası indirilir. Bunu Ayarlar’dan kapatabilirsin.</li>
+        <li><b>Hata raporları:</b> Uygulamada beklenmeyen bir hata olursa sunucumuza (api.oalabs.dev) kısa bir rapor gönderilir: rastgele kurulum kimliği, uygulama ve Windows sürümü, arayüz dili, hata mesajı ve teknik yığın izi. Göndermeden önce kullanıcı adın ve klasör yolları rapordan silinir. Kurulum kimliği yalnızca tek yönlü özet olarak saklanır; adın, e-postan ya da IP adresin saklanmaz. Raporlar 90 gün sonra silinir. Bu özellik varsayılan olarak açıktır; Ayarlar &gt; Genel’den kapatabilirsin.</li>
+        <li><b>Sorun bildirme:</b> “E-posta yaz” düğmesi e-posta programını hazır bir taslakla açar; içeriği sen görür ve sen gönderirsin.</li>
+      </ul>
+      <p>Her internet bağlantısında olduğu gibi bağlanılan sunucular IP adresini görebilir.</p>
+
       <h2>Çocuklar</h2>
       <p>Uygulama hiçbir yaştan kullanıcıdan kişisel bilgi toplamaz.</p>
 
@@ -102,7 +114,7 @@
 
       <h1 lang="en" id="en">Privacy policy</h1>
       <div lang="en">
-        <p class="date">Last updated: 20 October 2026 · Applies to: OA Radyo (Windows) and oalabs.dev</p>
+        <p class="date">Last updated: 22 October 2026 · Applies to: OA Radyo (Windows), Harrier Cleaner and oalabs.dev</p>
         <p class="short">In short: OA Radyo needs no account, collects no information that identifies you, and contains no ads or trackers. Your favourites, settings and listening history stay on your computer.</p>
         <h2>What we don’t collect</h2>
         <p>No name, email, phone number or location; no record of what you listen to (the Statistics screen is calculated on your computer only); no analytics, advertising IDs, cookies or similar tracking.</p>
@@ -118,6 +130,15 @@
         <p>You don’t need an account to use the apps. If you sign up on oalabs.dev, we process your name, email address, sign-up and last sign-in dates, your announcement-email preference, the apps you asked to be notified about, the version of the notice you accepted, and for each signed-in session a device name (such as “Chrome · Windows”) and last-activity time. No password is stored; sign-in codes and session keys are kept only as one-way hashes, and a one-way hash of your IP address is kept with sign-in requests to prevent abuse. Data is stored on our server (Cloudflare) and sign-in codes and announcements are sent through the Resend email service. Announcement emails are only sent if you opt in, and you can turn them off in your account. One essential cookie (oa_s) keeps you signed in. Deleting your account on the account page removes your data immediately. Questions: destek@oalabs.dev.</p>
         <h2>Features you turn on</h2>
         <p>Sync writes your lists to a file in a folder you choose (such as OneDrive). Discord status sends the current station and song to the Discord app on your computer. Search, share and “report” buttons open your browser or email app; you see and send the content yourself.</p>
+        <h2 id="harrier-en">Harrier Cleaner</h2>
+        <p class="short">In short: Harrier Cleaner scans and cleans your computer entirely on the computer itself. The names and contents of your files and your photos are never sent anywhere. It only goes online to check for new versions and, unless you turn it off, to send anonymous error reports.</p>
+        <p><b>Your files:</b> Junk and duplicate cleanup, the disk map, photo compression and photo location removal all happen on your computer. No files, file names or folder lists are sent. Deleted duplicates and the originals of compressed photos are moved to the Recycle Bin.</p>
+        <p><b>Stored on your computer:</b> Settings, cleanup history, folders you added or excluded and a random install ID are kept in <span class="muted">%APPDATA%\HarrierCleaner</span>; a log of app errors is kept in errors.log in the same folder. Uninstalling the app and deleting this folder removes all of it.</p>
+        <p><b>App Permissions and System Info:</b> Which apps used your camera, microphone and location, hardware details and running programs are read from Windows’ own records and only shown on your screen. Nothing is sent.</p>
+        <p><b>Update checks:</b> When it starts, the app checks the version information on oalabs.dev; if you choose to install a new version, the setup file is downloaded. You can turn this off in Settings.</p>
+        <p><b>Error reports:</b> If something unexpected goes wrong, a short report is sent to our server (api.oalabs.dev): a random install ID, the app and Windows versions, the interface language, the error message and a technical stack trace. Your user name and folder paths are removed before sending. The install ID is stored only as a one-way hash; no name, email or IP address is stored. Reports are deleted after 90 days. This is on by default; you can turn it off in Settings &gt; General.</p>
+        <p><b>Reporting a problem:</b> The “Write an email” button opens your email app with a ready-made draft; you see and send the content yourself.</p>
+        <p>As with any internet connection, the servers the app connects to can see your IP address.</p>
         <h2>Contact</h2>
         <p><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
       </div>
