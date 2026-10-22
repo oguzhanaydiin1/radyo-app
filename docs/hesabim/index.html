@@ -88,7 +88,7 @@
     }
   </style>
 </head>
-<body>
+<body data-auto-lang>
   <header class="site-head">
     <nav class="wrap nav" aria-label="Site">
       <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
@@ -97,6 +97,7 @@
         <a href="/dinle/">Web’de dinle</a>
         <a href="/#iletisim">İletişim</a>
       </div>
+      <a class="lang-sw" data-lang-switch href="?lang=en">EN</a>
       <div class="acct" data-account-slot></div>
     </nav>
   </header>
@@ -161,6 +162,10 @@
               <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="ann-l" id="tog-ann"></button>
             </div>
             <div class="switch">
+              <div><b id="ra-l">OA Radyo Android çıkınca haber ver</b><span>Android sürümü yayına girdiğinde tek bir e-posta.</span></div>
+              <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="ra-l" data-notify="radyo-android"></button>
+            </div>
+            <div class="switch">
               <div><b id="sc-l">OA Score çıkınca haber ver</b><span>Uygulama yayına girdiğinde tek bir e-posta.</span></div>
               <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="sc-l" data-notify="score"></button>
             </div>
@@ -207,6 +212,7 @@
     </div>
   </footer>
 
+  <script src="../i18n-site.js" data-auto></script>
   <script src="../hesap.js"></script>
   <script>
     (function () {
@@ -220,7 +226,7 @@
         { id: 'score', name: 'OA Score', letter: 'S', bg: '#5BC48C', ink: '#0F2A1C' },
         { id: 'barkod', name: 'OA Barkod', letter: 'B', bg: '#6EA8FE', ink: '#0E1A30' },
       ];
-      var month = function (d) { return new Date(d).toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' }); };
+      var month = function (d) { return new Date(d).toLocaleDateString(window.OA_LOCALE || 'tr-TR', { month: 'long', year: 'numeric' }); };
       var when = function (d) {
         var m = Math.round((Date.now() - Date.parse(d)) / 60000);
         if (m < 15) return 'şu an etkin';
@@ -343,7 +349,7 @@
           var ic = a.live
             ? '<img class="ic" src="/radyo/img/icon.png" alt="" width="48" height="48">'
             : '<span class="ic" aria-hidden="true" style="background:' + a.bg + ';color:' + a.ink + '">' + a.letter + '</span>';
-          var sub = a.live ? 'Windows' + (radyoVer ? ' · Son sürüm ' + esc(radyoVer) : '') : (on ? 'Yakında · Çıkınca sana haber vereceğiz' : 'Yakında');
+          var sub = a.live ? 'Windows · Web' + (radyoVer ? ' · Son sürüm ' + esc(radyoVer) : '') + ' · Android yakında' : (on ? 'Yakında · Çıkınca sana haber vereceğiz' : 'Yakında');
           var act = a.live
             ? '<a class="btn sm" href="/dinle/">Web’de dinle</a><a class="btn primary sm" href="/radyo/">İndir</a>'
             : '<button class="btn sm" type="button" aria-pressed="' + on + '" data-app-notify="' + a.id + '">' + (on ? '✓ Haber verilecek' : 'Çıkınca haber ver') + '</button>';

@@ -10,6 +10,9 @@
   <meta property="og:description" content="Küçük uygulamalar, özenle yapılmış. Ücretsiz, reklamsız, verin sende kalır.">
   <meta property="og:image" content="https://oalabs.dev/radyo/img/app-kesfet.webp">
   <link rel="canonical" href="https://oalabs.dev/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/">
   <link rel="icon" href="radyo/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,6 +74,7 @@
         <a href="#iletisim">İletişim</a>
       </div>
       <a class="btn primary small nav-cta" href="radyo/">OA Radyo’yu indir</a>
+      <a class="lang-sw" data-lang-switch href="/en/">EN</a>
       <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Giriş yap</b><small>veya üye ol</small></span></a></div>
     </nav>
   </header>
@@ -114,6 +118,7 @@
           <div class="app-body">
             <div class="app-title"><h3>OA Radyo</h3><span class="state live">Yayında</span></div>
             <p>Türkiye’nin ve dünyanın radyoları tek uygulamada. Kayıt, alarm, ekolayzır, şarkı adı.</p>
+            <div class="plats" aria-label="Platformlar"><span class="plat"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5l7-1v7H3zM11 4.3L21 3v8.5H11zM3 12.5h7v7l-7-1zM11 12.5h10V21l-10-1.4z"/></svg>Windows</span><span class="plat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Web</span><span class="plat soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Android <small>Yakında</small></span></div>
             <div class="app-actions">
               <a class="btn primary small" href="radyo/">İncele ve indir</a>
               <a class="btn small" href="dinle/"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg> Web’de dinle</a>
@@ -124,7 +129,8 @@
           <div class="app-top" style="background: #1D3A2C"><span class="app-icon" aria-hidden="true" style="background: var(--green); color: #0F2A1C">S</span></div>
           <div class="app-body">
             <div class="app-title"><h3>OA Score</h3><span class="state">Yakında</span></div>
-            <p>Hazırlanıyor.</p>
+            <p>Canlı skorlar, istatistikler ve maç haberleri.</p>
+            <div class="plats" aria-label="Platformlar"><span class="plat soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Android <small>Yakında</small></span></div>
           </div>
         </article>
         <article class="app soon">
@@ -132,6 +138,7 @@
           <div class="app-body">
             <div class="app-title"><h3>OA Barkod</h3><span class="state">Yakında</span></div>
             <p>Hazırlanıyor.</p>
+            <div class="plats" aria-label="Platformlar"><span class="plat soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Android <small>Yakında</small></span></div>
           </div>
         </article>
       </div>
@@ -179,6 +186,7 @@
     </div>
   </footer>
 
+  <script src="i18n-site.js"></script>
   <script src="hesap.js"></script>
   <script>
     fetch('https://raw.githubusercontent.com/oguzhanaydiin1/radyo-app/main/updates/latest.json', { cache: 'no-store' })

@@ -13,10 +13,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../site.css">
 </head>
-<body>
+<body data-auto-lang>
   <header class="site-head">
     <nav class="wrap nav" aria-label="Site">
       <a class="logo" href="/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+      <a class="lang-sw" data-lang-switch href="?lang=en" style="margin-left: auto">EN</a>
     </nav>
   </header>
   <main class="wrap">
@@ -68,13 +69,23 @@
       <div class="foot-links"><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a><a class="quiet" href="/gizlilik/#uyelik">Gizlilik politikası</a></div>
     </div>
   </footer>
+  <script src="../i18n-site.js" data-auto></script>
   <script src="../hesap.js"></script>
   <script>
     (function () {
       var $ = function (s) { return document.querySelector(s); };
       var mode = /giris/.test(location.search + location.hash) ? 'login' : 'register';
       var email = '';
-      OA.me().then(function (r) { if (r && r.ok) location.replace('/hesabim/'); });
+      // "Çıkınca haber ver"den gelindiyse giriş/üyelik bitince o uygulama listeye eklenir.
+      var haber = new URLSearchParams(location.search).get('haber');
+      function finish(created) {
+        var go = function () { location.href = haber ? '/hesabim/#bildirimler' : '/hesabim/' + (created ? '?hosgeldin=1' : ''); };
+        if (!haber) { go(); return; }
+        var n = {}; n[haber] = true;
+        OA.call('/v1/me', { notify: n }).then(go, go);
+      }
+      OA.me().then(function (r) { if (r && r.ok) finish(false); });
+      if (haber) $('#lead').setAttribute('data-haber', '1');
 
       function setMode(m) {
         mode = m;
@@ -84,7 +95,8 @@
         $('#f-name').hidden = !reg;
         $('#f-consent').hidden = !reg;
         $('#title').textContent = reg ? 'OA Labs’e üye ol' : 'Giriş yap';
-        $('#lead').textContent = reg ? 'Ücretsiz. Şifre yok: her girişte e-postana 6 haneli bir kod gelir.' : 'E-posta adresini yaz, sana bir giriş kodu gönderelim.';
+        $('#lead').textContent = haber ? 'Çıkınca haber vermemiz için üye ol ya da giriş yap. Şifre yok, e-postana kod gelir.'
+          : reg ? 'Ücretsiz. Şifre yok: her girişte e-postana 6 haneli bir kod gelir.' : 'E-posta adresini yaz, sana bir giriş kodu gönderelim.';
         document.title = (reg ? 'Üye ol' : 'Giriş yap') + ' — OA Labs';
         show('#msg1', '');
       }
@@ -142,7 +154,7 @@
         show('#msg2', 'Kontrol ediliyor…');
         OA.call('/v1/auth/verify', { email: email, code: code }).then(function (r) {
           busy($('#verify'), false);
-          if (r.ok) { show('#msg2', r.created ? 'Üyeliğin açıldı!' : 'Giriş yapıldı!', 'ok'); location.href = '/hesabim/' + (r.created ? '?hosgeldin=1' : ''); return; }
+          if (r.ok) { show('#msg2', r.created ? 'Üyeliğin açıldı!' : 'Giriş yapıldı!', 'ok'); finish(r.created); return; }
           show('#msg2', OA.msg(r.error), 'err');
           $('#code').select();
         });

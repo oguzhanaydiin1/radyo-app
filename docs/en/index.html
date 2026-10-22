@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OA Labs — small apps, carefully made</title>
+  <meta name="description" content="OA Labs: free, ad-free and simple apps made by Oğuzhan Aydın. OA Radyo, with more on the way.">
+  <meta name="theme-color" content="#0D0F16">
+  <meta property="og:title" content="OA Labs">
+  <meta property="og:description" content="Small apps, carefully made. Free, ad-free, and your data stays yours.">
+  <meta property="og:image" content="https://oalabs.dev/radyo/img/app-kesfet.webp">
+  <link rel="canonical" href="https://oalabs.dev/en/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/">
+  <link rel="icon" href="/radyo/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    .hero { padding: 96px 0 88px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center; }
+    .hero-text { flex: 1 1 440px; min-width: 0; }
+    .kicker { margin: 0 0 20px; color: var(--muted); font-size: 16px; }
+    .hero h1 { margin: 0 0 24px; font: 800 clamp(48px, 6.4vw, 76px)/0.98 var(--display); letter-spacing: -0.035em; }
+    .hero .lead { margin: 0 0 36px; color: var(--text-2); font-size: 20px; max-width: 30em; }
+    .cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .hero-shot { flex: 1 1 520px; min-width: 0; position: relative; }
+    .frame { border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 8px var(--bg-2); }
+    .badge { position: absolute; left: -22px; bottom: -26px; display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--border-2); box-shadow: 0 16px 40px rgba(0,0,0,.5); line-height: 1.3; }
+    .badge img { width: 40px; height: 40px; border-radius: 11px; }
+    .badge b { display: block; font-weight: 600; font-size: 15px; }
+    .badge span { color: var(--muted); font-size: 13px; }
+
+    .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .app { border-radius: 20px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; }
+    .app-top { height: 150px; position: relative; overflow: hidden; }
+    .app-top svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .app-icon { position: absolute; left: 24px; top: 24px; width: 56px; height: 56px; border-radius: 15px; display: grid; place-items: center; font: 800 24px/1 var(--display); }
+    .app-icon.img { box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .app-body { padding: 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .app-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .app h3 { margin: 0; font: 800 26px/1.2 var(--display); }
+    .state { font-size: 13px; font-weight: 600; color: var(--muted); }
+    .state.live { color: var(--amber); }
+    .app p { margin: 0; color: var(--text-2); font-size: 16px; flex: 1; }
+    .app.soon p { color: var(--muted); }
+    .app .btn { align-self: flex-start; }
+    .app-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .ways { border-top: 1px solid var(--line); padding-top: 56px; display: flex; flex-wrap: wrap; gap: 48px; }
+    .ways .h2 { flex: 1 1 280px; margin: 0; }
+    .ways-grid { flex: 2 1 600px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+    .ways-grid h3 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
+    .ways-grid p { margin: 0; color: var(--muted); font-size: 16px; }
+
+    @media (max-width: 960px) {
+      .apps, .ways-grid { grid-template-columns: minmax(0, 1fr); }
+      .badge { left: 12px; bottom: -22px; }
+    }
+    @media (max-width: 760px) {
+      .hero { padding: 48px 0 64px; gap: 40px; }
+      .hero .lead { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/en/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+      <div class="nav-links">
+        <a href="#uygulamalar">Apps</a>
+        <a href="#ilkeler">How we work</a>
+        <a href="#iletisim">Contact</a>
+      </div>
+      <a class="btn primary small nav-cta" href="/en/radyo/">Get OA Radyo</a>
+      <a class="lang-sw" data-lang-switch href="/">TR</a>
+      <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Sign in</b><small>or sign up</small></span></a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div class="hero-text">
+        <p class="kicker">Oğuzhan Aydın’s software workshop</p>
+        <h1>Small apps, carefully made.</h1>
+        <p class="lead">Simple, free tools you’ll use every day. No ads, no account required, and your data stays on your computer.</p>
+        <div class="cta">
+          <a class="btn primary" href="/en/radyo/">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>
+            Get OA Radyo
+          </a>
+          <a class="btn" href="/dinle/?lang=en">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+            Listen on the web
+          </a>
+          <a class="btn" href="#uygulamalar">All apps</a>
+        </div>
+      </div>
+      <div class="hero-shot">
+        <div class="frame"><img src="/radyo/img/app-kesfet.webp" width="1280" height="820" alt="OA Radyo’s main screen: the station playing, station details and station cards"></div>
+        <div class="badge">
+          <img src="/radyo/img/icon.png" alt="" width="40" height="40">
+          <div><b id="badge-ver">OA Radyo</b><span>Windows 10 and 11 · Free</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="uygulamalar" aria-labelledby="apps-h">
+      <h2 class="h2" id="apps-h">Apps</h2>
+      <p class="lead-2">Each one does one thing well. All with the same signature: OA.</p>
+      <div class="apps">
+        <article class="app">
+          <div class="app-top" style="background: var(--amber)">
+            <svg aria-hidden="true" viewBox="0 0 360 150" preserveAspectRatio="none"><g stroke="#14110A" stroke-opacity=".22" stroke-width="2"><path d="M20 110v20M40 120v10M60 120v10M80 100v30M100 120v10M120 120v10M140 110v20M160 120v10M180 90v40M200 120v10M220 120v10M240 110v20M260 120v10M280 120v10M300 100v30M320 120v10M340 120v10"/></g><path d="M178 20v115" stroke="#14110A" stroke-width="3"/></svg>
+            <img class="app-icon img" src="/radyo/img/icon.png" alt="" width="56" height="56">
+          </div>
+          <div class="app-body">
+            <div class="app-title"><h3>OA Radyo</h3><span class="state live">Available</span></div>
+            <p>Turkey’s and the world’s radio stations in one app. Recording, alarms, equaliser, song titles.</p>
+            <div class="plats" aria-label="Platforms"><span class="plat"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5l7-1v7H3zM11 4.3L21 3v8.5H11zM3 12.5h7v7l-7-1zM11 12.5h10V21l-10-1.4z"/></svg>Windows</span><span class="plat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Web</span><span class="plat soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Android <small>Soon</small></span></div>
+            <div class="app-actions">
+              <a class="btn primary small" href="/en/radyo/">Learn more</a>
+              <a class="btn small" href="/dinle/?lang=en"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg> Listen on the web</a>
+            </div>
+          </div>
+        </article>
+        <article class="app soon">
+          <div class="app-top" style="background: #1D3A2C"><span class="app-icon" aria-hidden="true" style="background: var(--green); color: #0F2A1C">S</span></div>
+          <div class="app-body">
+            <div class="app-title"><h3>OA Score</h3><span class="state">Coming soon</span></div>
+            <p>Live scores, stats and match news.</p>
+            <div class="plats" aria-label="Platforms"><span class="plat soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Android <small>Soon</small></span></div>
+          </div>
+        </article>
+        <article class="app soon">
+          <div class="app-top" style="background: #1B2A45"><span class="app-icon" aria-hidden="true" style="background: var(--blue); color: #0E1A30">B</span></div>
+          <div class="app-body">
+            <div class="app-title"><h3>OA Barkod</h3><span class="state">Coming soon</span></div>
+            <p>In the works.</p>
+            <div class="plats" aria-label="Platforms"><span class="plat soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>Android <small>Soon</small></span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap" id="uyelik" aria-labelledby="uye-h">
+      <div class="join">
+        <div class="join-text">
+          <h2 class="h2" id="uye-h">Create an OA Labs account</h2>
+          <p>Free and password-free: you sign in with a code sent to your email. You don’t need an account to use the apps.</p>
+          <ul class="perks">
+            <li>Be the first to hear about new apps</li>
+            <li>Early access to beta versions</li>
+            <li>Delete your account anytime</li>
+          </ul>
+        </div>
+        <div class="join-cta">
+          <a class="btn primary" href="/uye/?lang=en" data-guest>Sign up</a>
+          <a class="btn" href="/uye/?giris&amp;lang=en" data-guest>Sign in</a>
+          <a class="btn primary" href="/hesabim/?lang=en" data-member hidden>Go to my account</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="ilkeler" aria-labelledby="ilke-h">
+      <div class="ways">
+        <h2 class="h2" id="ilke-h">How we work</h2>
+        <div class="ways-grid">
+          <div><h3>Free and ad-free</h3><p>All our apps are free. We don’t put ads in them.</p></div>
+          <div><h3>Your data stays yours</h3><p>The apps don’t need an account; signing up is optional. We never sell your data or use it for ads. <a href="/gizlilik/#en">Privacy policy</a></p></div>
+          <div><h3>Updates itself</h3><p>New versions arrive inside the app with one click.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot" id="iletisim">
+    <div class="wrap foot">
+      <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="/gizlilik/#en">Privacy policy</a>
+        <a class="quiet" href="/en/radyo/">OA Radyo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/i18n-site.js"></script>
+  <script src="/hesap.js"></script>
+  <script>
+    fetch('https://raw.githubusercontent.com/oguzhanaydiin1/radyo-app/main/updates/latest.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j && j.version) document.getElementById('badge-ver').textContent = 'OA Radyo ' + j.version; })
+      .catch(() => {});
+  </script>
+</body>
+</html>

@@ -40,7 +40,7 @@ async function hash(env, text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${env.PEPPER || 'oa'}:auth:${text}`));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
-const NOTIFY_APPS = new Set(['score', 'barkod']);
+const NOTIFY_APPS = new Set(['score', 'barkod', 'radyo-android']);
 
 // Tarayıcı bilgisinden kısa bir cihaz adı: "Chrome · Windows"
 function deviceName(req) {
@@ -62,25 +62,35 @@ function readCookie(req) {
   return m ? m[1] : '';
 }
 
-function codeMail(code, mode) {
-  const title = mode === 'register' ? 'OA Labs üyeliğini tamamla' : mode === 'change' ? 'OA Labs e-posta değişikliği' : 'OA Labs giriş kodun';
-  const lead = mode === 'register'
-    ? 'OA Labs’e üye olmak için bu kodu sayfaya yaz:'
-    : mode === 'change'
-      ? 'OA Labs hesabının e-posta adresini bu adresle değiştirmek için bu kodu sayfaya yaz:'
-      : 'OA Labs hesabına girmek için bu kodu sayfaya yaz:';
-  const html = `<!doctype html><html lang="tr"><body style="margin:0;background:#0D0F16;padding:32px 16px;font-family:Segoe UI,Arial,sans-serif;color:#EEEAE2">
+function codeMail(code, mode, lang) {
+  const en = lang === 'en';
+  const T = en
+    ? {
+      title: mode === 'register' ? 'Finish creating your OA Labs account' : mode === 'change' ? 'OA Labs email change' : 'Your OA Labs sign-in code',
+      lead: mode === 'register' ? 'Enter this code on the page to create your OA Labs account:'
+        : mode === 'change' ? 'Enter this code on the page to change your OA Labs account email to this address:'
+          : 'Enter this code on the page to sign in to your OA Labs account:',
+      foot: `The code is valid for ${CODE_MIN} minutes. If you didn’t ask for this, you can ignore this email; never share the code.`,
+    }
+    : {
+      title: mode === 'register' ? 'OA Labs üyeliğini tamamla' : mode === 'change' ? 'OA Labs e-posta değişikliği' : 'OA Labs giriş kodun',
+      lead: mode === 'register' ? 'OA Labs’e üye olmak için bu kodu sayfaya yaz:'
+        : mode === 'change' ? 'OA Labs hesabının e-posta adresini bu adresle değiştirmek için bu kodu sayfaya yaz:'
+          : 'OA Labs hesabına girmek için bu kodu sayfaya yaz:',
+      foot: `Kod ${CODE_MIN} dakika geçerli. Bu isteği sen yapmadıysan bu e-postayı yok sayabilirsin; kodu kimseyle paylaşma.`,
+    };
+  const html = `<!doctype html><html lang="${en ? 'en' : 'tr'}"><body style="margin:0;background:#0D0F16;padding:32px 16px;font-family:Segoe UI,Arial,sans-serif;color:#EEEAE2">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
 <table role="presentation" width="100%" style="max-width:480px;background:#151824;border:1px solid #262B3D;border-radius:16px" cellpadding="0" cellspacing="0"><tr><td style="padding:32px">
 <div style="font-weight:800;font-size:20px;margin-bottom:24px"><span style="display:inline-block;background:#EEEAE2;color:#0D0F16;border-radius:8px;padding:5px 6px;font-size:12px;margin-right:8px">OA</span>OA Labs</div>
-<p style="margin:0 0 16px;font-size:16px;line-height:1.6">${lead}</p>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6">${T.lead}</p>
 <div style="font-size:36px;font-weight:800;letter-spacing:8px;background:#0D0F16;border:1px solid #262B3D;border-radius:12px;padding:16px 0;text-align:center;color:#F2A541">${code}</div>
-<p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:#9EA2B3">Kod ${CODE_MIN} dakika geçerli. Bu isteği sen yapmadıysan bu e-postayı yok sayabilirsin; kodu kimseyle paylaşma.</p>
+<p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:#9EA2B3">${T.foot}</p>
 </td></tr></table>
 <p style="font-size:12px;color:#7E8296;margin:16px 0 0">OA Labs · oalabs.dev</p>
 </td></tr></table></body></html>`;
-  const text = `${lead}\n\n${code}\n\nKod ${CODE_MIN} dakika geçerli. Bu isteği sen yapmadıysan bu e-postayı yok sayabilirsin.\n`;
-  return { subject: `${title}: ${code}`, html, text };
+  const text = `${T.lead}\n\n${code}\n\n${T.foot}\n`;
+  return { subject: `${T.title}: ${code}`, html, text };
 }
 
 async function sendMail(env, to, m) {
@@ -134,7 +144,7 @@ export async function start(req, env, ipHash) {
        ON CONFLICT (email) DO UPDATE SET code = excluded.code, expires = excluded.expires, attempts = 0, created = excluded.created, ip = excluded.ip, pending = excluded.pending`,
     ).bind(email, await hash(env, `${email}:${code}`), new Date(Date.now() + CODE_MIN * 60e3).toISOString(), now(), ipHash, pending),
   ]);
-  const sent = await sendMail(env, email, codeMail(code, mode));
+  const sent = await sendMail(env, email, codeMail(code, mode, b.lang));
   if (!sent.ok) {
     await env.DB.prepare('DELETE FROM login_codes WHERE email = ?1').bind(email).run();
     return { status: 502, data: { ok: false, error: 'gonderilemedi', resend: sent.status || 0, detail: sent.detail || '' } };
@@ -288,7 +298,7 @@ export async function emailStart(req, env, ipHash) {
     `INSERT INTO login_codes (email, code, expires, attempts, created, ip, pending) VALUES (?1, ?2, ?3, 0, ?4, ?5, ?6)
      ON CONFLICT (email) DO UPDATE SET code = excluded.code, expires = excluded.expires, attempts = 0, created = excluded.created, ip = excluded.ip, pending = excluded.pending`,
   ).bind(email, await hash(env, `${email}:${code}`), new Date(Date.now() + CODE_MIN * 60e3).toISOString(), now(), ipHash, JSON.stringify({ changeFor: u.id })).run();
-  const sent = await sendMail(env, email, codeMail(code, 'change'));
+  const sent = await sendMail(env, email, codeMail(code, 'change', b.lang));
   if (!sent.ok) {
     await env.DB.prepare('DELETE FROM login_codes WHERE email = ?1').bind(email).run();
     return { status: 502, data: { ok: false, error: 'gonderilemedi', resend: sent.status || 0, detail: sent.detail || '' } };

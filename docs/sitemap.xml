@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://oalabs.dev/</loc><lastmod>2026-10-19</lastmod></url>
-  <url><loc>https://oalabs.dev/radyo/</loc><lastmod>2026-10-19</lastmod></url>
-  <url><loc>https://oalabs.dev/dinle/</loc><lastmod>2026-10-19</lastmod></url>
-  <url><loc>https://oalabs.dev/gizlilik/</loc><lastmod>2026-10-19</lastmod></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url><loc>https://oalabs.dev/</loc><lastmod>2026-10-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/"/></url>
+  <url><loc>https://oalabs.dev/en/</loc><lastmod>2026-10-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/"/></url>
+  <url><loc>https://oalabs.dev/radyo/</loc><lastmod>2026-10-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/radyo/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/radyo/"/></url>
+  <url><loc>https://oalabs.dev/en/radyo/</loc><lastmod>2026-10-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/radyo/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/radyo/"/></url>
+  <url><loc>https://oalabs.dev/dinle/</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://oalabs.dev/gizlilik/</loc><lastmod>2026-10-22</lastmod></url>
 </urlset>

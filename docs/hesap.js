@@ -21,6 +21,7 @@ window.OA = (function () {
     ag: 'Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.',
   };
   function call(path, body) {
+    if (body && typeof body === 'object' && !('lang' in body)) body.lang = window.OA_LANG || 'tr'; // e-postalar bu dilde gider
     return fetch(API + path, {
       method: body === undefined ? 'GET' : 'POST',
       credentials: 'include',
@@ -119,14 +120,38 @@ window.OA = (function () {
     pop.addEventListener('click', function (e) { if (e.target.closest('a')) open(false); });
   }
 
+  // "Çıkınca haber ver" düğmeleri: üyeyse listeye ekler, değilse önce üyelik sayfasına götürür.
+  function notifyButtons(u) {
+    document.querySelectorAll('[data-notify-app]').forEach(function (b) {
+      var app = b.getAttribute('data-notify-app');
+      var on = !!(u && (u.notify || []).indexOf(app) >= 0);
+      var paint = function () {
+        b.setAttribute('aria-pressed', String(on));
+        b.textContent = on ? '✓ Haber verilecek' : 'Çıkınca haber ver';
+      };
+      paint();
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!u) { location.href = '/uye/?haber=' + encodeURIComponent(app); return; }
+        var n = {}; n[app] = !on;
+        b.disabled = true;
+        call('/v1/me', { notify: n }).then(function (r) {
+          b.disabled = false;
+          if (r && r.ok) { u = r.user; on = !on; paint(); }
+        });
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     var slots = document.querySelectorAll('[data-account-slot]');
-    if (!slots.length) return;
+    if (!slots.length && !document.querySelector('[data-notify-app]')) return;
     me().then(function (r) {
       var u = r && r.ok ? r.user : null;
       slots.forEach(function (s) { mount(s, u); });
       document.querySelectorAll('[data-guest]').forEach(function (el) { el.hidden = !!u; });
       document.querySelectorAll('[data-member]').forEach(function (el) { el.hidden = !u; });
+      notifyButtons(u);
     });
   });
   return { call: call, msg: msg, me: me, esc: esc, initials: initials, firstName: firstName, icons: I, sections: SECTIONS, menuItems: menuItems, logout: logout };

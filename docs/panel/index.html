@@ -220,7 +220,7 @@
         $('#m-announce').textContent = fmt(r.counts.announce);
         const nt = r.notify || {};
         $('#m-note').textContent = (r.mailEnabled ? '' : 'E-posta gönderimi kapalı: Resend anahtarı eklenene kadar kimse üye olamaz. ')
-          + `“Çıkınca haber ver”: OA Score ${fmt(nt.score || 0)} kişi, OA Barkod ${fmt(nt.barkod || 0)} kişi.`;
+          + `“Çıkınca haber ver”: OA Radyo Android ${fmt(nt['radyo-android'] || 0)} kişi, OA Score ${fmt(nt.score || 0)} kişi, OA Barkod ${fmt(nt.barkod || 0)} kişi.`;
         const today = new Date().toISOString().slice(0, 10);
         const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
         const n = Object.fromEntries(r.daily.map((x) => [x.day, x.n]));

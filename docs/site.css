@@ -158,3 +158,18 @@ section { padding: 72px 0; }
   .acct-btn .lbl, .acct-btn svg.chev { display: none; }
   .acct-pop { position: fixed; right: 16px; left: 16px; top: 72px; width: auto; max-width: none; }
 }
+
+/* Platform çipleri (Windows · Web · Android yakında) */
+.plats { display: flex; flex-wrap: wrap; gap: 8px; }
+.plat { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 15px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; }
+.plat svg { width: 15px; height: 15px; flex: none; }
+.plat.soon { background: transparent; border-style: dashed; border-color: #3E5A46; color: #7CC88A; }
+.plat.soon small { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 1px 6px; border-radius: 6px; background: rgba(124,200,138,.14); }
+
+/* Dil düğmesi ve öneri şeridi */
+.lang-sw { flex: none; display: inline-grid; place-items: center; min-width: 44px; height: 36px; padding: 0 10px; border-radius: 18px; border: 1px solid var(--border-2); color: var(--text-2); text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: .06em; }
+.lang-sw:hover { color: var(--text); border-color: var(--faint); }
+.lang-bar { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; padding: 10px 16px; background: var(--surface-2); border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text-2); }
+.lang-bar .btn { height: 34px; padding: 0 14px; font-size: 14px; }
+.lang-x { width: 34px; height: 34px; border-radius: 17px; border: 1px solid var(--border-2); background: transparent; color: var(--text-2); font-size: 18px; cursor: pointer; }
+@media (max-width: 760px) { .lang-sw { min-width: 40px; height: 34px; } }

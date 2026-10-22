@@ -10,6 +10,9 @@
   <meta property="og:description" content="Türkiye'deki ve dünyadaki binlerce radyo tek uygulamada. Ücretsiz ve reklamsız.">
   <meta property="og:image" content="https://oalabs.dev/radyo/img/app-kesfet.webp">
   <link rel="canonical" href="https://oalabs.dev/radyo/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/radyo/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/radyo/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/radyo/">
   <link rel="icon" href="img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -148,6 +151,34 @@
       .say { padding: 110px 20px; }
       .more, .vals { padding-left: 16px; padding-right: 16px; }
     }
+    /* Android yakında */
+    .soonbar { display: inline-flex; align-items: center; gap: 14px; margin-top: 22px; padding: 8px 8px 8px 16px; border-radius: 30px; background: var(--surface); border: 1px solid var(--border); flex-wrap: wrap; justify-content: center; text-align: left; }
+    .soonbar .ic { width: 34px; height: 34px; border-radius: 10px; background: rgba(124,200,138,.14); display: grid; place-items: center; color: #7CC88A; flex: none; }
+    .soonbar .tx { color: var(--muted); font-size: 15px; }
+    .soonbar .tx b { color: var(--text); font-weight: 600; }
+    .soonbar .btn { height: 38px; padding: 0 16px; font-size: 14px; cursor: pointer; font-family: inherit; }
+    .btn[aria-pressed="true"], .btn.primary[aria-pressed="true"] { background: transparent; color: var(--green); border-color: #3E5A46; }
+    .droid { max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
+    .phone-card { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; border-radius: 28px; background: var(--surface); border: 1px solid var(--border); padding: 48px; overflow: hidden; }
+    .phone-card .txt { flex: 1 1 360px; min-width: 0; }
+    .phone-card h2 { margin: 0 0 12px; font-size: clamp(40px, 5vw, 64px); line-height: 1; }
+    .phone-card .pill { display: inline-block; margin: 0 0 16px; padding: 4px 12px; border-radius: 999px; background: rgba(124,200,138,.12); color: #7CC88A; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .phone { flex: 0 0 auto; width: 230px; height: 460px; border-radius: 42px; border: 8px solid #262B3D; background: #0A0B10; position: relative; margin-inline: auto; box-shadow: 0 30px 80px rgba(0,0,0,.6); overflow: hidden; }
+    .phone .notch { position: absolute; left: 50%; top: 10px; width: 70px; height: 18px; margin-left: -35px; border-radius: 9px; background: #262B3D; }
+    .phone .scr { position: absolute; inset: 40px 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .phone .now { border-radius: 16px; background: var(--amber); color: var(--amber-ink); padding: 14px; }
+    .phone .now b { display: block; font: 800 20px/1.1 var(--display); }
+    .phone .now small { font-size: 11px; font-weight: 700; letter-spacing: .06em; opacity: .8; }
+    .phone .row { height: 42px; border-radius: 12px; background: var(--surface-2); display: flex; align-items: center; gap: 10px; padding: 0 10px; color: var(--text-2); font-size: 13px; font-weight: 600; }
+    .phone .row i { width: 24px; height: 24px; border-radius: 7px; background: var(--border-2); flex: none; }
+    .phone .soon-tag { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); white-space: nowrap; height: 30px; padding: 0 12px; border-radius: 15px; display: inline-flex; align-items: center; background: var(--bg); border: 1px dashed #3E5A46; color: #7CC88A; font-size: 13px; font-weight: 700; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .phone { animation: phoneIn linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+        @keyframes phoneIn { from { opacity: 0; transform: translateY(120px) rotate(-6deg); } to { opacity: 1; transform: none; } }
+      }
+    }
+    @media (max-width: 800px) { .phone-card { padding: 28px 20px; } .droid { padding-left: 16px; padding-right: 16px; } }
   </style>
   <script type="application/ld+json">
 {
@@ -194,6 +225,7 @@
         <a href="#sss">Sorular</a>
         <a href="/dinle/">Web’de dinle</a>
       </div>
+      <a class="lang-sw" data-lang-switch href="/en/radyo/">EN</a>
       <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Giriş yap</b><small>veya üye ol</small></span></a></div>
     </nav>
   </header>
@@ -211,6 +243,11 @@
             <a class="btn big" href="/dinle/"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Web’de dinle</a>
           </div>
           <p class="meta" data-meta>Windows 10 ve 11 · 64 bit</p>
+          <div class="soonbar">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span>
+            <span class="tx"><b>Android sürümü yakında.</b> Telefonunda da dinle.</span>
+            <button class="btn" type="button" data-notify-app="radyo-android">Çıkınca haber ver</button>
+          </div>
           <div class="cue" aria-hidden="true">Kaydır<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
         </div>
         <img class="hero-shot" src="img/app-kesfet.webp" width="1280" height="820" alt="OA Radyo’nun Keşfet ekranı: çalan radyo, kategoriler ve radyo kartları">
@@ -276,6 +313,26 @@
       <div class="marq rev" aria-label="11 ile 20 arası"><span class="rk"><b>11</b>Radyo 7</span><span class="rk"><b>12</b>Joy Türk</span><span class="rk"><b>13</b>Radyo Fenomen</span><span class="rk"><b>14</b>Radyo Seymen</span><span class="rk"><b>15</b>Damar Türk</span><span class="rk"><b>16</b>NTV Radyo</span><span class="rk"><b>17</b>TRT Türkü</span><span class="rk"><b>18</b>Radyo Voyage</span><span class="rk"><b>19</b>Power FM</span><span class="rk"><b>20</b>Joy FM</span></div>
     </section>
 
+    <!-- Android yakında -->
+    <section class="droid" id="android" aria-labelledby="droid-h">
+      <div class="phone-card">
+        <div class="txt">
+          <p class="pill">Yakında</p>
+          <h2 id="droid-h" class="dsp">Cebinde de radyo.</h2>
+          <p style="margin: 0 0 24px; color: var(--muted); max-width: 26em">OA Radyo Android’e geliyor. Çıktığında sana haber verelim.</p>
+          <button class="btn primary" type="button" data-notify-app="radyo-android">Çıkınca haber ver</button>
+        </div>
+        <div class="phone" aria-hidden="true">
+          <span class="notch"></span>
+          <div class="scr">
+            <div class="now"><small>ŞU AN ÇALIYOR</small><b>Kral FM</b></div>
+            <div class="row"><i></i>TRT FM</div><div class="row"><i></i>Power Türk</div><div class="row"><i></i>Slow Türk</div><div class="row"><i></i>Best FM</div><div class="row"><i></i>Süper FM</div>
+          </div>
+          <span class="soon-tag">Android · Yakında</span>
+        </div>
+      </div>
+    </section>
+
     <!-- 6. Üç söz -->
     <section aria-label="OA Radyo’nun sözleri">
       <div class="vals">
@@ -326,6 +383,7 @@
     </div>
   </footer>
 
+  <script src="../i18n-site.js"></script>
   <script src="../hesap.js"></script>
   <script>
     // Son sürümün numarası, boyutu ve zip bağlantısı.

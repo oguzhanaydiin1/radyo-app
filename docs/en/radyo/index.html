@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OA Radyo — free radio app for Windows</title>
+  <meta name="description" content="Thousands of Turkish and international radio stations in one app. Song titles, recording, alarms, equaliser, mini player. Free and ad-free.">
+  <meta name="theme-color" content="#0D0F16">
+  <meta property="og:title" content="OA Radyo — free radio app for Windows">
+  <meta property="og:description" content="Thousands of Turkish and international radio stations in one app. Free and ad-free.">
+  <meta property="og:image" content="https://oalabs.dev/radyo/img/app-kesfet.webp">
+  <link rel="canonical" href="https://oalabs.dev/en/radyo/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/radyo/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/radyo/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/radyo/">
+  <link rel="icon" href="/radyo/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    body { overflow-x: clip; }
+    .dsp { font-family: var(--display); font-weight: 800; letter-spacing: -0.035em; }
+    .meta { margin: 16px 0 0; color: var(--faint); font-size: 14px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+
+    /* Temel görünüm: kaydırma animasyonu olmayan tarayıcılarda da düzgün */
+    .hero { padding: 96px 0 24px; text-align: center; }
+    .hero .kick { margin: 0 0 18px; color: var(--amber); font-weight: 600; font-size: 20px; }
+    .hero h1 { margin: 0; font-size: clamp(64px, 11vw, 168px); line-height: .92; }
+    .hero .tag { margin: 22px auto 0; font-size: clamp(26px, 3.4vw, 46px); line-height: 1.1; color: var(--text-2); letter-spacing: -0.02em; }
+    .hero .cta { margin-top: 36px; }
+    .hero-shot { display: block; width: min(1100px, 100%); height: auto; margin: 56px auto 0; border-radius: 18px; border: 1px solid var(--border); box-shadow: 0 60px 140px rgba(0,0,0,.7); }
+    .cue { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 36px; color: var(--faint); font-size: 14px; }
+    .say { max-width: 1100px; margin: 0 auto; padding: 160px 32px; }
+    .say p { margin: 0 0 .18em; font-size: clamp(40px, 6.4vw, 92px); line-height: 1.04; }
+    .tour-pin { max-width: 1200px; margin: 0 auto; padding: 80px 32px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
+    .tour-pin h2 { margin: 0 0 22px; font-size: clamp(34px, 4.4vw, 60px); line-height: 1; }
+    .tour-bar { height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; margin-bottom: 8px; }
+    .tour-device { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-2); aspect-ratio: 1280 / 820; box-shadow: 0 50px 120px rgba(0,0,0,.6); }
+    .tour-device img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+    .tour-device img.s1 { opacity: 1; }
+    .step { padding: 22px 0; border-top: 1px solid var(--line); }
+    .step h3 { margin: 0 0 6px; font-size: 26px; line-height: 1.15; }
+    .step p { margin: 0; color: var(--muted); font-size: 17px; }
+    .more { max-width: 1200px; margin: 0 auto; padding: 40px 32px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; }
+    .more div { padding: 24px 0; border-top: 1px solid var(--line); }
+    .more h3 { margin: 0 0 6px; font-size: 19px; font-weight: 600; }
+    .more p { margin: 0; color: var(--muted); font-size: 16px; }
+    .wipe-pin { max-width: 1200px; margin: 0 auto; padding: 120px 32px 80px; text-align: center; }
+    .wipe-pin h2 { margin: 0; font-size: clamp(40px, 5.6vw, 80px); line-height: 1; }
+    .wipe-frame { position: relative; margin: 48px auto 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 1280 / 820; max-width: 1100px; }
+    .wipe-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .wipe-frame .light { clip-path: inset(0 0 0 50%); }
+    .wipe-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--amber); box-shadow: 0 0 24px rgba(242,165,65,.6); }
+    .top20 { padding: 140px 0 120px; overflow: hidden; }
+    .top20 h2 { margin: 0; max-width: 12em; font-size: clamp(40px, 5.6vw, 80px); line-height: 1; }
+    .marq { display: flex; gap: 14px; width: max-content; padding: 0 32px; }
+    .marq + .marq { margin-top: 14px; }
+    .rk { display: flex; align-items: center; gap: 14px; height: 76px; padding: 0 28px 0 12px; border-radius: 38px; background: var(--bg-2); border: 1px solid var(--line); white-space: nowrap; font-size: 22px; font-weight: 600; }
+    .rk b { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 26px; background: var(--amber); color: var(--amber-ink); font: 800 22px/1 var(--display); }
+    .vals { max-width: 1200px; margin: 0 auto; padding: 40px 32px 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .val { border-radius: 28px; background: var(--bg-2); border: 1px solid var(--line); padding: 36px 32px 32px; min-height: 240px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .val .big { font-size: 96px; line-height: .9; color: var(--amber); }
+    .val h3 { margin: 18px 0 6px; font-size: 28px; }
+    .val p { margin: 0; color: var(--muted); font-size: 16px; }
+    .end { padding: 120px 24px 80px; text-align: center; }
+    .end img { width: 96px; height: 96px; border-radius: 24px; box-shadow: 0 20px 60px rgba(242,165,65,.25); }
+    .end h2 { margin: 28px 0 40px; font-size: clamp(56px, 9vw, 140px); line-height: .92; }
+
+    .steps { list-style: none; margin: 36px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; counter-reset: s; }
+    .steps li { padding: 24px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); counter-increment: s; }
+    .steps li::before { content: counter(s); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); font: 800 18px/1 var(--display); margin-bottom: 16px; }
+    .steps h3 { margin: 0 0 6px; font-size: 19px; font-weight: 600; }
+    .steps p { margin: 0; color: var(--muted); font-size: 16px; }
+    .faq { max-width: 820px; margin-inline: auto; }
+    .faq .h2 { margin-bottom: 24px; }
+    details { border-top: 1px solid var(--line); padding: 18px 0; }
+    details:last-of-type { border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; font-weight: 600; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; color: var(--amber); font-size: 22px; line-height: 1; }
+    details[open] summary::after { content: '–'; }
+    details p { margin: 10px 0 0; color: var(--muted); }
+
+    /* Kaydırdıkça oynayan sahneler (Chrome, Edge, Safari 26+) */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .hero { height: 250vh; padding: 0; view-timeline: --hero block; }
+        .hero-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; place-items: center; }
+        .hero-text, .hero-shot { grid-area: 1 / 1; }
+        .hero-text { animation: heroOut linear both; animation-timeline: --hero; animation-range: contain 0% contain 38%; }
+        .hero-shot { margin: 0; width: min(1100px, 86vw, 128vh); animation: shotIn linear both; animation-timeline: --hero; animation-range: contain 4% contain 70%; }
+        @keyframes heroOut { to { opacity: 0; transform: scale(.86) translateY(-8vh); visibility: hidden; } }
+        @keyframes shotIn { from { transform: translateY(80vh) scale(.72); } to { transform: translateY(0) scale(1); } }
+
+        .say p { animation: sayIn linear both; animation-timeline: view(); animation-range: entry 20% cover 42%; }
+        @keyframes sayIn { from { opacity: .1; transform: translateY(48px); } to { opacity: 1; transform: none; } }
+
+        .tour { height: 460vh; view-timeline: --tour block; }
+        .tour-pin { position: sticky; top: 0; height: 100vh; box-sizing: border-box; padding-top: 96px; padding-bottom: 24px; }
+        .tour-device img, .step { animation: linear both; animation-timeline: --tour; }
+        .tour-device img.s1 { animation-name: out1; animation-range: contain 21% contain 29%; }
+        .tour-device img.s2 { animation-name: mid; animation-range: contain 21% contain 54%; }
+        .tour-device img.s3 { animation-name: mid; animation-range: contain 46% contain 79%; }
+        .tour-device img.s4 { animation-name: in1; animation-range: contain 71% contain 79%; }
+        .step { opacity: .28; }
+        .step.t1 { opacity: 1; animation-name: out2; animation-range: contain 21% contain 29%; }
+        .step.t2 { animation-name: mid2; animation-range: contain 21% contain 54%; }
+        .step.t3 { animation-name: mid2; animation-range: contain 46% contain 79%; }
+        .step.t4 { animation-name: in2; animation-range: contain 71% contain 79%; }
+        .tour-bar i { display: block; height: 100%; background: var(--amber); transform-origin: left; animation: grow linear both; animation-timeline: --tour; animation-range: contain 0% contain 100%; }
+        @keyframes out1 { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes in1 { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes mid { 0% { opacity: 0; } 24% { opacity: 1; } 76% { opacity: 1; } 100% { opacity: 0; } }
+        @keyframes out2 { from { opacity: 1; } to { opacity: .28; } }
+        @keyframes in2 { from { opacity: .28; } to { opacity: 1; } }
+        @keyframes mid2 { 0% { opacity: .28; } 24% { opacity: 1; } 76% { opacity: 1; } 100% { opacity: .28; } }
+        @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+        .more div { animation: up linear both; animation-timeline: view(); animation-range: entry 5% cover 30%; }
+
+        .wipe { height: 280vh; view-timeline: --wipe block; }
+        .wipe-pin { position: sticky; top: 0; height: 100vh; box-sizing: border-box; padding-top: 104px; padding-bottom: 32px; display: flex; flex-direction: column; }
+        .wipe-frame { flex: 1 1 auto; min-height: 0; width: min(1100px, 100%, calc((100vh - 320px) * 1.56)); aspect-ratio: auto; }
+        .wipe-frame .light { animation: reveal linear both; animation-timeline: --wipe; animation-range: contain 12% contain 88%; }
+        .wipe-line { animation: line linear both; animation-timeline: --wipe; animation-range: contain 12% contain 88%; }
+        @keyframes reveal { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+        @keyframes line { from { left: 100%; } to { left: 0%; } }
+
+        .marq { animation: slideL linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+        .marq.rev { animation-name: slideR; }
+        @keyframes slideL { from { transform: translateX(6%); } to { transform: translateX(-38%); } }
+        @keyframes slideR { from { transform: translateX(-40%); } to { transform: translateX(4%); } }
+
+        .val { animation: up linear both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
+        @keyframes up { from { opacity: 0; transform: translateY(80px) scale(.96); } to { opacity: 1; transform: none; } }
+        .end h2 { animation: pop linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+        @keyframes pop { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: none; } }
+        .cue svg { animation: bob 1.6s ease-in-out infinite; }
+        @keyframes bob { 50% { transform: translateY(6px); } }
+      }
+    }
+    @media (max-width: 960px) { .steps, .more, .vals { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 800px) {
+      .tour-pin { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-left: 16px; padding-right: 16px; }
+      .tour-device { order: -1; }
+      .step { padding: 12px 0; } .step h3 { font-size: 20px; } .step p { font-size: 15px; }
+      .val { min-height: 180px; } .val .big { font-size: 72px; }
+      .rk { height: 60px; font-size: 18px; } .rk b { width: 42px; height: 42px; font-size: 18px; }
+      .say { padding: 110px 20px; }
+      .more, .vals { padding-left: 16px; padding-right: 16px; }
+    }
+    /* Android yakında */
+    .soonbar { display: inline-flex; align-items: center; gap: 14px; margin-top: 22px; padding: 8px 8px 8px 16px; border-radius: 30px; background: var(--surface); border: 1px solid var(--border); flex-wrap: wrap; justify-content: center; text-align: left; }
+    .soonbar .ic { width: 34px; height: 34px; border-radius: 10px; background: rgba(124,200,138,.14); display: grid; place-items: center; color: #7CC88A; flex: none; }
+    .soonbar .tx { color: var(--muted); font-size: 15px; }
+    .soonbar .tx b { color: var(--text); font-weight: 600; }
+    .soonbar .btn { height: 38px; padding: 0 16px; font-size: 14px; cursor: pointer; font-family: inherit; }
+    .btn[aria-pressed="true"], .btn.primary[aria-pressed="true"] { background: transparent; color: var(--green); border-color: #3E5A46; }
+    .droid { max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
+    .phone-card { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; border-radius: 28px; background: var(--surface); border: 1px solid var(--border); padding: 48px; overflow: hidden; }
+    .phone-card .txt { flex: 1 1 360px; min-width: 0; }
+    .phone-card h2 { margin: 0 0 12px; font-size: clamp(40px, 5vw, 64px); line-height: 1; }
+    .phone-card .pill { display: inline-block; margin: 0 0 16px; padding: 4px 12px; border-radius: 999px; background: rgba(124,200,138,.12); color: #7CC88A; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .phone { flex: 0 0 auto; width: 230px; height: 460px; border-radius: 42px; border: 8px solid #262B3D; background: #0A0B10; position: relative; margin-inline: auto; box-shadow: 0 30px 80px rgba(0,0,0,.6); overflow: hidden; }
+    .phone .notch { position: absolute; left: 50%; top: 10px; width: 70px; height: 18px; margin-left: -35px; border-radius: 9px; background: #262B3D; }
+    .phone .scr { position: absolute; inset: 40px 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .phone .now { border-radius: 16px; background: var(--amber); color: var(--amber-ink); padding: 14px; }
+    .phone .now b { display: block; font: 800 20px/1.1 var(--display); }
+    .phone .now small { font-size: 11px; font-weight: 700; letter-spacing: .06em; opacity: .8; }
+    .phone .row { height: 42px; border-radius: 12px; background: var(--surface-2); display: flex; align-items: center; gap: 10px; padding: 0 10px; color: var(--text-2); font-size: 13px; font-weight: 600; }
+    .phone .row i { width: 24px; height: 24px; border-radius: 7px; background: var(--border-2); flex: none; }
+    .phone .soon-tag { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); white-space: nowrap; height: 30px; padding: 0 12px; border-radius: 15px; display: inline-flex; align-items: center; background: var(--bg); border: 1px dashed #3E5A46; color: #7CC88A; font-size: 13px; font-weight: 700; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .phone { animation: phoneIn linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+        @keyframes phoneIn { from { opacity: 0; transform: translateY(120px) rotate(-6deg); } to { opacity: 1; transform: none; } }
+      }
+    }
+    @media (max-width: 800px) { .phone-card { padding: 28px 20px; } .droid { padding-left: 16px; padding-right: 16px; } }
+  </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "OA Radyo",
+  "description": "Thousands of Turkish and international radio stations in one app. Song titles, recording, alarms, equaliser. Free and ad-free.",
+  "url": "https://oalabs.dev/en/radyo/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Windows 10, Windows 11",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TRY"
+  },
+  "downloadUrl": "https://github.com/oguzhanaydiin1/radyo-app/releases/latest/download/Radyo-Setup.exe",
+  "screenshot": "https://oalabs.dev/radyo/img/app-kesfet.webp",
+  "image": "https://oalabs.dev/radyo/img/icon.png",
+  "author": {
+    "@type": "Person",
+    "name": "Oğuzhan Aydın",
+    "url": "https://oalabs.dev/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "OA Labs",
+    "url": "https://oalabs.dev/"
+  }
+}
+  </script>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="crumb-home" href="/en/"><span class="oa-mark" aria-hidden="true">OA</span>OA Labs</a>
+      <span class="crumb" aria-hidden="true">/</span>
+      <span class="crumb-app"><img src="/radyo/img/icon.png" alt="" width="30" height="30">OA Radyo</span>
+      <div class="nav-links" style="justify-content: flex-end">
+        <a href="#ozellikler">Features</a>
+        <a href="#top20">Top 20</a>
+        <a href="#kurulum">Install</a>
+        <a href="#sss">FAQ</a>
+        <a href="/dinle/?lang=en">Listen on the web</a>
+      </div>
+      <a class="lang-sw" data-lang-switch href="/radyo/">TR</a>
+      <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Sign in</b><small>or sign up</small></span></a></div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 1. Açılış: başlık kaybolurken uygulama aşağıdan büyüyerek gelir -->
+    <section class="hero" aria-labelledby="h1">
+      <div class="hero-pin">
+        <div class="hero-text">
+          <p class="kick">Free for Windows</p>
+          <h1 id="h1" class="dsp">OA Radyo.</h1>
+          <p class="tag dsp">Every station. One window.</p>
+          <div class="cta">
+            <a class="btn primary big" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest/download/Radyo-Setup.exe"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download for Windows</a>
+            <a class="btn big" href="/dinle/?lang=en"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Listen on the web</a>
+          </div>
+          <p class="meta" data-meta>Windows 10 and 11 · 64-bit</p>
+          <div class="soonbar">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span>
+            <span class="tx"><b>Android version coming soon.</b> Listen on your phone too.</span>
+            <button class="btn" type="button" data-notify-app="radyo-android">Notify me</button>
+          </div>
+          <div class="cue" aria-hidden="true">Scroll<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+        </div>
+        <img class="hero-shot" src="/radyo/img/app-kesfet.webp" width="1280" height="820" alt="OA Radyo’s Discover screen: the station playing, categories and station cards">
+      </div>
+    </section>
+
+    <!-- 2. Büyük cümleler -->
+    <section class="say dsp" aria-label="OA Radyo in short">
+      <p>Every radio station in Turkey.</p>
+      <p style="color: var(--text-2)">Thousands more from around the world.</p>
+      <p>The song title, right on screen.</p>
+      <p style="color: var(--amber)">All free.</p>
+    </section>
+
+    <!-- 3. Sabit ekran turu -->
+    <section class="tour" id="ozellikler" aria-labelledby="oz-h">
+      <div class="tour-pin">
+        <div>
+          <h2 id="oz-h" class="dsp">Turn on the radio.<br>It handles the rest.</h2>
+          <div class="tour-bar" aria-hidden="true"><i></i></div>
+          <article class="step t1"><h3 class="dsp">Discover</h3><p>By genre, by city, or the most listened. Tap a card and it plays.</p></article>
+          <article class="step t2"><h3 class="dsp">Equaliser</h3><p>Presets like Bass, Speech and Car. Volume doesn’t jump when you switch stations.</p></article>
+          <article class="step t3"><h3 class="dsp">Favourite folders</h3><p>Sort stations into folders, reorder by dragging, sync between computers.</p></article>
+          <article class="step t4"><h3 class="dsp">Statistics</h3><p>What you listen to, and how much. All calculated on your computer, never sent anywhere.</p></article>
+        </div>
+        <div class="tour-device">
+          <img class="s1" src="/radyo/img/app-kesfet.webp" width="1280" height="820" alt="Discover screen">
+          <img class="s2" src="/radyo/img/app-ekolayzir.webp" width="1280" height="820" loading="lazy" alt="Equaliser settings">
+          <img class="s3" src="/radyo/img/app-favoriler.webp" width="1280" height="820" loading="lazy" alt="Favourite folders">
+          <img class="s4" src="/radyo/img/app-istatistik.webp" width="1280" height="820" loading="lazy" alt="Statistics screen">
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="More features">
+      <div class="more">
+        <div><h3>Now playing</h3><p>The song title on screen; open it on YouTube or Spotify in one click. Recent songs are kept too.</p></div>
+        <div><h3>Recording and alarms</h3><p>Record a broadcast, schedule recordings, or wake up to the radio.</p></div>
+        <div><h3>In the background</h3><p>Close the window and it keeps playing next to the clock. Mini player and shortcuts.</p></div>
+      </div>
+    </section>
+
+    <!-- 4. Koyu → açık tema perdesi -->
+    <section class="wipe" aria-labelledby="wipe-h">
+      <div class="wipe-pin">
+        <h2 id="wipe-h" class="dsp">Day and night.</h2>
+        <p style="margin: 12px auto 0; max-width: 30em; color: var(--muted)">Dark and light themes. Follows your Windows setting automatically.</p>
+        <div class="wipe-frame">
+          <img src="/radyo/img/app-kesfet.webp" width="1280" height="820" loading="lazy" alt="Dark theme">
+          <img class="light" src="/radyo/img/app-acik-tema.webp" width="1280" height="820" loading="lazy" alt="Light theme">
+          <span class="wipe-line" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. En çok dinlenen 20 -->
+    <section class="top20" id="top20" aria-labelledby="top-h">
+      <div class="wrap" style="margin-bottom: 56px">
+        <h2 id="top-h" class="dsp">Turkey’s 20 most listened stations.</h2>
+        <p style="margin: 14px 0 0; color: var(--muted)">One tap away in Discover.</p>
+      </div>
+      <div class="marq" aria-label="1 to 10"><span class="rk"><b>1</b>Kral FM</span><span class="rk"><b>2</b>Kral Pop</span><span class="rk"><b>3</b>TRT FM</span><span class="rk"><b>4</b>Power Türk</span><span class="rk"><b>5</b>Slow Türk</span><span class="rk"><b>6</b>Best FM</span><span class="rk"><b>7</b>Süper FM</span><span class="rk"><b>8</b>Virgin Radio</span><span class="rk"><b>9</b>Metro FM</span><span class="rk"><b>10</b>Alem FM</span></div>
+      <div class="marq rev" aria-label="11 to 20"><span class="rk"><b>11</b>Radyo 7</span><span class="rk"><b>12</b>Joy Türk</span><span class="rk"><b>13</b>Radyo Fenomen</span><span class="rk"><b>14</b>Radyo Seymen</span><span class="rk"><b>15</b>Damar Türk</span><span class="rk"><b>16</b>NTV Radyo</span><span class="rk"><b>17</b>TRT Türkü</span><span class="rk"><b>18</b>Radyo Voyage</span><span class="rk"><b>19</b>Power FM</span><span class="rk"><b>20</b>Joy FM</span></div>
+    </section>
+
+    <!-- Android yakında -->
+    <section class="droid" id="android" aria-labelledby="droid-h">
+      <div class="phone-card">
+        <div class="txt">
+          <p class="pill">Coming soon</p>
+          <h2 id="droid-h" class="dsp">Radio in your pocket.</h2>
+          <p style="margin: 0 0 24px; color: var(--muted); max-width: 26em">OA Radyo is coming to Android. We’ll let you know when it’s out.</p>
+          <button class="btn primary" type="button" data-notify-app="radyo-android">Notify me</button>
+        </div>
+        <div class="phone" aria-hidden="true">
+          <span class="notch"></span>
+          <div class="scr">
+            <div class="now"><small>NOW PLAYING</small><b>Kral FM</b></div>
+            <div class="row"><i></i>TRT FM</div><div class="row"><i></i>Power Türk</div><div class="row"><i></i>Slow Türk</div><div class="row"><i></i>Best FM</div><div class="row"><i></i>Süper FM</div>
+          </div>
+          <span class="soon-tag">Android · Coming soon</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Üç söz -->
+    <section aria-label="OA Radyo’s promises">
+      <div class="vals">
+        <div class="val"><span class="dsp big">0 ₺</span><h3 class="dsp">Completely free.</h3><p>No subscription, no hidden costs.</p></div>
+        <div class="val"><span class="dsp big">0</span><h3 class="dsp">Ads.</h3><p>We never add ads of our own.</p></div>
+        <div class="val"><span class="dsp big">1 min</span><h3 class="dsp">To install.</h3><p>No account needed. Download, open, listen.</p></div>
+      </div>
+    </section>
+
+    <!-- 7. Kapanış -->
+    <section class="end" id="indir" aria-labelledby="end-h">
+      <img src="/radyo/img/icon.png" width="96" height="96" alt="">
+      <h2 id="end-h" class="dsp">Start listening.</h2>
+      <div class="cta">
+        <a class="btn primary big" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest/download/Radyo-Setup.exe"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download for Windows</a>
+        <a class="btn big" href="/dinle/?lang=en"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Listen on the web</a>
+        <a class="btn big" id="zip" href="https://github.com/oguzhanaydiin1/radyo-app/releases/latest">Portable zip</a>
+      </div>
+      <p class="meta" data-meta>Windows 10 and 11 · 64-bit</p>
+    </section>
+
+    <section class="wrap" id="kurulum" aria-labelledby="kur-h">
+      <h2 class="h2" id="kur-h">Installs in a minute</h2>
+      <ol class="steps">
+        <li><h3>Download</h3><p>Get Radyo-Setup.exe with the button above.</p></li>
+        <li><h3>Install</h3><p>Open the file. If Windows shows a warning, choose “More info”, then “Run anyway”.</p></li>
+        <li><h3>Listen</h3><p>OA Radyo opens and downloads the station list by itself. Click a card.</p></li>
+      </ol>
+    </section>
+    <section class="wrap faq" id="sss" aria-labelledby="sss-h">
+      <h2 class="h2" id="sss-h">Questions</h2>
+      <details open><summary>Does it cost anything? Are there ads?</summary><p>No. OA Radyo is completely free and ad-free. Ads in the stations’ own broadcasts are part of the broadcast.</p></details>
+      <details><summary>Why does Windows show a warning?</summary><p>The app isn’t digitally signed yet, so Windows may say “Windows protected your PC” the first time. Choose “More info”, then “Run anyway”.</p></details>
+      <details><summary>Where does the station list come from?</summary><p>From the free, volunteer-run <a href="https://www.radio-browser.info">Radio Browser</a> database.</p></details>
+      <details><summary>My station isn’t listed. What can I do?</summary><p>Use “Add by stream URL” in the app, or write to <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a> and we’ll add it.</p></details>
+      <details><summary>How do updates work?</summary><p>When a new version is out, the app tells you; just press “Restart and update”.</p></details>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot">
+      <span>© 2026 <a href="/en/">OA Labs</a> · Oğuzhan Aydın</span>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="/gizlilik/#en">Privacy policy</a>
+      </div>
+      <span>Radio broadcasts belong to their respective stations.</span>
+    </div>
+  </footer>
+
+  <script src="/i18n-site.js"></script>
+  <script src="/hesap.js"></script>
+  <script>
+    // Son sürümün numarası, boyutu ve zip bağlantısı.
+    fetch('https://api.github.com/repos/oguzhanaydiin1/radyo-app/releases/latest')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (!j) return;
+        const v = String(j.tag_name || '').replace(/^v/, '');
+        const exe = (j.assets || []).find((a) => a.name === 'Radyo-Setup.exe');
+        const zip = (j.assets || []).find((a) => /-win\.zip$/.test(a.name));
+        const parts = [];
+        if (v) parts.push('Version ' + v);
+        parts.push('Windows 10 and 11 · 64-bit');
+        if (exe) parts.push(Math.round(exe.size / 1e6) + ' MB');
+        document.querySelectorAll('[data-meta]').forEach((el) => { el.textContent = parts.join(' · '); });
+        if (zip) document.getElementById('zip').href = zip.browser_download_url;
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

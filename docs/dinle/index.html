@@ -146,6 +146,18 @@
     </form>
   </dialog>
 
+  <script>
+    // Sitede seçilen dil (TR/EN) web oynatıcıya da geçer: ?lang=en ya da oalabs.dev'deki seçim.
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search).get('lang');
+        if (q === 'en' || q === 'tr') localStorage.setItem('oaLang', q);
+        var l = q || localStorage.getItem('oaLang');
+        if (l === 'en' || l === 'tr') localStorage.setItem('lang', JSON.stringify(l));
+      } catch (e) {}
+    })();
+  </script>
+  <script src="i18n.js"></script>
   <script src="hls.min.js"></script>
   <script src="radio-web.js"></script>
   <script src="app.js"></script>
