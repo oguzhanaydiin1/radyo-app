@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "date": "2026-10-23",
+  "notes": {
+    "tr": "İlk sürüm: Akıllı Tarama, Gereksiz Dosyalar, Kopya Dosyalar, Disk Haritası, Medya Küçültücü, Sistem Bilgisi, Uygulama Kaldırıcı, Başlangıç Programları, Pil ve Sağlık, İzin Kontrolü, Konum Bilgisi Temizleyici. Türkçe ve İngilizce arayüz, otomatik güncelleme.",
+    "en": "First release: Smart Scan, Junk Files, Duplicate Files, Disk Map, Media Compressor, System Info, App Uninstaller, Startup Apps, Battery & Health, Permission Check, Location Data Cleaner. Turkish and English interface, automatic updates."
+  },
+  "windows": {
+    "url": "https://github.com/oguzhanaydiin1/cihaz_bakim/releases/download/v0.1.0/HarrierCleaner-Setup-0.1.0.exe",
+    "sha256": "aa578f7580147cac038ea356be06d633c80d9045e54243034ca52684086bd37b",
+    "size": 11123128
+  }
+}
