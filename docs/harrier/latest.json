@@ -1,13 +1,13 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "date": "2026-10-23",
   "notes": {
-    "tr": "İlk sürüm: Akıllı Tarama, Gereksiz Dosyalar, Kopya Dosyalar, Disk Haritası, Medya Küçültücü, Sistem Bilgisi, Uygulama Kaldırıcı, Başlangıç Programları, Pil ve Sağlık, İzin Kontrolü, Konum Bilgisi Temizleyici. Türkçe ve İngilizce arayüz, otomatik güncelleme.",
-    "en": "First release: Smart Scan, Junk Files, Duplicate Files, Disk Map, Media Compressor, System Info, App Uninstaller, Startup Apps, Battery & Health, Permission Check, Location Data Cleaner. Turkish and English interface, automatic updates."
+    "tr": "Düzeltme: Medya Küçültücü ve Konum Bilgisi Temizleyici'de “Klasör seç” düğmesi, OneDrive yedeklemesi açık olan bilgisayarlarda pencereyi açmıyordu. Bu ekranlar artık Resimler klasörünün gerçek yerini kullanıyor.",
+    "en": "Fix: the “Choose folder” button in Media Compressor and Location Data Cleaner didn’t open the dialog on computers with OneDrive backup turned on. These screens now use the real location of your Pictures folder."
   },
   "windows": {
-    "url": "https://github.com/oguzhanaydiin1/cihaz_bakim/releases/download/v0.1.0/HarrierCleaner-Setup-0.1.0.exe",
-    "sha256": "aa578f7580147cac038ea356be06d633c80d9045e54243034ca52684086bd37b",
-    "size": 11123128
+    "url": "https://github.com/oguzhanaydiin1/cihaz_bakim/releases/download/v0.1.1/HarrierCleaner-Setup-0.1.1.exe",
+    "sha256": "b91d9f48ed47353f16d08a225021e51ba7ab37a67eb75f454cc4d37d20a213f5",
+    "size": 11128575
   }
 }
