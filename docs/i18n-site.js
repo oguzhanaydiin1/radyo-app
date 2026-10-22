@@ -130,7 +130,7 @@
     'Çıkınca haber ver': 'Notify me', '✓ Haber verilecek': '✓ You’ll be notified', 'Hazırlanıyor.': 'In the works.',
     'Sana yalnızca istediğin konularda e-posta göndeririz.': 'We only email you about the things you choose.',
     'Duyurular': 'Announcements', 'Yeni uygulamalar ve önemli güncellemeler. Ayda en fazla birkaç e-posta.': 'New apps and important updates. A few emails a month at most.',
-    'OA Score çıkınca haber ver': 'Tell me when OA Score is out', 'OA Barkod çıkınca haber ver': 'Tell me when OA Barkod is out',
+    'OA Score çıkınca haber ver': 'Tell me when OA Score is out', 'OA Barkod çıkınca haber ver': 'Tell me when OA Barkod is out', 'Harrier Cleaner çıkınca haber ver': 'Tell me when Harrier Cleaner is out',
     'Uygulama yayına girdiğinde tek bir e-posta.': 'A single email when the app launches.',
     'Güvenlik e-postaları': 'Security emails', 'Giriş kodları ve hesabınla ilgili önemli bildirimler. Kapatılamaz.': 'Sign-in codes and important account notices. Can’t be turned off.',
     'Güvenlik e-postaları her zaman açık': 'Security emails are always on',
