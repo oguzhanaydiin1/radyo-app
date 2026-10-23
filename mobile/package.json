@@ -1,0 +1,11 @@
+{
+  "name": "oa-radyo-android",
+  "private": true,
+  "version": "0.9.1",
+  "description": "OA Radyo — Android test sürümü (web oynatıcısının Capacitor ile paketlenmiş hâli)",
+  "dependencies": {
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/core": "^7.4.0"
+  }
+}
