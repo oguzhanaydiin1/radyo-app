@@ -14,7 +14,7 @@
  * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
 
-import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify } from './auth.js';
+import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync } from './auth.js';
 
 const APPS = new Set(['radyo']);
 const REPORT_APPS = new Set(['harrier']);
@@ -222,6 +222,7 @@ export default {
         return send(await emailStart(req, env, ip));
       }
       if (url.pathname === '/v1/me/email/verify' && req.method === 'POST') return send(await emailVerify(req, env));
+      if (url.pathname === '/v1/me/sync' && (req.method === 'GET' || req.method === 'POST')) return send(await mySync(req, env));
       if (url.pathname === '/v1/admin/users') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
         return json(await adminUsers(req, url, env), 200, h);

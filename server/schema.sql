@@ -77,3 +77,12 @@ CREATE TABLE IF NOT EXISTS app_notify (
   created TEXT NOT NULL,
   PRIMARY KEY (user_id, app)
 );
+
+-- OA Tarayıcı eşitlemesi: üyenin yer imleri ve hızlı erişim kutuları (koleksiyon başına bir satır).
+CREATE TABLE IF NOT EXISTS user_sync (
+  user_id TEXT NOT NULL,
+  item TEXT NOT NULL,
+  updated TEXT NOT NULL,
+  data TEXT NOT NULL,
+  PRIMARY KEY (user_id, item)
+);
