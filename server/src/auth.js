@@ -11,6 +11,8 @@
  *   POST /v1/me/sessions    { id } o oturumu kapat | { others: true } bu cihaz dışındakileri kapat
  *   POST /v1/me/email/start { email }        yeni adrese kod gönder
  *   POST /v1/me/email/verify { email, code } yeni adresi onayla
+ *   GET  /v1/me/sync        Eşitlenen tarayıcı verisi (OA Tarayıcı: yer imleri, hızlı erişim)
+ *   POST /v1/me/sync        { items: { <ad>: { updated, data } } } daha yeni olanlar kaydedilir
  *   GET  /v1/admin/users    Üye sayıları ve listesi (yönetici)
  *   POST /v1/admin/users    { action: "remove", id } (yönetici)
  *
@@ -45,7 +47,7 @@ const NOTIFY_APPS = new Set(['score', 'barkod', 'radyo-android', 'harrier']);
 // Tarayıcı bilgisinden kısa bir cihaz adı: "Chrome · Windows"
 function deviceName(req) {
   const ua = req.headers.get('User-Agent') || '';
-  const b = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
+  const b = /OATarayici\//.test(ua) ? 'OA Tarayıcı' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
   const o = /Windows/.test(ua) ? 'Windows' : /iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Mac OS X/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'Bilinmeyen cihaz';
   return `${b} · ${o}`;
 }
@@ -337,6 +339,7 @@ async function removeUser(env, id) {
     env.DB.prepare('DELETE FROM session_info WHERE token IN (SELECT token FROM sessions WHERE user_id = ?1)').bind(id),
     env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM app_notify WHERE user_id = ?1').bind(id),
+    env.DB.prepare('DELETE FROM user_sync WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM users WHERE id = ?1').bind(id),
   ]);
 }
@@ -375,4 +378,38 @@ export async function adminUsers(req, url, env) {
     rows: rows.results,
     notify: Object.fromEntries(notify.results.map((r) => [r.app, r.n])),
   };
+}
+
+// OA Tarayıcı eşitlemesi. Her koleksiyon ("bookmarks", "quick") ayrı tutulur ve
+// istemcinin gönderdiği "updated" zamanı sunucudakinden yeniyse yerine geçer (son yazan kazanır).
+const SYNC_ITEMS = new Set(['bookmarks', 'quick']);
+const SYNC_MAX = 256 * 1024; // bir kullanıcının toplam eşitleme verisi
+
+export async function mySync(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  const rows = await env.DB.prepare('SELECT item, updated, data FROM user_sync WHERE user_id = ?1').bind(u.id).all();
+  const items = {};
+  for (const r of rows.results) {
+    try { items[r.item] = { updated: r.updated, data: JSON.parse(r.data) }; } catch { /* bozuk kayıt: yok say */ }
+  }
+  if (req.method === 'POST') {
+    let b;
+    try { b = await req.json(); } catch { return fail('istek'); }
+    const stmts = [];
+    let total = 0;
+    for (const [name, v] of Object.entries((b && b.items) || {})) {
+      if (!SYNC_ITEMS.has(name) || !v || !Array.isArray(v.data)) continue;
+      const updated = typeof v.updated === 'string' && !Number.isNaN(Date.parse(v.updated)) ? new Date(v.updated).toISOString() : now();
+      const text = JSON.stringify(v.data);
+      total += text.length;
+      if (total > SYNC_MAX) return fail('buyuk', 413);
+      if (items[name] && items[name].updated >= updated) continue; // sunucudaki daha yeni
+      items[name] = { updated, data: v.data };
+      stmts.push(env.DB.prepare('INSERT INTO user_sync (user_id, item, updated, data) VALUES (?1, ?2, ?3, ?4) ON CONFLICT (user_id, item) DO UPDATE SET updated = excluded.updated, data = excluded.data')
+        .bind(u.id, name, updated, text));
+    }
+    if (stmts.length) await env.DB.batch(stmts);
+  }
+  return { status: 200, data: { ok: true, items } };
 }
