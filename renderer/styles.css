@@ -772,6 +772,9 @@ svg { display: block; flex: none; }
   font-size: 13px; color: var(--text-muted); animation: rise 0.6s 0.6s ease-out both;
 }
 .splash-foot strong { color: var(--text); font-weight: 600; }
+.splash-by { display: inline-flex; align-items: center; gap: 8px; }
+.splash-oalabs { color: var(--text); flex: none; }
+.splash-oalabs path { stroke: var(--accent); }
 .splash-ver { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
 @media (prefers-reduced-motion: reduce) {
   .splash *, .splash { animation: none !important; }
