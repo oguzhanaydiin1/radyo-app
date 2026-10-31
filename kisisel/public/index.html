@@ -26,6 +26,7 @@ html{scroll-behavior:smooth}
 .hero{min-height:100vh;box-sizing:border-box;display:grid;place-items:center;text-align:center;padding:80px 24px}
 .hero h1{margin:0;font-size:clamp(88px,17vw,260px);line-height:.86}
 .hero h1 span{color:#F2A541}
+.oa-anim{display:block;width:clamp(150px,19vw,250px);height:auto;margin:0 auto 18px;overflow:visible}
 .story{max-width:1000px;margin:0 auto;padding:120px 32px}
 .story p{margin:0 0 .35em;font-size:clamp(32px,4.6vw,64px);line-height:1.1}
 .cols{max-width:1200px;margin:0 auto;padding:40px 32px 120px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
@@ -54,6 +55,14 @@ html{scroll-behavior:smooth}
     @keyframes bob{50%{transform:translateY(6px)}}
   }
 }
+@media (max-width: 760px){
+  .nav-main{height:auto!important;flex-wrap:wrap;padding:10px 16px!important;gap:10px 12px!important}
+  .nav-brand{flex:1;min-width:0;white-space:nowrap;font-size:18px!important}
+  .nav-links{order:3;flex-basis:100%!important;justify-content:flex-start!important;gap:22px!important;overflow-x:auto;padding:2px 0 4px}
+  .nav-links a{white-space:nowrap}
+  .nav-login{padding:0 5px!important}
+  .nav-login-txt{display:none!important}
+}
 @media (max-width: 800px){ .cols{grid-template-columns:minmax(0,1fr)} .story{padding:90px 20px} }
 </style>
 </head>
@@ -61,22 +70,22 @@ html{scroll-behavior:smooth}
 <div class="pg">
 
   <header class="top">
-    <nav aria-label="Site" style="max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 24px">
-      <a href="/" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #EEEAE2; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">
+    <nav class="nav-main" aria-label="Site" style="max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 24px">
+      <a class="nav-brand" href="/" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #EEEAE2; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">
         <span aria-hidden="true" style="width: 28px; height: 28px; color: #EEEAE2; display: block; flex: none"><svg viewBox="2 0 100 100" width="100%" height="100%"><path d="M26 86 L52 14 L78 86" fill="none" style="stroke:#F2A541" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="28" fill="none" stroke="currentColor" stroke-width="10"/></svg></span>
         Oğuzhan Aydın
       </a>
-      <div style="flex: 1; display: flex; justify-content: flex-end; gap: 24px; font-size: 15px">
+      <div class="nav-links" style="flex: 1; display: flex; justify-content: flex-end; gap: 24px; font-size: 15px">
         <a href="#hakkimizda" style="color: #B7BACA; text-decoration: none">Hakkımızda</a>
         <a href="#uygulamalar" style="color: #B7BACA; text-decoration: none">Uygulamalar</a>
         <a href="#iletisim" style="color: #B7BACA; text-decoration: none">İletişim</a>
       </div>
       <a href="/en/" lang="en" hreflang="en" aria-label="English" title="English" style="display: inline-grid; place-items: center; min-width: 44px; height: 36px; padding: 0 10px; border-radius: 18px; border: 1px solid #2A2F43; color: #B7BACA; text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: .06em">EN</a>
-      <a href="https://oalabs.dev/uye/?giris" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 6px; border-radius: 22px; border: 1px solid #2A2F43; background: #11131C; color: #EEEAE2; text-decoration: none">
+      <a class="nav-login" aria-label="Giriş yap veya üye ol" href="https://oalabs.dev/uye/?giris" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 6px; border-radius: 22px; border: 1px solid #2A2F43; background: #11131C; color: #EEEAE2; text-decoration: none">
         <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: #1C2030; display: grid; place-items: center; color: #B7BACA">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
         </span>
-        <span style="display: flex; flex-direction: column; line-height: 1.15"><span style="font-size: 14px; font-weight: 600">Giriş yap</span><span style="font-size: 12px; color: #9EA2B3">veya üye ol</span></span>
+        <span class="nav-login-txt" style="display: flex; flex-direction: column; line-height: 1.15"><span style="font-size: 14px; font-weight: 600">Giriş yap</span><span style="font-size: 12px; color: #9EA2B3">veya üye ol</span></span>
       </a>
     </nav>
   </header>
@@ -85,6 +94,11 @@ html{scroll-behavior:smooth}
   <div class="hero-wrap">
     <section class="hero" aria-labelledby="h1">
       <div class="hero-in">
+        <svg id="oa-anim" class="oa-anim" viewBox="600 240 660 460" role="img" aria-label="OA Labs logosu">
+          <polyline id="oa-legs" fill="none" stroke="#F2A541" stroke-linejoin="round" stroke-linecap="round" points="824.8,657.2 960,282.8 1095.2,657.2" stroke-width="46.8"/>
+          <circle id="oa-c2" fill="none" stroke="#F2A541" cx="960" cy="282.8" r="0" stroke-width="0"/>
+          <circle id="oa-c1" fill="none" stroke="#EEEAE2" cx="960" cy="511.6" r="145.6" stroke-width="46.8"/>
+        </svg>
         <p style="margin: 0 0 20px; color: #9EA2B3; font-size: 20px">Oğuzhan Aydın’ın yazılım atölyesi</p>
         <h1 id="h1" class="dsp">OA Labs<span>.</span></h1>
         <p class="dsp" style="margin: 26px auto 0; max-width: 18em; font-size: clamp(24px, 3vw, 40px); line-height: 1.15; color: #B7BACA; letter-spacing: -0.02em">Küçük uygulamalar, özenle yapılmış.</p>
@@ -157,5 +171,45 @@ html{scroll-behavior:smooth}
     </div>
   </footer>
 </div>
+<script>
+/* Açılış logosu: geometrik "oa" çizilir, sonra A'nın içinden geçen O'ya (asıl logo) dönüşür.
+   Hareketi azaltma açıksa ya da betik çalışmazsa doğrudan son hali görünür. */
+(function () {
+  var svg = document.getElementById('oa-anim');
+  if (!svg || !window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c1 = document.getElementById('oa-c1'), c2 = document.getElementById('oa-c2'), legs = document.getElementById('oa-legs');
+  function cl(x) { return Math.max(0, Math.min(1, x)); }
+  function seg(t, a, b) { return cl((t - a) / (b - a)); }
+  function eio(x) { return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function eo(x) { return 1 - Math.pow(1 - x, 3); }
+  function L(a, b, u) { return a + (b - a) * u; }
+  function g(x, y) { return [600 + x * 6, 252 + y * 6]; }
+  function k(x, y) { return [689.6 + x * 5.2, 210 + y * 5.2]; }
+  var C1a = g(30, 38), C1b = k(52, 58), C2a = g(80, 38), C2b = k(52, 14);
+  var P1a = g(101, 59), P2a = g(101, 17), P1b = k(26, 86), P2b = k(52, 14), P3b = k(78, 86);
+  function ring(el, cx, cy, r, w, draw) {
+    var c = 2 * Math.PI * r;
+    el.setAttribute('cx', cx); el.setAttribute('cy', cy); el.setAttribute('r', r); el.setAttribute('stroke-width', w);
+    el.setAttribute('stroke-dasharray', c); el.setAttribute('stroke-dashoffset', c * (1 - draw));
+    el.setAttribute('transform', 'rotate(-90 ' + cx + ' ' + cy + ')');
+  }
+  function render(t) {
+    var d1 = eo(seg(t, 0.1, 0.8)), d2 = eo(seg(t, 0.25, 0.95)), d3 = eo(seg(t, 0.5, 1.0));
+    var u = eio(seg(t, 1.5, 2.9)), us = eio(seg(t, 1.5, 2.6)), ul = eio(seg(t, 1.65, 2.9));
+    var w = L(54, 46.8, u);
+    ring(c1, L(C1a[0], C1b[0], u), L(C1a[1], C1b[1], u), L(126, 145.6, u), w, d1);
+    ring(c2, L(C2a[0], C2b[0], us), L(C2a[1], C2b[1], us), Math.max(.01, L(126, 0, us)), L(54, 0, us), d2);
+    c2.setAttribute('opacity', 1 - seg(t, 2.3, 2.6));
+    var p1 = [L(P1a[0], P1b[0], ul), L(P1a[1], P1b[1], ul)], p3 = [L(P1a[0], P3b[0], ul), L(P1a[1], P3b[1], ul)];
+    var p2 = t < 1.65 ? [P1a[0], L(P1a[1], P2a[1], d3)] : [L(P2a[0], P2b[0], ul), L(P2a[1], P2b[1], ul)];
+    legs.setAttribute('points', [p1, p2, p3].join(' '));
+    legs.setAttribute('stroke-width', w); legs.setAttribute('opacity', d3 > .001 ? 1 : 0);
+  }
+  var t0 = null;
+  render(0);
+  function step(now) { if (t0 === null) t0 = now; var t = (now - t0) / 1000; render(Math.min(t, 3)); if (t < 3) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+})();
+</script>
 </body>
 </html>
