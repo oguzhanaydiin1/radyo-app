@@ -69,6 +69,33 @@ section { padding: 72px 0; }
 .foot-links a.quiet { color: var(--muted); }
 .foot-links a.quiet:hover { color: var(--text); }
 
+/* Yapboz: Uygulamalar başlığının yanındaki dört karo. Sayfada görününce bir kez oynar. */
+.apps-head { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 36px; margin-bottom: 40px; }
+.apps-head .lead-2 { margin-bottom: 0; }
+.yapboz { width: 148px; height: 148px; flex: none; overflow: visible; }
+.yapboz .yz-t { transform-box: fill-box; transform-origin: 50% 100%; }
+.yapboz.hazir .yz-t, .yapboz.hazir .yz-o, .yapboz.hazir .yz-a { opacity: 0; }
+.yapboz.oynat .yz-t { opacity: 1; animation: 2.7s cubic-bezier(.3,1.4,.5,1) both; }
+.yapboz.oynat .yz-1 { animation-name: yz1; }
+.yapboz.oynat .yz-2 { animation-name: yz2; }
+.yapboz.oynat .yz-3 { animation-name: yz3; }
+.yapboz.oynat .yz-4 { animation-name: yz4; animation-timing-function: ease-in; }
+.yapboz.oynat .yz-o { opacity: 1; stroke-dasharray: 160; animation: yzo 2.7s ease-out both; }
+.yapboz.oynat .yz-a { opacity: 1; stroke-dasharray: 125; animation: yza 2.7s ease-out both; }
+@keyframes yz1 { 0% { transform: translate(-260px,-160px) rotate(-18deg); opacity: 0 } 4% { opacity: 1 } 22% { transform: none } 25.6% { transform: scale(1.08,.92) } 28.9%,100% { transform: none } }
+@keyframes yz2 { 0%,8.9% { transform: translate(260px,-160px) rotate(16deg); opacity: 0 } 13.3% { opacity: 1 } 31.1% { transform: none } 34.4% { transform: scale(1.08,.92) } 37.8%,100% { transform: none } }
+@keyframes yz3 { 0%,17.8% { transform: translate(-260px,160px) rotate(14deg); opacity: 0 } 22.2% { opacity: 1 } 40% { transform: none } 43.3% { transform: scale(1.08,.92) } 46.7%,100% { transform: none } }
+@keyframes yz4 { 0%,48.9% { transform: translateY(-260px); opacity: 0 } 51.1% { opacity: 1 } 66.7% { transform: none } 71.1% { transform: scale(1.2,.8) } 77.8%,100% { transform: none } }
+@keyframes yzo { 0%,8.9% { stroke-dashoffset: 160 } 33.3%,100% { stroke-dashoffset: 0 } }
+@keyframes yza { 0%,75.6% { stroke-dashoffset: 125 } 97.8%,100% { stroke-dashoffset: 0 } }
+
+/* Mühür: alt bilgide, çevresindeki yazı çok yavaş döner. */
+.muhur { width: 96px; height: 96px; flex: none; }
+.muhur .muhur-yazi { transform-origin: 0 0; animation: muhur-don 40s linear infinite; }
+@keyframes muhur-don { to { transform: rotate(360deg) } }
+.foot-imza { display: flex; align-items: center; gap: 20px; }
+@media (prefers-reduced-motion: reduce) { .muhur .muhur-yazi { animation: none; } }
+
 @media (max-width: 760px) {
   .wrap { width: min(1200px, 100% - 32px); }
   .nav { height: auto; min-height: 64px; flex-wrap: wrap; gap: 12px 20px; padding: 12px 0; }

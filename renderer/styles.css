@@ -255,6 +255,13 @@ svg { display: block; flex: none; }
 
 .info { padding: 20px 24px; display: flex; flex-direction: column; }
 .info h2 { margin: 0 0 8px; font-size: 15px; font-weight: 600; }
+.about-seal { display: flex; align-items: center; gap: 18px; margin-bottom: 8px; }
+.about-seal h2 { margin: 0 0 4px; }
+.oa-muhur { flex: none; color: var(--text); }
+.oa-muhur-a { stroke: var(--accent); }
+.oa-muhur-yazi { transform-origin: 0 0; animation: oa-muhur-don 40s linear infinite; }
+@keyframes oa-muhur-don { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .oa-muhur-yazi { animation: none; } }
 .info-row { display: flex; padding: 9px 0; border-bottom: 1px solid var(--divider); font-size: 13px; }
 .info-row span:first-child { width: 72px; color: var(--text-faint); }
 .info-row span:last-child { font-family: var(--font-mono); }

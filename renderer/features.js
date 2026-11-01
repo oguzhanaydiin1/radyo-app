@@ -716,7 +716,18 @@ function supportHTML() {
     </div>
   </div>` : ''}
   <div class="card about-card" style="margin-top:16px">
-    <h2>Uygulama hakkında</h2>
+    <div class="about-seal">
+      <svg class="oa-muhur" viewBox="-70 -70 140 140" width="96" height="96" role="img" aria-label="OA Labs">
+        <defs><path id="oa-muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
+        <circle r="64" fill="none" stroke="currentColor" stroke-width="2.5"/><circle r="42" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <g class="oa-muhur-yazi"><text font-size="11" font-weight="600" letter-spacing="2" fill="currentColor"><textPath href="#oa-muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · ATÖLYE · 2026 · OA LABS · ATÖLYE · 2026 ·</textPath></text></g>
+        <path class="oa-muhur-a" d="M-15 18 L0 -20 L15 18" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h2>Uygulama hakkında</h2>
+        <p class="dialog-note">OA Labs atölyesinde özenle yapıldı.</p>
+      </div>
+    </div>
     <div class="info-row"><span>Sürüm</span><span>${esc(a ? a.version : '')}</span></div>
     <div class="info-row"><span>Sistem</span><span>${esc(a ? `${a.os} (${a.arch})` : '')}</span></div>
     <div class="info-row"><span>Altyapı</span><span>${esc(a ? `Electron ${a.electron}` : '')}</span></div>

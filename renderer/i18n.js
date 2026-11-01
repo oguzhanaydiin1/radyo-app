@@ -176,7 +176,7 @@ const LANG = (() => {
     'Sorun bildir ya da öneri gönder': 'Report a problem or send a suggestion', 'Mesajın': 'Your message', 'E-postayı hazırla': 'Prepare email',
     'Ne oldu, ya da ne eklenmesini istersin? (Örneğin: “X radyosu açılmıyor”)': 'What happened, or what would you like added? (E.g. “Station X won’t play”)',
     'E-posta programın açılır; mesaja sürüm ve sistem bilgisi eklenir, göndermeden önce görebilirsin.': 'Your email app opens; version and system info are added to the message and you can review it before sending.',
-    'Uygulama hakkında': 'About the app', 'Altyapı': 'Built with', 'Web sitesi': 'Website', 'E-posta': 'Email', 'Telefon': 'Phone',
+    'Uygulama hakkında': 'About the app', 'OA Labs atölyesinde özenle yapıldı.': 'Carefully made at the OA Labs workshop.', 'Altyapı': 'Built with', 'Web sitesi': 'Website', 'E-posta': 'Email', 'Telefon': 'Phone',
     'İletişim bilgisi eklenmemiş.': 'No contact details added.',
     'İstasyon bilgileri, gönüllülerin oluşturduğu ücretsiz': 'Station data comes from the free, volunteer-built',
     'veritabanından gelir.\n      Yayınların hakları ilgili radyo kuruluşlarına aittir.': 'database. Broadcast rights belong to the respective stations.',
