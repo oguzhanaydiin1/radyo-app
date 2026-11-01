@@ -64,6 +64,33 @@ html{scroll-behavior:smooth}
   .nav-login-txt{display:none!important}
 }
 @media (max-width: 800px){ .cols{grid-template-columns:minmax(0,1fr)} .story{padding:90px 20px} }
+/* Yapboz: Uygulamalar başlığının yanındaki dört karo. Sayfada görününce bir kez oynar. */
+.apps-head { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 36px; margin-bottom: 40px; }
+.apps-head .lead-2 { margin-bottom: 0; }
+.yapboz { width: 148px; height: 148px; flex: none; overflow: visible; }
+.yapboz .yz-t { transform-box: fill-box; transform-origin: 50% 100%; }
+.yapboz.hazir .yz-t, .yapboz.hazir .yz-o, .yapboz.hazir .yz-a { opacity: 0; }
+.yapboz.oynat .yz-t { opacity: 1; animation: 2.7s cubic-bezier(.3,1.4,.5,1) both; }
+.yapboz.oynat .yz-1 { animation-name: yz1; }
+.yapboz.oynat .yz-2 { animation-name: yz2; }
+.yapboz.oynat .yz-3 { animation-name: yz3; }
+.yapboz.oynat .yz-4 { animation-name: yz4; animation-timing-function: ease-in; }
+.yapboz.oynat .yz-o { opacity: 1; stroke-dasharray: 160; animation: yzo 2.7s ease-out both; }
+.yapboz.oynat .yz-a { opacity: 1; stroke-dasharray: 125; animation: yza 2.7s ease-out both; }
+@keyframes yz1 { 0% { transform: translate(-260px,-160px) rotate(-18deg); opacity: 0 } 4% { opacity: 1 } 22% { transform: none } 25.6% { transform: scale(1.08,.92) } 28.9%,100% { transform: none } }
+@keyframes yz2 { 0%,8.9% { transform: translate(260px,-160px) rotate(16deg); opacity: 0 } 13.3% { opacity: 1 } 31.1% { transform: none } 34.4% { transform: scale(1.08,.92) } 37.8%,100% { transform: none } }
+@keyframes yz3 { 0%,17.8% { transform: translate(-260px,160px) rotate(14deg); opacity: 0 } 22.2% { opacity: 1 } 40% { transform: none } 43.3% { transform: scale(1.08,.92) } 46.7%,100% { transform: none } }
+@keyframes yz4 { 0%,48.9% { transform: translateY(-260px); opacity: 0 } 51.1% { opacity: 1 } 66.7% { transform: none } 71.1% { transform: scale(1.2,.8) } 77.8%,100% { transform: none } }
+@keyframes yzo { 0%,8.9% { stroke-dashoffset: 160 } 33.3%,100% { stroke-dashoffset: 0 } }
+@keyframes yza { 0%,75.6% { stroke-dashoffset: 125 } 97.8%,100% { stroke-dashoffset: 0 } }
+
+/* Mühür: alt bilgide, çevresindeki yazı çok yavaş döner. */
+.muhur { width: 96px; height: 96px; flex: none; }
+.muhur .muhur-yazi { transform-origin: 0 0; animation: muhur-don 40s linear infinite; }
+@keyframes muhur-don { to { transform: rotate(360deg) } }
+.foot-imza { display: flex; align-items: center; gap: 20px; }
+@media (prefers-reduced-motion: reduce) { .muhur .muhur-yazi { animation: none; } }
+.apps-head .dsp{margin:0!important}
 </style>
 </head>
 <body>
@@ -132,7 +159,15 @@ html{scroll-behavior:smooth}
   </section>
 
   <section class="apps" id="uygulamalar" aria-labelledby="app-h">
-    <h2 id="app-h" class="dsp" style="margin: 0 0 24px; font-size: clamp(36px, 4.4vw, 60px); line-height: 1">Uygulamalarımız</h2>
+    <div class="apps-head">
+      <svg class="yapboz" width="148" height="148" viewBox="0 0 220 220" role="img" aria-label="Uygulamalar: dört karodan oluşan OA Labs ızgarası">
+          <g class="yz-t yz-1"><rect x="6" y="6" width="96" height="96" rx="25" fill="#0D0F16" stroke="#EEEAE2" stroke-width="8.4"/><circle class="yz-o" cx="54" cy="54" r="25.4" fill="none" stroke="#EEEAE2" stroke-width="11.3" transform="rotate(-90 54 54)"/></g>
+          <g class="yz-t yz-2"><rect x="118" y="6" width="96" height="96" rx="25" fill="#0D0F16" stroke="#5D606B" stroke-width="8.4"/></g>
+          <g class="yz-t yz-3"><rect x="6" y="118" width="96" height="96" rx="25" fill="#0D0F16" stroke="#5D606B" stroke-width="8.4"/></g>
+          <g class="yz-t yz-4"><rect x="118" y="118" width="96" height="96" rx="25" fill="#F2A541"/><path class="yz-a" d="M140.6 194.3 L166 137.7 L191.4 194.3" fill="none" stroke="#14110A" stroke-width="11.3" stroke-linecap="round" stroke-linejoin="round"/></g>
+        </svg>
+      <h2 id="app-h" class="dsp" style="margin: 0 0 24px; font-size: clamp(36px, 4.4vw, 60px); line-height: 1">Uygulamalarımız</h2>
+    </div>
     <div class="app-row">
       <img class="ic" src="/icon.png" alt="">
       <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Radyo <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #F2A541; letter-spacing: 0">Yayında</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Türkiye’nin ve dünyanın radyoları tek uygulamada. Windows ve web.</p></div>
@@ -166,7 +201,12 @@ html{scroll-behavior:smooth}
 
   <footer style="border-top: 1px solid #1E2232">
     <div style="max-width: 1200px; margin: 0 auto; padding: 32px 32px 44px; display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; font-size: 14px; color: #7E8296">
-      <span>© 2026 Oğuzhan Aydın · OA Labs</span>
+      <span class="foot-imza"><svg class="muhur" width="96" height="96" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs mühürü">
+          <defs><path id="muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
+          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
+          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="11" letter-spacing="2" fill="#EEEAE2"><textPath href="#muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · ATÖLYE · 2026 · OA LABS · ATÖLYE · 2026 ·</textPath></text></g>
+          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg><span>© 2026 Oğuzhan Aydın · OA Labs</span></span>
       <span><a href="mailto:info@oguzhanaydin.com.tr">info@oguzhanaydin.com.tr</a> · <a href="https://oalabs.dev">oalabs.dev</a> · <a href="https://oalabs.dev/gizlilik/" style="color: #9EA2B3">Gizlilik politikası</a></span>
     </div>
   </footer>
@@ -209,6 +249,18 @@ html{scroll-behavior:smooth}
   render(0);
   function step(now) { if (t0 === null) t0 = now; var t = (now - t0) / 1000; render(Math.min(t, 3)); if (t < 3) requestAnimationFrame(step); }
   requestAnimationFrame(step);
+})();
+</script>
+<script>
+/* Yapboz: hareketi azaltma kapalıysa, Uygulamalar bölümü görününce karolar bir kez yerine oturur. */
+(function () {
+  var el = document.querySelector('.yapboz');
+  if (!el || !('IntersectionObserver' in window) || !window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.classList.add('hazir');
+  var io = new IntersectionObserver(function (es) {
+    if (es[0].isIntersecting) { el.classList.remove('hazir'); el.classList.add('oynat'); io.disconnect(); }
+  }, { threshold: 0.6 });
+  io.observe(el);
 })();
 </script>
 </body>
