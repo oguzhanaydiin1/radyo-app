@@ -382,8 +382,17 @@ export async function adminUsers(req, url, env) {
 
 // OA Tarayıcı eşitlemesi. Her koleksiyon ("bookmarks", "quick") ayrı tutulur ve
 // istemcinin gönderdiği "updated" zamanı sunucudakinden yeniyse yerine geçer (son yazan kazanır).
-const SYNC_ITEMS = new Set(['bookmarks', 'quick']);
-const SYNC_MAX = 256 * 1024; // bir kullanıcının toplam eşitleme verisi
+// OA Tarayıcı eşitlemesi:
+//   bookmarks, quick   yer imleri ve hızlı erişim
+//   history            geçmiş (cihazlar birleştirir)
+//   vault              şifreler; cihazda kullanıcının parolasıyla şifrelenmiş (sunucu içini göremez)
+//   tabs:<cihaz>       o cihazda açık sekmeler
+//   inbox:<cihaz>      o cihaza gönderilen sekmeler
+const SYNC_ITEMS = new Set(['bookmarks', 'quick', 'history', 'vault']);
+const SYNC_DEVICE = /^(tabs|inbox):[a-z0-9-]{8,48}$/;
+const SYNC_DEVICE_MAX = 20; // kullanıcı başına cihaz kaydı (her tür için)
+const SYNC_MAX = 1024 * 1024; // bir istekte gönderilen toplam eşitleme verisi
+const syncName = (n) => SYNC_ITEMS.has(n) || SYNC_DEVICE.test(n);
 
 export async function mySync(req, env) {
   const u = await sessionUser(req, env);
@@ -399,7 +408,11 @@ export async function mySync(req, env) {
     const stmts = [];
     let total = 0;
     for (const [name, v] of Object.entries((b && b.items) || {})) {
-      if (!SYNC_ITEMS.has(name) || !v || !Array.isArray(v.data)) continue;
+      if (!syncName(name) || !v || !Array.isArray(v.data)) continue;
+      if (!items[name] && SYNC_DEVICE.test(name)) {
+        const kind = name.split(':')[0] + ':';
+        if (Object.keys(items).filter((k) => k.startsWith(kind)).length >= SYNC_DEVICE_MAX) continue;
+      }
       const updated = typeof v.updated === 'string' && !Number.isNaN(Date.parse(v.updated)) ? new Date(v.updated).toISOString() : now();
       const text = JSON.stringify(v.data);
       total += text.length;
