@@ -19,6 +19,9 @@ window.OA = (function () {
     gonderilemedi: 'E-posta gönderilemedi, biraz sonra tekrar dene.',
     giris: 'Oturumun kapanmış. Yeniden giriş yap.',
     ag: 'Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.',
+    buyuk: 'Fotoğraf çok büyük. Başka bir fotoğraf dene.',
+    tur: 'Bu dosya türü desteklenmiyor. JPEG, PNG ya da WebP bir fotoğraf seç.',
+    'foto-kapali': 'Profil fotoğrafı şu an kullanılamıyor. Biraz sonra tekrar dene.',
   };
   function call(path, body) {
     if (body && typeof body === 'object' && !('lang' in body)) body.lang = window.OA_LANG || 'tr'; // e-postalar bu dilde gider
@@ -40,6 +43,10 @@ window.OA = (function () {
     return s.toLocaleUpperCase('tr-TR');
   }
   function firstName(name) { return String(name || '').trim().split(/\s+/)[0] || ''; }
+  // Profil fotoğrafı yalnız sahibine gösterilir: adres oturum çereziyle açılır, ?v= sürüm değişince yenilenir.
+  function avatarUrl(u) { return u && u.avatar ? API + '/v1/me/avatar?v=' + encodeURIComponent(u.avatar) : ''; }
+  function avaInner(u) { return u && u.avatar ? '<img src="' + esc(avatarUrl(u)) + '" alt="" width="72" height="72">' : esc(initials(u && u.name)); }
+  function avaFill(el, u) { if (el) { el.innerHTML = avaInner(u); el.classList.toggle('has-img', !!(u && u.avatar)); } }
   var meP = null;
   function me(fresh) { if (fresh || !meP) meP = call('/v1/me'); return meP; }
 
@@ -78,11 +85,11 @@ window.OA = (function () {
     if (u) {
       slot.innerHTML =
         '<button class="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="' + id + '" aria-label="Hesabım: ' + esc(u.name) + '">' +
-          '<span class="ava on" aria-hidden="true">' + esc(initials(u.name)) + '</span>' +
+          '<span class="ava on' + (u.avatar ? ' has-img' : '') + '" aria-hidden="true">' + avaInner(u) + '</span>' +
           '<span class="lbl"><small>Hesabım</small><b>' + esc(firstName(u.name)) + '</b></span>' + I.chev +
         '</button>' +
         '<div class="acct-pop" id="' + id + '" role="menu" aria-label="Hesabım" hidden>' +
-          '<div class="acct-who"><span class="ava on lg" aria-hidden="true">' + esc(initials(u.name)) + '</span><div><b>' + esc(u.name) + '</b><span>' + esc(u.email) + '</span></div></div>' +
+          '<div class="acct-who"><span class="ava on lg' + (u.avatar ? ' has-img' : '') + '" aria-hidden="true">' + avaInner(u) + '</span><div><b>' + esc(u.name) + '</b><span>' + esc(u.email) + '</span></div></div>' +
           menuItems(u, '') +
         '</div>';
     } else {
@@ -154,5 +161,5 @@ window.OA = (function () {
       notifyButtons(u);
     });
   });
-  return { call: call, msg: msg, me: me, esc: esc, initials: initials, firstName: firstName, icons: I, sections: SECTIONS, menuItems: menuItems, logout: logout };
+  return { api: API, avatarUrl: avatarUrl, avaFill: avaFill, call: call, msg: msg, me: me, esc: esc, initials: initials, firstName: firstName, icons: I, sections: SECTIONS, menuItems: menuItems, logout: logout };
 })();

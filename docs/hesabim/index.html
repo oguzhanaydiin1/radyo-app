@@ -86,6 +86,9 @@
       .hello h1 { font-size: 28px; }
       .crumbs { margin: 20px 0 16px; }
     }
+    .photo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 18px; }
+    .photo-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .photo-actions .btn { cursor: pointer; font-family: inherit; }
   </style>
 </head>
 <body data-auto-lang>
@@ -137,6 +140,22 @@
 
           <!-- Kullanıcı bilgilerim -->
           <section data-view="bilgiler" class="stack-v" hidden>
+            <div class="box" id="photo-box">
+              <h2>Profil fotoğrafı</h2>
+              <p class="lead">Fotoğrafını yalnızca sen görürsün: sağ üstteki hesap menüsünde, bu sayfada ve OA Tarayıcı’da.</p>
+              <div class="photo-row">
+                <span class="ava on xxl" aria-hidden="true" data-ava id="ph-prev"></span>
+                <div class="photo-actions">
+                  <button class="btn small" type="button" id="ph-pick">Fotoğraf seç</button>
+                  <input type="file" id="ph-file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden>
+                  <button class="btn primary small" type="button" id="ph-save" hidden>Kaydet</button>
+                  <button class="btn small" type="button" id="ph-cancel" hidden>Vazgeç</button>
+                  <button class="btn small" type="button" id="ph-del" hidden>Fotoğrafı kaldır</button>
+                </div>
+              </div>
+              <p class="hint" style="margin: 16px 0 0; color: var(--faint); font-size: 13px">Fotoğraf ortadan kare olarak kırpılır ve küçültülür; konum gibi ek bilgiler gönderilmeden silinir.</p>
+              <p class="form-msg" id="ph-msg" role="status" aria-live="polite"></p>
+            </div>
             <div class="box" data-info-form="b"></div>
             <div class="box" id="delete-box">
               <h2>Hesabımı sil</h2>
@@ -268,9 +287,10 @@
 
       // ---- Üye bilgilerini sayfaya yaz ----
       function paint() {
-        var ini = OA.initials(user.name);
-        $('#s-ava').textContent = ini;
-        $$('[data-ava]').forEach(function (e) { e.textContent = ini; });
+        OA.avaFill($('#s-ava'), user);
+        $$('[data-ava]').forEach(function (e) { if (!(e.id === 'ph-prev' && pendingPhoto)) OA.avaFill(e, user); });
+        $('#ph-del').hidden = !user.avatar || !!pendingPhoto;
+        $('#ph-pick').textContent = user.avatar ? 'Fotoğrafı değiştir' : 'Fotoğraf seç';
         $('#s-name').textContent = user.name;
         $('#s-since').textContent = month(user.created) + '’dan beri üye';
         $('#hello').textContent = 'Merhaba, ' + OA.firstName(user.name);
@@ -429,13 +449,94 @@
         });
       });
 
+      // ---- Profil fotoğrafı ----
+      // Fotoğraf tarayıcıda ortadan kare kırpılıp 256×256'ya küçültülür ve yeniden kodlanır;
+      // böylece konum gibi ek bilgiler (EXIF) sunucuya hiç gitmez.
+      var pendingPhoto = null, pendingUrl = '';
+      function viaImg(file) {
+        return new Promise(function (ok, no) {
+          var u = URL.createObjectURL(file), im = new Image();
+          im.onload = function () { ok(im); };
+          im.onerror = function () { URL.revokeObjectURL(u); no(new Error('decode')); };
+          im.src = u;
+        });
+      }
+      function decodeImage(file) {
+        if (window.createImageBitmap) {
+          return createImageBitmap(file, { imageOrientation: 'from-image' }).catch(function () { return viaImg(file); });
+        }
+        return viaImg(file);
+      }
+      function encode(canvas, type, q) { return new Promise(function (ok) { canvas.toBlob(ok, type, q); }); }
+      function makePhoto(file) {
+        if (file.size > 30e6) return Promise.reject(new Error('size'));
+        return decodeImage(file).then(function (img) {
+          var w = img.width || img.naturalWidth, h = img.height || img.naturalHeight, s = Math.min(w, h);
+          if (!s) throw new Error('decode');
+          var c = document.createElement('canvas'); c.width = c.height = 256;
+          var x = c.getContext('2d'); x.imageSmoothingQuality = 'high';
+          x.drawImage(img, (w - s) / 2, (h - s) / 2, s, s, 0, 0, 256, 256);
+          return encode(c, 'image/webp', 0.85).then(function (b) {
+            return b && b.type === 'image/webp' ? b : encode(c, 'image/jpeg', 0.88);
+          });
+        });
+      }
+      function photoButtons(editing) {
+        $('#ph-save').hidden = !editing; $('#ph-cancel').hidden = !editing;
+        $('#ph-pick').hidden = editing; $('#ph-del').hidden = editing || !user.avatar;
+      }
+      function clearPending() {
+        pendingPhoto = null;
+        if (pendingUrl) { URL.revokeObjectURL(pendingUrl); pendingUrl = ''; }
+        OA.avaFill($('#ph-prev'), user); photoButtons(false);
+      }
+      $('#ph-pick').addEventListener('click', function () { $('#ph-file').click(); });
+      $('#ph-file').addEventListener('change', function () {
+        var f = this.files && this.files[0]; this.value = '';
+        if (!f) return;
+        say($('#ph-msg'), 'Hazırlanıyor…');
+        makePhoto(f).then(function (blob) {
+          if (!blob) throw new Error('encode');
+          pendingPhoto = blob;
+          if (pendingUrl) URL.revokeObjectURL(pendingUrl);
+          pendingUrl = URL.createObjectURL(blob);
+          var p = $('#ph-prev'); p.innerHTML = '<img src="' + pendingUrl + '" alt="" width="112" height="112">'; p.classList.add('has-img');
+          photoButtons(true);
+          say($('#ph-msg'), 'Böyle görünecek. Beğendiysen kaydet.');
+        }).catch(function () {
+          say($('#ph-msg'), 'Bu fotoğraf açılamadı. JPEG, PNG ya da WebP bir fotoğraf seç.', 'err');
+        });
+      });
+      $('#ph-cancel').addEventListener('click', function () { clearPending(); say($('#ph-msg'), ''); });
+      $('#ph-save').addEventListener('click', function () {
+        if (!pendingPhoto) return;
+        var b = this; b.disabled = true; say($('#ph-msg'), 'Kaydediliyor…');
+        fetch(OA.api + '/v1/me/avatar', { method: 'POST', credentials: 'include', headers: { 'Content-Type': pendingPhoto.type }, body: pendingPhoto })
+          .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'sunucu' }; }); }, function () { return { ok: false, error: 'ag' }; })
+          .then(function (r) {
+            b.disabled = false;
+            if (!r.ok) { say($('#ph-msg'), OA.msg(r.error), 'err'); return; }
+            user.avatar = r.avatar; clearPending(); paint(); refreshHeader();
+            say($('#ph-msg'), 'Fotoğrafın kaydedildi.', 'ok');
+          });
+      });
+      $('#ph-del').addEventListener('click', function () {
+        var b = this; b.disabled = true;
+        OA.call('/v1/me/avatar/delete', {}).then(function (r) {
+          b.disabled = false;
+          if (!r.ok) { say($('#ph-msg'), OA.msg(r.error), 'err'); return; }
+          user.avatar = null; clearPending(); paint(); refreshHeader();
+          say($('#ph-msg'), 'Fotoğrafın kaldırıldı.', 'ok');
+        });
+      });
+
       // Sağ üstteki menüyü yeni ad/e-postayla yenile.
       function refreshHeader() {
         var slot = $('[data-account-slot]');
         if (!slot) return;
         var ava = $('.acct-btn .ava', slot), b = $('.acct-btn .lbl b', slot), who = $('.acct-who b', slot), mail = $('.acct-who span', slot), ava2 = $('.acct-who .ava', slot);
-        if (ava) ava.textContent = OA.initials(user.name);
-        if (ava2) ava2.textContent = OA.initials(user.name);
+        OA.avaFill(ava, user);
+        OA.avaFill(ava2, user);
         if (b) b.textContent = OA.firstName(user.name);
         if (who) who.textContent = user.name;
         if (mail) mail.textContent = user.email;

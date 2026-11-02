@@ -86,3 +86,10 @@ CREATE TABLE IF NOT EXISTS user_sync (
   data TEXT NOT NULL,
   PRIMARY KEY (user_id, item)
 );
+
+-- Profil fotoğrafı: dosyanın kendisi R2'de (AVATARS), burada yalnız adı. Fotoğrafı yalnız üyenin kendisi görür.
+CREATE TABLE IF NOT EXISTS user_avatar (
+  user_id TEXT PRIMARY KEY,
+  key TEXT NOT NULL,
+  updated TEXT NOT NULL
+);

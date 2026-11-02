@@ -14,7 +14,7 @@
  * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
 
-import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync } from './auth.js';
+import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
 
 const APPS = new Set(['radyo']);
 const REPORT_APPS = new Set(['harrier']);
@@ -223,6 +223,14 @@ export default {
       }
       if (url.pathname === '/v1/me/email/verify' && req.method === 'POST') return send(await emailVerify(req, env));
       if (url.pathname === '/v1/me/sync' && (req.method === 'GET' || req.method === 'POST')) return send(await mySync(req, env));
+      if (url.pathname === '/v1/me/avatar' && req.method === 'GET') {
+        const r = await myAvatar(req, env);
+        if (r.status !== 200) return new Response(null, { status: r.status, headers: { 'Cache-Control': 'no-store', ...h } });
+        // Adres ?v=<sürüm> taşır: sürüm değişince yeni adres olur, eskisi önbellekte kalabilir.
+        return new Response(r.body, { status: 200, headers: { 'Content-Type': r.type, 'Cache-Control': 'private, max-age=31536000, immutable', 'X-Content-Type-Options': 'nosniff', ...h } });
+      }
+      if (url.pathname === '/v1/me/avatar' && req.method === 'POST') return send(await setAvatar(req, env));
+      if (url.pathname === '/v1/me/avatar/delete' && req.method === 'POST') return send(await deleteAvatar(req, env));
       if (url.pathname === '/v1/admin/users') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
         return json(await adminUsers(req, url, env), 200, h);

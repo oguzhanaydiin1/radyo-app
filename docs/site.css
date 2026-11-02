@@ -236,6 +236,9 @@ section { padding: 72px 0; }
 .ava.on { background: var(--amber); color: var(--amber-ink); }
 .ava.lg { width: 44px; height: 44px; font-size: 16px; }
 .ava.xl { width: 72px; height: 72px; font-size: 26px; }
+.ava img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.ava.has-img { background: var(--surface-2); }
+.ava.xxl { width: 112px; height: 112px; font-size: 40px; }
 .acct-pop { position: absolute; right: 0; top: calc(100% + 10px); width: 300px; max-width: calc(100vw - 32px); box-sizing: border-box; padding: 8px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border-2); box-shadow: 0 24px 60px rgba(0,0,0,.55); z-index: 30; }
 .acct-pop.guest { padding: 20px; }
 .acct-pop .hi { margin: 0 0 4px; font: 800 20px/1.2 var(--display); }

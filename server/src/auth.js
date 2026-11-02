@@ -11,6 +11,9 @@
  *   POST /v1/me/sessions    { id } o oturumu kapat | { others: true } bu cihaz dışındakileri kapat
  *   POST /v1/me/email/start { email }        yeni adrese kod gönder
  *   POST /v1/me/email/verify { email, code } yeni adresi onayla
+ *   GET  /v1/me/avatar      Profil fotoğrafı (yalnız sahibine; yoksa 404)
+ *   POST /v1/me/avatar      Gövde: WebP ya da JPEG, en çok 150 KB → fotoğrafı kaydet / değiştir
+ *   POST /v1/me/avatar/delete  Fotoğrafı sil
  *   GET  /v1/me/sync        Eşitlenen tarayıcı verisi (OA Tarayıcı: yer imleri, hızlı erişim)
  *   POST /v1/me/sync        { items: { <ad>: { updated, data } } } daha yeni olanlar kaydedilir
  *   GET  /v1/admin/users    Üye sayıları ve listesi (yönetici)
@@ -236,9 +239,10 @@ export async function me(req, env, secure) {
     }
   }
   if (stmts.length) await env.DB.batch(stmts);
-  const [notify, count] = await env.DB.batch([
+  const [notify, count, ava] = await env.DB.batch([
     env.DB.prepare('SELECT app FROM app_notify WHERE user_id = ?1').bind(u.id),
     env.DB.prepare('SELECT COUNT(*) AS n FROM sessions WHERE user_id = ?1 AND expires > ?2').bind(u.id, now()),
+    env.DB.prepare('SELECT key FROM user_avatar WHERE user_id = ?1').bind(u.id),
   ]);
   return {
     status: 200,
@@ -247,6 +251,8 @@ export async function me(req, env, secure) {
       user: {
         email: u.email, name: u.name, created: u.created, announce: !!u.announce,
         notify: notify.results.map((r) => r.app), sessions: count.results[0].n,
+        // Fotoğraf varsa sürümü (adresin sonuna ?v= olarak eklenir), yoksa null.
+        avatar: ava.results.length ? ava.results[0].key.split('/').pop() : null,
       },
     },
   };
@@ -335,7 +341,10 @@ export async function emailVerify(req, env) {
 }
 
 async function removeUser(env, id) {
+  const ava = await env.DB.prepare('SELECT key FROM user_avatar WHERE user_id = ?1').bind(id).first();
+  if (ava && env.AVATARS) await env.AVATARS.delete(ava.key);
   await env.DB.batch([
+    env.DB.prepare('DELETE FROM user_avatar WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM session_info WHERE token IN (SELECT token FROM sessions WHERE user_id = ?1)').bind(id),
     env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM app_notify WHERE user_id = ?1').bind(id),
@@ -425,4 +434,55 @@ export async function mySync(req, env) {
     if (stmts.length) await env.DB.batch(stmts);
   }
   return { status: 200, data: { ok: true, items } };
+}
+
+// ---------- Profil fotoğrafı ----------
+// Fotoğraf tarayıcıda 256×256'ya küçültülüp (konum bilgisi dahil bütün ek bilgiler atılarak) gönderilir.
+// Yalnız sahibine, oturum çereziyle verilir; herkese açık bir adresi yoktur.
+const AVATAR_MAX = 150 * 1024;
+function imageType(b) {
+  if (b.length > 12 && b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return 'image/webp';
+  if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  return '';
+}
+
+export async function myAvatar(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return { status: 401 };
+  const row = await env.DB.prepare('SELECT key FROM user_avatar WHERE user_id = ?1').bind(u.id).first();
+  if (!row || !env.AVATARS) return { status: 404 };
+  const obj = await env.AVATARS.get(row.key);
+  if (!obj) return { status: 404 };
+  return { status: 200, body: obj.body, type: (obj.httpMetadata && obj.httpMetadata.contentType) || 'image/webp' };
+}
+
+export async function setAvatar(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  if (!env.AVATARS) return fail('foto-kapali', 503);
+  const len = Number(req.headers.get('Content-Length') || 0);
+  if (len > AVATAR_MAX) return fail('buyuk', 413);
+  const buf = new Uint8Array(await req.arrayBuffer());
+  if (!buf.length) return fail('istek');
+  if (buf.length > AVATAR_MAX) return fail('buyuk', 413);
+  const type = imageType(buf);
+  if (!type) return fail('tur', 415);
+  const old = await env.DB.prepare('SELECT key FROM user_avatar WHERE user_id = ?1').bind(u.id).first();
+  const key = `${u.id}/${rand(12)}`;
+  await env.AVATARS.put(key, buf, { httpMetadata: { contentType: type } });
+  await env.DB.prepare('INSERT INTO user_avatar (user_id, key, updated) VALUES (?1, ?2, ?3) ON CONFLICT (user_id) DO UPDATE SET key = excluded.key, updated = excluded.updated')
+    .bind(u.id, key, now()).run();
+  if (old) await env.AVATARS.delete(old.key);
+  return { status: 200, data: { ok: true, avatar: key.split('/').pop() } };
+}
+
+export async function deleteAvatar(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  const old = await env.DB.prepare('SELECT key FROM user_avatar WHERE user_id = ?1').bind(u.id).first();
+  if (old) {
+    if (env.AVATARS) await env.AVATARS.delete(old.key);
+    await env.DB.prepare('DELETE FROM user_avatar WHERE user_id = ?1').bind(u.id).run();
+  }
+  return { status: 200, data: { ok: true, avatar: null } };
 }
