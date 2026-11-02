@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Help — OA Labs</title>
+  <meta name="description" content="Frequently asked questions about OA Labs apps: installing, the Windows warning, updates, accounts and privacy.">
+  <meta name="theme-color" content="#0D0F16">
+  <meta property="og:title" content="Help — OA Labs">
+  <meta property="og:description" content="Frequently asked questions about OA Labs apps: installing, the Windows warning, updates, accounts and privacy.">
+  <link rel="canonical" href="https://oalabs.dev/en/yardim/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/yardim/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/yardim/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/yardim/">
+  <link rel="icon" href="/img/oa-labs.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    .page-head { padding: 64px 0 8px; }
+    .page-head h1 { margin: 0; font: 800 clamp(40px, 6vw, 72px)/1 var(--display); letter-spacing: -0.035em; }
+    .page-head p { margin: 16px 0 0; font-size: 20px; color: var(--text-2); max-width: 36em; }
+    .help { padding: 0 0 72px; max-width: 880px; }
+    .help-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 8px; }
+    .help-jump a { height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid var(--border-2); color: var(--text-2); text-decoration: none; display: inline-flex; align-items: center; font-size: 14px; font-weight: 600; }
+    .help-jump a:hover { border-color: var(--faint); color: var(--text); }
+    .help h2 { margin: 48px 0 8px; font: 800 28px/1.1 var(--display); letter-spacing: -0.02em; scroll-margin-top: 96px; }
+    .help details { border-top: 1px solid var(--line); padding: 18px 0; }
+    .help details:last-of-type { border-bottom: 1px solid var(--line); }
+    .help summary { cursor: pointer; font-weight: 600; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+    .help summary::-webkit-details-marker { display: none; }
+    .help summary::after { content: '+'; color: var(--amber); font-size: 22px; line-height: 1; flex: none; }
+    .help details[open] summary::after { content: '–'; }
+    .help details p { margin: 10px 0 0; color: var(--text-2); }
+    .help-apps { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .help-apps a { display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); color: var(--text); text-decoration: none; font-weight: 600; }
+    .help-apps a:hover { border-color: var(--border-2); }
+    .help-apps img { width: 36px; height: 36px; border-radius: 10px; }
+    .help-contact { margin-top: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 28px; }
+    .help-contact h2 { margin-top: 0; }
+    .help-contact p { margin: 8px 0 0; color: var(--text-2); }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/en/"><span class="oa-mark" aria-hidden="true"><svg viewBox="2 0 100 100" width="100%" height="100%"><path d="M26 86 L52 14 L78 86" fill="none" style="stroke:var(--amber)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="28" fill="none" stroke="currentColor" stroke-width="10"/></svg></span>OA Labs</a>
+      <div class="nav-links">
+        <a href="/en/#uygulamalar">Apps</a>
+        <a href="/en/yenilikler/">What’s new</a>
+        <a href="/en/yardim/" aria-current="page" style="color: var(--text)">Help</a>
+      </div>
+      <a class="lang-sw" data-lang-switch href="/yardim/">TR</a>
+      <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Sign in</b><small>or sign up</small></span></a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap page-head" aria-labelledby="h1">
+      <h1 id="h1">Help</h1>
+      <p>Common questions about installing, updates, accounts and privacy.</p>
+    </section>
+    <section class="wrap help" aria-label="Help">
+      <nav class="help-jump" aria-label="Help"><a href="#kurulum">Installing</a><a href="#guncelleme">Updates</a><a href="#uyelik">Account</a><a href="#gizlilik">Privacy</a><a href="#iletisim">Contact</a></nav>
+      <h2 id="kurulum">Installing</h2>
+      <details><summary>Windows says “Windows protected your PC”. What do I do?</summary><p>Our apps aren’t digitally signed yet, so Windows may show this warning the first time. Choose “More info”, then “Run anyway”. It only happens the first time.</p></details>
+      <details><summary>Do I need administrator rights to install?</summary><p>No. OA Radyo, OA Browser and Harrier Cleaner install without administrator rights. Harrier Cleaner may ask for them for some details such as disk temperature; that’s your call.</p></details>
+      <details><summary>How do I install the file I downloaded on Android?</summary><p>Tap the downloaded file. If your phone asks about installing from unknown sources, turn on “Allow from this source”, then tap “Install”.</p></details>
+      <details><summary>Why aren’t the apps on Google Play?</summary><p>For now we distribute them directly from here. The apps are always signed with the same OA key, so new versions install over the old ones and your data isn’t lost.</p></details>
+      <details><summary>Which Windows and Android versions are supported?</summary><p>Windows 10 and 11. OA Browser runs on Android 7 and later.</p></details>
+      <h2 id="guncelleme">Updates</h2>
+      <details><summary>How do the apps update?</summary><p>When a new version is out, the app lets you know and installs it in one click. In OA Browser you can also use “Check for updates” in the menu.</p></details>
+      <details><summary>Where can I see what changed?</summary><p>Release notes for every app are on the <a href="/en/yenilikler/">What’s new</a> page.</p></details>
+      <h2 id="uyelik">Account</h2>
+      <details><summary>Do I need an account to use the apps?</summary><p>No. Every app works without an account. An account is only for syncing devices in OA Browser, news about new apps and early access to betas.</p></details>
+      <details><summary>There’s no password. How do I sign in?</summary><p>You type your email and we send you a 6-digit code; enter it and you’re in. The code is valid for 10 minutes. With no password, there’s none to steal or forget.</p></details>
+      <details><summary>I didn’t get the code.</summary><p>Wait a few minutes and check your spam folder. If it still hasn’t arrived, ask for a new one; the old code stops working when the new one arrives.</p></details>
+      <details><summary>How long do I stay signed in?</summary><p>60 days on the device you signed in on. You can see your open sessions on your <a href="/hesabim/">account page</a> and close any of them.</p></details>
+      <details><summary>Can I change my email address?</summary><p>Yes, on your <a href="/hesabim/">account page</a>. You confirm it with a code sent to the new address.</p></details>
+      <details><summary>How do I delete my account?</summary><p>Use “Delete my account” at the bottom of your <a href="/hesabim/">account page</a>. Your account, details and all sessions are deleted permanently.</p></details>
+      <h2 id="gizlilik">Privacy</h2>
+      <details><summary>Are there ads? Do you sell my data?</summary><p>No. There are no ads in our apps, and we don’t sell your data or use it for ads.</p></details>
+      <details><summary>What do the apps send over the internet?</summary><p>The <a href="/gizlilik/#en">privacy policy</a> covers each app one by one. For example, Harrier Cleaner scans your files entirely on your computer; your files are never sent anywhere.</p></details>
+      <h2>App-specific questions</h2>
+      <p style="margin: 0; color: var(--text-2)">Each app’s page also has questions about that app:</p>
+      <div class="help-apps"><a href="/en/tarayici/#sss"><img src="/tarayici/img/icon.png" alt="" width="36" height="36">OA Browser</a><a href="/en/radyo/#sss"><img src="/radyo/img/icon.png" alt="" width="36" height="36">OA Radyo</a><a href="/en/harrier/#sss"><img src="/harrier/img/icon.png" alt="" width="36" height="36">Harrier Cleaner</a></div>
+      <div class="help-contact" id="iletisim"><h2>Didn’t find your answer?</h2><p>Write to us at <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>. We usually reply within a day. If something’s wrong in an app, you can also report it from the app’s support screen; the version and system details are added for you.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-foot" id="iletisim">
+    <div class="wrap foot">
+      <div class="foot-imza">
+        <svg class="muhur" width="96" height="96" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs seal">
+          <defs><path id="muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
+          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
+          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="11" letter-spacing="2" fill="#EEEAE2"><textPath href="#muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · WORKSHOP · 2026 · OA LABS · WORKSHOP · 2026 ·</textPath></text></g>
+          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="/gizlilik/#en">Privacy policy</a>
+        <a class="quiet" href="/en/radyo/">OA Radyo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/i18n-site.js"></script>
+  <script src="/hesap.js"></script>
+</body>
+</html>
