@@ -87,7 +87,7 @@ window.OA = (function () {
         '</div>';
     } else {
       slot.innerHTML =
-        '<button class="acct-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="' + id + '">' +
+        '<button class="acct-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="' + id + '" aria-label="' + (window.OA_LANG === 'en' ? 'Sign in or sign up' : 'Giriş yap veya üye ol') + '">' +
           '<span class="ava" aria-hidden="true">' + I.user.replace('<svg ', '<svg width="18" height="18" ') + '</span>' +
           '<span class="lbl"><b>Giriş yap</b><small>veya üye ol</small></span>' +
         '</button>' +

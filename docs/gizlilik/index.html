@@ -6,11 +6,19 @@
   <title>Gizlilik politikası — OA Labs</title>
   <meta name="theme-color" content="#0D0F16">
   <meta name="description" content="OA Radyo ve OA Labs uygulamalarının gizlilik politikası.">
+  <meta property="og:title" content="Gizlilik politikası — OA Labs">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OA Labs">
+  <meta property="og:image" content="https://oalabs.dev/img/paylas/home-tr.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://oalabs.dev/img/paylas/home-tr.png">
   <link rel="canonical" href="https://oalabs.dev/gizlilik/">
   <link rel="icon" href="/img/oa-labs.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
   <style>
     :root {
       --bg: #0D0F16; --border: #1E2232; --text: #EEEAE2; --muted: #9EA2B3; --accent: #F2A541;
@@ -65,7 +73,7 @@
         <li><strong>Radyo istasyonlarının sunucuları:</strong> dinlediğin yayın doğrudan o radyonun sunucusundan gelir. Kayıt ve şarkı adı da bu yayından alınır.</li>
         <li><strong>Logo kaynakları:</strong> istasyon logoları radyonun kendi sitesinden ya da Google’ın site simgesi hizmetinden indirilir.</li>
         <li><strong>GitHub:</strong> yeni sürüm denetimi, güncelleme dosyaları ve ek istasyon listesi buradan indirilir.</li>
-        <li><strong>Google Fonts:</strong> uygulamanın yazı tipleri.</li>
+        <li><strong>Google Fonts:</strong> uygulamanın yazı tipleri, yalnızca 0.9.1 ve önceki sürümlerde. Sonraki sürümlerde yazı tipleri uygulamanın içinde gelir; Google’a bağlanılmaz.</li>
       </ul>
 
       <h2>İsimsiz kullanım sayımı (yalnızca izin verirsen)</h2>
@@ -121,7 +129,7 @@
         <h2>Stored on your computer</h2>
         <p>Favourites, history, added stations, alarms, schedules, settings, equalizer choices, listening statistics, recent songs and cached station logos are kept in <span class="muted">%APPDATA%\Radyo</span>. Recordings are saved to “Radyo Kayıtları” in your Music folder.</p>
         <h2>Services the app connects to</h2>
-        <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and Google Fonts. As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
+        <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and, in version 0.9.1 and earlier only, Google Fonts (later versions ship the fonts inside the app). As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
         <h2>Anonymous usage counts (only with your permission)</h2>
         <p>If you allow it (you can turn it off in Settings), every 15 minutes the app sends our server (api.oalabs.dev) a random install ID, the app version, the interface language and how many minutes each station was played. Names of stations you added yourself are not sent. The install ID is stored only as a one-way hash; no name, email or IP address is stored. The numbers are only viewed in aggregate.</p>
         <h2>Live chat</h2>
