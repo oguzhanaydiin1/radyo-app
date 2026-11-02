@@ -115,6 +115,8 @@ section { padding: 72px 0; }
 .btn.on-amber { border-color: rgba(20,17,10,.4); color: var(--amber-ink); background: var(--amber); }
 .btn.on-amber:hover { border-color: var(--amber-ink); color: var(--amber-ink); }
 .btn.light { background: #EEEAE2; border-color: #EEEAE2; color: #0F1B45; }
+.btn.on-navy { border-color: rgba(255,255,255,.4); color: #fff; background: #1E3A8A; }
+.btn.on-navy:hover { border-color: #fff; color: #fff; }
 .btn.light:hover { background: #fff; border-color: #fff; color: #0F1B45; transform: translateY(-1px); }
 .t-tarayici .btn:focus-visible, .t-harrier .btn:focus-visible { outline-color: #fff; }
 .t-radyo .btn:focus-visible { outline-color: var(--amber-ink); }
