@@ -11,6 +11,11 @@ binding = "DB"
 database_name = "oa-stats"
 database_id = "00000000-0000-0000-0000-000000000000" # yayınlarken gerçek kimlikle değiştirilir
 
+# Profil fotoğrafları (yalnız sahibine gösterilir). Depo yayın sırasında yoksa açılır.
+[[r2_buckets]]
+binding = "AVATARS"
+bucket_name = "oa-avatars"
+
 [[durable_objects.bindings]]
 name = "CHAT"
 class_name = "ChatRoom"

@@ -80,6 +80,25 @@ jobs:
           sed -i "s/00000000-0000-0000-0000-000000000000/$ID/" wrangler.toml
           npx wrangler d1 execute oa-stats --remote --file schema.sql
 
+      - name: Profil fotoğrafı deposu (R2) var mı, yoksa aç
+        if: steps.check.outputs.skip != '1'
+        run: |
+          if npx wrangler r2 bucket list 2>/dev/null | grep -q 'oa-avatars'; then
+            echo "oa-avatars deposu var."
+          elif npx wrangler r2 bucket create oa-avatars; then
+            echo "oa-avatars deposu açıldı."
+          else
+            # Cloudflare anahtarında R2 izni yoksa sunucu fotoğrafsız yayınlanır; fotoğraf uçları 503 döner.
+            echo "::warning title=r2::oa-avatars deposu açılamadı (Cloudflare anahtarında R2 izni olmayabilir). Profil fotoğrafı şimdilik kapalı."
+            python3 - <<'PY'
+          import re
+          p = 'wrangler.toml'
+          s = open(p).read()
+          s = re.sub(r'\n# Profil fotoğrafları.*?bucket_name = "oa-avatars"\n', '\n', s, flags=re.S)
+          open(p, 'w').write(s)
+          PY
+          fi
+
       - name: Sunucuyu yükle
         if: steps.check.outputs.skip != '1'
         run: |
