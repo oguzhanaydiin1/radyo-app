@@ -116,7 +116,7 @@
     // Hesabım
     'Hesabım — OA Labs': 'My account — OA Labs', 'Ana sayfa': 'Home', 'Konum': 'Breadcrumb', 'Hesabım menüsü': 'Account menu',
     'Uygulamalar': 'Apps', 'Web’de dinle': 'Listen on the web', 'İletişim': 'Contact', 'Merhaba': 'Hi',
-    'Profil fotoğrafı': 'Profile photo', 'Fotoğrafını yalnızca sen görürsün: sağ üstteki hesap menüsünde, bu sayfada ve OA Tarayıcı’da.': 'Only you can see your photo: in the account menu at the top right, on this page and in OA Browser.',
+    'Profil fotoğrafı': 'Profile photo', 'Fotoğrafını yalnızca sen görürsün: sağ üstteki hesap menüsünde, bu sayfada ve Pusula Browser’da.': 'Only you can see your photo: in the account menu at the top right, on this page and in Pusula Browser.',
     'Fotoğraf seç': 'Choose a photo', 'Fotoğrafı değiştir': 'Change photo', 'Kaydet': 'Save', 'Vazgeç': 'Cancel', 'Fotoğrafı kaldır': 'Remove photo',
     'Fotoğraf ortadan kare olarak kırpılır ve küçültülür; konum gibi ek bilgiler gönderilmeden silinir.': 'Your photo is cropped to a square from the centre and made smaller; extra details such as location are removed before it’s sent.',
     'Hazırlanıyor…': 'Preparing…', 'Böyle görünecek. Beğendiysen kaydet.': 'This is how it will look. Save it if you like it.', 'Kaydediliyor…': 'Saving…',
