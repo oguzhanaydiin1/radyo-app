@@ -397,8 +397,9 @@ export async function adminUsers(req, url, env) {
 //   vault              şifreler; cihazda kullanıcının parolasıyla şifrelenmiş (sunucu içini göremez)
 //   tabs:<cihaz>       o cihazda açık sekmeler
 //   inbox:<cihaz>      o cihaza gönderilen sekmeler
+//   screentime:<cihaz> o cihazın ekran süresi özeti (isteğe bağlı, son 30 gün)
 const SYNC_ITEMS = new Set(['bookmarks', 'quick', 'history', 'vault']);
-const SYNC_DEVICE = /^(tabs|inbox):[a-z0-9-]{8,48}$/;
+const SYNC_DEVICE = /^(tabs|inbox|screentime):[a-z0-9-]{8,48}$/;
 const SYNC_DEVICE_MAX = 20; // kullanıcı başına cihaz kaydı (her tür için)
 const SYNC_MAX = 1024 * 1024; // bir istekte gönderilen toplam eşitleme verisi
 const syncName = (n) => SYNC_ITEMS.has(n) || SYNC_DEVICE.test(n);
