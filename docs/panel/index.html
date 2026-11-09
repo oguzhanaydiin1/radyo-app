@@ -47,6 +47,7 @@
     .note { color: var(--muted); font-size: 14px; }
     .err { color: #F08A73; }
     @media (max-width: 860px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .two { grid-template-columns: minmax(0, 1fr); } }
+  .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #3DDC84; margin-right: 6px; vertical-align: 1px; }
   </style>
 </head>
 <body>
@@ -78,6 +79,24 @@
         </div>
         <span class="note" id="updated"></span>
       </div>
+
+      <section class="card" aria-labelledby="cs" id="site">
+        <h2 id="cs">Web sitesi (oalabs.dev)</h2>
+        <div class="tiles">
+          <div class="tile"><span><span class="live-dot" aria-hidden="true"></span>Şu an sitede</span><b id="s-live">—</b></div>
+          <div class="tile"><span>Bugün ziyaretçi</span><b id="s-today">—</b></div>
+          <div class="tile"><span>Bu dönemde ziyaretçi</span><b id="s-total">—</b></div>
+          <div class="tile"><span>Sayfa görüntüleme</span><b id="s-views">—</b></div>
+        </div>
+        <p class="note" id="s-livepages" style="margin: 6px 0 12px"></p>
+        <div class="chart" id="ch-site" style="height: 120px"></div><div class="axis" id="ax-site"></div>
+        <div class="grid2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 16px">
+          <div><h3 style="margin: 0 0 6px; font-size: 15px">En çok bakılan sayfalar</h3><table><tbody id="s-pages"></tbody></table></div>
+          <div><h3 style="margin: 0 0 6px; font-size: 15px">Nereden geldiler</h3><table><tbody id="s-sources"></tbody></table></div>
+          <div><h3 style="margin: 0 0 6px; font-size: 15px">Cihaz ve dil</h3><table><tbody id="s-devices"></tbody></table></div>
+        </div>
+        <p class="note" style="margin-top: 12px">Çerezsiz sayılır; kişi tanınmaz. Aynı kişi aynı gün içinde bir kez sayılır. Sayaç 9 Kasım 2026'da kuruldu; öncesi yok.</p>
+      </section>
 
       <div class="tiles">
         <div class="tile"><span>Farklı kullanıcı</span><b id="t-users">—</b></div>
@@ -275,11 +294,41 @@
         $('#langs').innerHTML = rows(s.langs.map((x) => ({ ...x, lang: x.lang === 'tr' ? 'Türkçe' : x.lang === 'en' ? 'İngilizce' : x.lang })), 'lang');
         loadErrors();
         loadUsers();
+        loadSite();
         $('#updated').textContent = 'Güncellendi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
         $('#status').innerHTML = `<span class="err">${esc(err.message === 'Failed to fetch' ? 'Sunucuya ulaşılamadı.' : err.message)}</span>`;
       }
     }
+
+    // Web sitesi ziyaretçileri. "Şu an sitede" 20 saniyede bir yenilenir.
+    async function loadSite() {
+      try {
+        const r = await call(`/v1/admin/site?days=${days}`);
+        const today = new Date().toISOString().slice(0, 10);
+        const v = Object.fromEntries(r.daily.map((x) => [x.day, x.visitors]));
+        $('#s-today').textContent = fmt(v[today] || 0);
+        $('#s-total').textContent = fmt(r.visitors);
+        $('#s-views').textContent = fmt(r.views.reduce((a, x) => a + x.views, 0));
+        showLive(r.live);
+        bars($('#ch-site'), $('#ax-site'), fill(r.from, today).map((d) => ({ d, v: v[d] || 0 })), (n) => fmt(n) + ' ziyaretçi');
+        const pageName = (p) => ({ '/': 'Ana sayfa', '/en/': 'Ana sayfa (EN)', '/tarayici/': 'Pusula Browser', '/en/tarayici/': 'Pusula Browser (EN)', '/radyo/': 'OA Radyo', '/en/radyo/': 'OA Radyo (EN)', '/harrier/': 'Harrier Cleaner', '/en/harrier/': 'Harrier Cleaner (EN)', '/yenilikler/': 'Yenilikler', '/yardim/': 'Yardım', '/gizlilik/': 'Gizlilik', '/dinle/': 'Dinle', '/uye/': 'Üyelik', '/hesabim/': 'Hesabım' })[p] || p;
+        const tr = (list, label, val) => list.length ? list.map((x) => `<tr><td>${esc(label(x))}</td><td class="num">${fmt(val(x))}</td></tr>`).join('') : '<tr><td class="note">Henüz veri yok.</td></tr>';
+        $('#s-pages').innerHTML = tr(r.pages.slice(0, 12), (x) => pageName(x.path), (x) => x.views);
+        $('#s-sources').innerHTML = tr(r.sources, (x) => ({ 'doğrudan': 'Doğrudan / uygulama', google: 'Google', bing: 'Bing', sosyal: 'Sosyal medya' })[x.source] || x.source || '—', (x) => x.visitors);
+        const devs = [...r.devices.map((x) => ({ k: x.device ? x.device[0].toUpperCase() + x.device.slice(1) : '—', n: x.visitors })),
+          ...r.langs.map((x) => ({ k: x.lang === 'en' ? 'İngilizce sayfa' : x.lang === 'tr' ? 'Türkçe sayfa' : (x.lang || '—'), n: x.visitors }))];
+        $('#s-devices').innerHTML = tr(devs, (x) => x.k, (x) => x.n);
+      } catch (err) {
+        $('#s-livepages').innerHTML = `<span class="err">${esc(err.message)}</span>`;
+      }
+    }
+    function showLive(l) {
+      if (!l) return;
+      $('#s-live').textContent = fmt(l.now);
+      $('#s-livepages').textContent = l.now ? 'Şu an açık sayfalar: ' + l.pages.map((x) => `${x.path} (${x.n})`).join(', ') : 'Şu an sitede kimse yok.';
+    }
+    setInterval(() => { if (key && !$('#dash').hidden && document.visibilityState === 'visible') call('/v1/admin/site?days=1').then((r) => showLive(r.live)).catch(() => {}); }, 20000);
 
     async function loadErrors() {
       try {

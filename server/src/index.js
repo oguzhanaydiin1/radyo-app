@@ -5,6 +5,9 @@
  *   POST /v1/report            Uygulama hata raporu (isimsiz, kullanıcı kapatabilir)
  *   GET  /v1/admin/errors      Son hata raporları (yönetici)
  *   GET  /v1/stats             Toplu istatistikler (yalnızca yönetici anahtarıyla)
+ *   POST /v1/site/visit        Site sayfa görüntüleme (oalabs.dev, çerezsiz)
+ *   POST /v1/site/live         "Şu an sitede" sinyali (25 sn'de bir); { live } döner
+ *   GET  /v1/admin/site        Site ziyaret istatistikleri ve anlık ziyaretçiler (yönetici)
  *   GET  /v1/chat/:oda         Canlı sohbet (WebSocket), her radyo için bir oda
  *   GET  /v1/admin/chat/:oda   Odanın son mesajları, kimlik özetleriyle (yönetici)
  *   POST /v1/admin/chat/:oda   { action: "delete", id } | { action: "ban", uid } (yönetici)
@@ -52,6 +55,11 @@ function json(data, status = 200, headers = {}) {
 async function sha(text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 20);
+}
+
+async function withCors(p, h) {
+  const r = await p;
+  return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
 }
 
 function isAdmin(req, env) {
@@ -107,6 +115,112 @@ async function adminErrors(url, env) {
                     FROM error_reports WHERE app = ?1 AND created > ?2 GROUP BY message ORDER BY n DESC LIMIT 20`).bind(app, since),
   ]);
   return { ok: true, app, reports: rows.results, top: top.results };
+}
+
+// ---------- Site ziyaretçi sayacı (oalabs.dev) ----------
+// Çerez kullanılmaz. Ziyaretçi, IP ve tarayıcı bilgisinin o güne özel tuzlanmış özetiyle sayılır
+// (ham IP saklanmaz, ertesi gün aynı kişi tanınamaz). Botlar sayılmaz.
+
+const BOT_RE = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora|whatsapp|telegram|discord|preview|headless|lighthouse|pagespeed|curl|wget|python|go-http|java\//i;
+const SITE_PATH_RE = /^\/[a-z0-9/_-]{0,80}$/i;
+
+async function siteVisitor(req, env) {
+  const ip = req.headers.get('CF-Connecting-IP') || '';
+  const ua = req.headers.get('User-Agent') || '';
+  return sha(`${env.PEPPER || 'oa'}:site:${today()}:${ip}:${ua}`);
+}
+
+function siteSource(ref) {
+  let h = '';
+  try { h = new URL(ref).hostname.replace(/^www\./, ''); } catch { return 'doğrudan'; }
+  if (!h || h === 'oalabs.dev' || h.endsWith('.oalabs.dev')) return 'doğrudan';
+  if (/(^|\.)google\./.test(h)) return 'google';
+  if (/(^|\.)bing\.com$/.test(h)) return 'bing';
+  if (/(^|\.)(yandex\.|duckduckgo\.com$|search\.yahoo\.com$|ecosia\.org$)/.test(h)) return 'arama (diğer)';
+  if (/(^|\.)(t\.co|x\.com|twitter\.com|facebook\.com|instagram\.com|linkedin\.com|reddit\.com|youtube\.com|tiktok\.com|whatsapp\.com|t\.me)$/.test(h)) return 'sosyal';
+  return h.slice(0, 60);
+}
+
+function siteDevice(ua) {
+  if (/iPad|Tablet|Android(?!.*Mobile)/i.test(ua)) return 'tablet';
+  if (/Mobi|iPhone|Android/i.test(ua)) return 'telefon';
+  return 'bilgisayar';
+}
+
+async function siteVisit(req, env) {
+  const ua = req.headers.get('User-Agent') || '';
+  if (BOT_RE.test(ua)) return json({ ok: true, skipped: true });
+  let b;
+  try { b = JSON.parse(await req.text()); } catch { return json({ ok: false }, 400); }
+  let path = clean(b && b.p, 80).toLowerCase();
+  if (!SITE_PATH_RE.test(path)) return json({ ok: false }, 400);
+  if (!path.endsWith('/')) path += '/';
+  const day = today();
+  const visitor = await siteVisitor(req, env);
+  await env.DB.batch([
+    env.DB.prepare(`INSERT INTO site_daily (day, path, views) VALUES (?1, ?2, 1)
+                    ON CONFLICT (day, path) DO UPDATE SET views = views + 1`).bind(day, path),
+    env.DB.prepare('INSERT OR IGNORE INTO site_visitors (day, visitor, source, lang, device) VALUES (?1, ?2, ?3, ?4, ?5)')
+      .bind(day, visitor, siteSource(clean(b.r, 300)), clean(b.l, 5), siteDevice(ua)),
+  ]);
+  return json({ ok: true });
+}
+
+async function siteLive(req, env, leave) {
+  const ua = req.headers.get('User-Agent') || '';
+  let path = '/';
+  try { const b = JSON.parse(await req.text()); path = clean(b && b.p, 80).toLowerCase() || '/'; } catch {}
+  if (!SITE_PATH_RE.test(path)) path = '/';
+  const stub = env.SITELIVE.get(env.SITELIVE.idFromName('oalabs.dev'));
+  const visitor = BOT_RE.test(ua) ? '' : await siteVisitor(req, env);
+  const r = await stub.fetch(new Request('https://live/beat', { method: 'POST', body: JSON.stringify({ v: visitor, p: path, leave }) }));
+  return json(await r.json());
+}
+
+async function adminSite(url, env) {
+  const days = Math.min(400, Math.max(1, parseInt(url.searchParams.get('days'), 10) || 30));
+  const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
+  const [daily, views, total, pages, sources, langs, devices] = await env.DB.batch([
+    env.DB.prepare('SELECT day, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
+    env.DB.prepare('SELECT day, SUM(views) AS views FROM site_daily WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
+    env.DB.prepare('SELECT COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1').bind(from),
+    env.DB.prepare('SELECT path, SUM(views) AS views FROM site_daily WHERE day >= ?1 GROUP BY path ORDER BY views DESC LIMIT 25').bind(from),
+    env.DB.prepare('SELECT source, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY source ORDER BY visitors DESC LIMIT 15').bind(from),
+    env.DB.prepare('SELECT lang, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY lang ORDER BY visitors DESC').bind(from),
+    env.DB.prepare('SELECT device, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY device ORDER BY visitors DESC').bind(from),
+  ]);
+  const stub = env.SITELIVE.get(env.SITELIVE.idFromName('oalabs.dev'));
+  const live = await (await stub.fetch('https://live/admin')).json();
+  return {
+    ok: true, days, from,
+    visitors: (total.results[0] && total.results[0].visitors) || 0,
+    daily: daily.results, views: views.results, pages: pages.results,
+    sources: sources.results, langs: langs.results, devices: devices.results,
+    live,
+  };
+}
+
+// Şu an sitede olanlar: her açık sayfa 25 saniyede bir haber verir; 70 saniyedir haber vermeyen sayılmaz.
+// Yalnızca bellekte tutulur, hiçbir yere yazılmaz.
+export class SiteLive {
+  constructor() { this.seen = new Map(); }
+  prune(now) { for (const [k, v] of this.seen) if (now - v.t > 70e3) this.seen.delete(k); }
+  async fetch(req) {
+    const url = new URL(req.url);
+    const now = Date.now();
+    this.prune(now);
+    if (url.pathname === '/beat') {
+      const b = await req.json();
+      if (b.v) {
+        if (b.leave) this.seen.delete(b.v);
+        else this.seen.set(b.v, { t: now, p: b.p });
+      }
+      return Response.json({ ok: true, live: this.seen.size });
+    }
+    const pages = {};
+    for (const v of this.seen.values()) pages[v.p] = (pages[v.p] || 0) + 1;
+    return Response.json({ now: this.seen.size, pages: Object.entries(pages).map(([path, n]) => ({ path, n })).sort((a, b) => b.n - a.n) });
+  }
 }
 
 // ---------- Kullanım sayımı ----------
@@ -193,6 +307,13 @@ export default {
       if (url.pathname === '/v1/report' && req.method === 'POST') {
         const r = await report(req, env);
         return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
+      }
+
+      if (url.pathname === '/v1/site/visit' && req.method === 'POST') return await withCors(siteVisit(req, env), h);
+      if (url.pathname === '/v1/site/live' && req.method === 'POST') return await withCors(siteLive(req, env, url.searchParams.has('leave')), h);
+      if (url.pathname === '/v1/admin/site' && req.method === 'GET') {
+        if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
+        return json(await adminSite(url, env), 200, h);
       }
 
       if (url.pathname === '/v1/admin/errors' && req.method === 'GET') {

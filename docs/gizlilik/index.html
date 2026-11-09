@@ -52,7 +52,7 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 3 Kasım 2026 (profil fotoğrafı eklendi) · Geçerli olduğu yerler: OA Radyo (Windows), Harrier Cleaner ve oalabs.dev</p>
+      <p class="date">Son güncelleme: 9 Kasım 2026 (site ziyaretçi sayacı eklendi) · Geçerli olduğu yerler: OA Radyo (Windows), Harrier Cleaner ve oalabs.dev</p>
 
       <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam içermez. Favorilerin, ayarların ve dinleme geçmişin bilgisayarında durur. Yalnızca izin verirsen isimsiz kullanım sayıları gönderilir; sohbete yazdıkların o odadaki herkese görünür.</p>
 
@@ -78,6 +78,9 @@
 
       <h2>İsimsiz kullanım sayımı (yalnızca izin verirsen)</h2>
       <p>Uygulama ilk açılışta izin ister; Ayarlar → Gizlilik ve sohbet’ten istediğin zaman kapatabilirsin. İzin verirsen 15 dakikada bir sunucumuza (api.oalabs.dev) şunlar gönderilir: uygulamanın rastgele ürettiği bir kurulum kimliği, uygulama sürümü, arayüz dili ve son dakikalarda hangi radyonun kaç dakika dinlendiği. Kendi eklediğin istasyonların adı gönderilmez. Kurulum kimliği sunucuda tek yönlü olarak özetlenip saklanır; adın, e-postan ya da IP adresin kaydedilmez. Bu sayılar yalnızca toplu olarak (kaç kişi, toplam kaç saat, en çok dinlenen radyolar) görüntülenir.</p>
+
+      <h2 id="site-sayaci">oalabs.dev ziyaretçi sayacı</h2>
+      <p>Bu sitede kaç kişinin hangi sayfalara baktığını görmek için çerezsiz bir sayaç kullanıyoruz. Sayfa açıldığında sunucumuza (api.oalabs.dev) yalnızca sayfanın yolu, geldiğin sitenin adı (örneğin google.com) ve sayfanın dili gönderilir; sayfa açık kaldıkça 25 saniyede bir “buradayım” sinyali gider. Aynı kişiyi gün içinde bir kez saymak için IP adresin ve tarayıcı bilgin o güne özel, tek yönlü bir özete çevrilir; IP adresinin kendisi saklanmaz ve ertesi gün aynı kişi tanınamaz. Cihaz türü yalnızca telefon, tablet ya da bilgisayar olarak kaydedilir. Bu sayılar yalnızca toplu olarak görüntülenir; sitede aynı anda en az 3 kişi varsa köşede kaç kişinin sitede olduğu herkese gösterilir.</p>
 
       <h2>Canlı sohbet</h2>
       <p>Sohbet panelini açtığında o radyonun sohbet odasına bağlanırsın; panel kapalıyken bağlantı kurulmaz. Yazdığın takma ad ve mesajlar o odadaki herkese görünür ve odada son 100 mesaj saklanır, eskileri silinir. Kötüye kullanımı (spam, hakaret) önlemek için IP adresinin tek yönlü bir özeti mesajla birlikte tutulur; IP adresinin kendisi saklanmaz. Kurallara aykırı mesajlar silinebilir, yazan kişi o odadan engellenebilir. Kişisel bilgilerini (telefon, adres gibi) sohbette paylaşmamanı öneririz. Bir mesajı bildirmek ya da kendi mesajının silinmesini istemek için destek@oalabs.dev’e yazabilirsin.</p>
@@ -123,7 +126,7 @@
 
       <h1 lang="en" id="en">Privacy policy</h1>
       <div lang="en">
-        <p class="date">Last updated: 3 November 2026 · Applies to: OA Radyo (Windows), Harrier Cleaner and oalabs.dev</p>
+        <p class="date">Last updated: 9 November 2026 · Applies to: OA Radyo (Windows), Harrier Cleaner and oalabs.dev</p>
         <p class="short">In short: OA Radyo needs no account, collects no information that identifies you, and contains no ads or trackers. Your favourites, settings and listening history stay on your computer.</p>
         <h2>What we don’t collect</h2>
         <p>No name, email, phone number or location; no record of what you listen to (the Statistics screen is calculated on your computer only); no analytics, advertising IDs, cookies or similar tracking.</p>
@@ -133,6 +136,8 @@
         <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and, in version 0.9.1 and earlier only, Google Fonts (later versions ship the fonts inside the app). As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
         <h2>Anonymous usage counts (only with your permission)</h2>
         <p>If you allow it (you can turn it off in Settings), every 15 minutes the app sends our server (api.oalabs.dev) a random install ID, the app version, the interface language and how many minutes each station was played. Names of stations you added yourself are not sent. The install ID is stored only as a one-way hash; no name, email or IP address is stored. The numbers are only viewed in aggregate.</p>
+        <h2>oalabs.dev visitor counter</h2>
+        <p>To see how many people visit which pages of this site, we use a cookie-free counter. When a page opens, only the page path, the name of the site you came from (for example google.com) and the page language are sent to our server (api.oalabs.dev); while the page stays open, a “still here” signal is sent every 25 seconds. To count the same person once a day, your IP address and browser details are turned into a one-way hash valid for that day only; the IP address itself is not stored and you cannot be recognised the next day. Device type is recorded only as phone, tablet or computer. The numbers are only viewed in aggregate; when at least 3 people are on the site at once, the number of people currently on the site is shown to everyone in the corner.</p>
         <h2>Live chat</h2>
         <p>Opening the chat panel connects you to that station’s room; nothing connects while it is closed. Your nickname and messages are visible to everyone in the room, and the last 100 messages are kept. A one-way hash of your IP address is stored with each message to prevent abuse; the IP address itself is not stored. Messages that break the rules may be deleted and their authors blocked from the room. To report a message or ask for yours to be removed, write to destek@oalabs.dev.</p>
         <h2>Membership (optional)</h2>
@@ -155,5 +160,6 @@
 
     <footer>© 2026 OA Labs · Oğuzhan Aydın</footer>
   </div>
+  <script src="/sayac.js" defer></script>
 </body>
 </html>

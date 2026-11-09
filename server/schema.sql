@@ -93,3 +93,20 @@ CREATE TABLE IF NOT EXISTS user_avatar (
   key TEXT NOT NULL,
   updated TEXT NOT NULL
 );
+
+-- Site ziyaretçi sayacı (oalabs.dev). Çerez yok, kişiyi tanımlayan bilgi tutulmaz:
+-- "visitor" IP + tarayıcı bilgisinin o güne özel tuzlanmış özetidir; ertesi gün aynı kişi tanınamaz.
+CREATE TABLE IF NOT EXISTS site_daily (
+  day TEXT NOT NULL,
+  path TEXT NOT NULL,
+  views INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day, path)
+);
+CREATE TABLE IF NOT EXISTS site_visitors (
+  day TEXT NOT NULL,
+  visitor TEXT NOT NULL,
+  source TEXT,     -- google, bing, doğrudan, sosyal, başka site (alan adı)
+  lang TEXT,
+  device TEXT,     -- telefon, tablet, bilgisayar
+  PRIMARY KEY (day, visitor)
+);
