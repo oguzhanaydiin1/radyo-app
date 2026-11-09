@@ -25,6 +25,18 @@
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="../site.css">
   <style>
+    .cmp { margin-top: 8px; overflow-x: auto; }
+    .cmp table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: 15px; }
+    .cmp th, .cmp td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+    .cmp th:first-child, .cmp td:first-child { text-align: left; color: var(--text); }
+    .cmp thead th { font: 700 15px/1.2 var(--display); color: var(--text-2); }
+    .cmp thead th.me { color: var(--amber); }
+    .cmp td.me { background: rgba(242,165,65,.06); }
+    .cmp .y { color: var(--green); font-weight: 700; }
+    .cmp .n { color: var(--faint); }
+    .cmp .p { color: var(--text-2); font-size: 13.5px; }
+    .cmp-note { color: var(--faint); font-size: 13.5px; margin-top: 12px; }
+
     body { overflow-x: clip; }
     .dsp { font-family: var(--display); font-weight: 800; letter-spacing: -0.035em; }
     .meta { margin: 16px 0 0; color: var(--faint); font-size: 14px; }
@@ -216,6 +228,7 @@
       <div class="nav-links" style="justify-content: flex-end">
         <a href="#esitleme">Eşitleme</a>
         <a href="#ozellikler">Özellikler</a>
+        <a href="#karsilastirma">Karşılaştır</a>
         <a href="#kurulum">Kurulum</a>
         <a href="#sss">Sorular</a>
       </div>
@@ -411,6 +424,32 @@
       </div>
     </section>
 
+    <section class="wrap" id="karsilastirma" aria-labelledby="karsilastirma-h">
+      <div class="feat-head">
+        <h2 id="karsilastirma-h" class="dsp">Chrome ve Edge’den farkı ne?</h2>
+        <p>Üçü de aynı web motorunu kullanıyor; siteler hepsinde aynı görünür. Farkı, kutudan çıktığı gibi neler yaptığında.</p>
+      </div>
+      <div class="cmp">
+        <table>
+          <thead><tr><th scope="col">Özellik</th><th scope="col" class="me">Pusula</th><th scope="col">Chrome</th><th scope="col">Edge</th></tr></thead>
+          <tbody>
+            <tr><td>Reklam engelleme</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="p">Eklentiyle</span></td><td><span class="p">Eklentiyle</span></td></tr>
+            <tr><td>İzleyici engelleme</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="n" aria-label="Yok">—</span></td><td><span class="y" aria-label="Var">✓</span></td></tr>
+            <tr><td>YouTube video reklamlarını atlama</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="n" aria-label="Yok">—</span></td><td><span class="n" aria-label="Yok">—</span></td></tr>
+            <tr><td>Çerez pencerelerini kendiliğinden reddetme</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="n" aria-label="Yok">—</span></td><td><span class="n" aria-label="Yok">—</span></td></tr>
+            <tr><td>Site başına ekran süresi ve süre sınırı</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="n" aria-label="Yok">—</span></td><td><span class="n" aria-label="Yok">—</span></td></tr>
+            <tr><td>Telefonla bilgisayar arasında not ve dosya gönderme</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="p">Yalnız sekme</span></td><td><span class="y" aria-label="Var">✓</span></td></tr>
+            <tr><td>Kenar çubuğunda WhatsApp, Instagram, Spotify</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="n" aria-label="Yok">—</span></td><td><span class="p">Bazı uygulamalar</span></td></tr>
+            <tr><td>Yerleşik radyo</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="n" aria-label="Yok">—</span></td><td><span class="n" aria-label="Yok">—</span></td></tr>
+            <tr><td>Başlangıç sayfasında hava, döviz, haber; reklamsız</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="p">Haber yok</span></td><td><span class="p">Reklamlı haber akışı</span></td></tr>
+            <tr><td>Yan yana görünüm, dikey sekmeler, okuma modu</td><td class="me"><span class="y" aria-label="Var">✓</span></td><td><span class="y" aria-label="Var">✓</span></td><td><span class="y" aria-label="Var">✓</span></td></tr>
+            <tr><td>Eklenti mağazası</td><td class="me"><span class="n" aria-label="Yok">—</span></td><td><span class="y" aria-label="Var">✓</span></td><td><span class="y" aria-label="Var">✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cmp-note">Kasım 2026 itibarıyla, Windows’ta varsayılan ayarlarla. Chrome ve Edge’de eklentilerle eksiklerin bir kısmı tamamlanabilir; Pusula ise eklenti desteklemez.</p>
+    </section>
+
     <section class="wrap" aria-label="Pusula Browser’ın sözleri">
       <div class="vals">
         <div class="val"><span class="dsp big">0 ₺</span><h3 class="dsp">Tamamen ücretsiz.</h3><p>Abonelik yok, gizli ücret yok.</p></div>
@@ -473,6 +512,11 @@
         <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
         <a class="quiet" href="/gizlilik/">Gizlilik politikası</a>
         <a class="quiet" href="/radyo/">OA Radyo</a>
+        <a class="quiet" href="/rehber/">Rehberler</a>
+        <a class="quiet" href="/yol-haritasi/">Yol haritası</a>
+        <a class="quiet" href="/geri-bildirim/">Geri bildirim</a>
+        <a class="quiet" href="/hakkimizda/">Hakkımızda</a>
+        <a class="quiet" href="/kosullar/">Kullanım koşulları</a>
       </div>
     </div>
   </footer>

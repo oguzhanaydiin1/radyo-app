@@ -110,3 +110,37 @@ CREATE TABLE IF NOT EXISTS site_visitors (
   device TEXT,     -- telefon, tablet, bilgisayar
   PRIMARY KEY (day, visitor)
 );
+
+-- Geri bildirim (hata, öneri) ve fikir panosu (oylanabilen özellik istekleri)
+CREATE TABLE IF NOT EXISTS feedback (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created TEXT NOT NULL,
+  kind TEXT NOT NULL,       -- hata, oneri, diger
+  app TEXT,
+  text TEXT NOT NULL,
+  email TEXT,               -- isteğe bağlı: yanıt istersen
+  page TEXT,
+  ip_hash TEXT,
+  user_id TEXT,
+  done INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS feedback_created ON feedback (created);
+CREATE TABLE IF NOT EXISTS ideas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT,
+  app TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',  -- pending, open, planned, progress, done, rejected
+  reply TEXT,
+  votes INTEGER NOT NULL DEFAULT 0,
+  created TEXT NOT NULL,
+  updated TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ideas_status ON ideas (status);
+CREATE TABLE IF NOT EXISTS idea_votes (
+  idea_id INTEGER NOT NULL,
+  user_id TEXT NOT NULL,
+  created TEXT NOT NULL,
+  PRIMARY KEY (idea_id, user_id)
+);
