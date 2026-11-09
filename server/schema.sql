@@ -144,3 +144,17 @@ CREATE TABLE IF NOT EXISTS idea_votes (
   created TEXT NOT NULL,
   PRIMARY KEY (idea_id, user_id)
 );
+
+-- Kullanıcı yorumları: geri bildirim formunda "yayımlanabilir" diye işaretlenenler. Yönetici onaylayınca
+-- sitede görünür (adı, kullanıcının yazdığı gibi; boşsa isimsiz).
+CREATE TABLE IF NOT EXISTS reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created TEXT NOT NULL,
+  app TEXT NOT NULL,
+  text TEXT NOT NULL,
+  name TEXT,
+  lang TEXT,
+  published INTEGER NOT NULL DEFAULT 0,
+  feedback_id INTEGER
+);
+CREATE INDEX IF NOT EXISTS reviews_pub ON reviews (published, app);

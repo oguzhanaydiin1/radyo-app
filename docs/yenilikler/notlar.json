@@ -1,0 +1,289 @@
+[
+ {
+  "date": "2026-11-08",
+  "app": "pusula",
+  "version": "0.19.10",
+  "tr": [
+   "Reklam engelleyicide 3.600’ü aşkın reklam sunucusu; reklamdan kalan boşluklar kapanır. YouTube’da video reklamları atlanır.",
+   "Sekmeler Chrome gibi: sürükleyerek sırala, çok sekmede daralır, orta tıkla arka sekmede aç, ses çıkaran sekmeyi tek tıkla sustur.",
+   "Adres çubuğundaki kilitten site bilgileri: izinler ve çerezler.",
+   "Geçmiş ve yer imlerinde arama; Ctrl+H, Ctrl+D, Ctrl+1…9 gibi kısayollar sayfanın içinde de çalışır.",
+   "Windows: güncelleme kendiliğinden kurulup Pusula’yı yeniden açar; pencere boyutu hatırlanır; açılışta yalnız son sekme yüklenir."
+  ],
+  "en": [
+   "The ad blocker now covers more than 3,600 ad servers and closes the gaps ads leave behind. Video ads on YouTube are skipped.",
+   "Tabs like Chrome: drag to reorder, they shrink to fit, middle-click opens a background tab, and you can mute a noisy tab in one click.",
+   "Site info from the lock in the address bar: permissions and cookies.",
+   "Search in history and bookmarks; shortcuts such as Ctrl+H, Ctrl+D and Ctrl+1…9 work inside the page too.",
+   "Windows: updates install by themselves and reopen Pusula; the window size is remembered; only your last tab loads on startup."
+  ]
+ },
+ {
+  "date": "2026-11-06",
+  "app": "pusula",
+  "version": "0.19.2",
+  "tr": [
+   "Ekran süresi: hangi sitede ne kadar kaldığın, site süre sınırı, günlük hedef ve haftalık özet.",
+   "Windows: touchpad ile kaydırma yeniden yazıldı, video tam ekranı düzeltildi."
+  ],
+  "en": [
+   "Screen time: how long you spend on each site, site time limits, a daily goal and a weekly summary.",
+   "Windows: touchpad scrolling rewritten, video fullscreen fixed."
+  ]
+ },
+ {
+  "date": "2026-11-05",
+  "app": "pusula",
+  "version": "0.18.7",
+  "tr": [
+   "Windows: Netflix, Disney+, TV+ gibi kopya korumalı yayınlar sekmenin içinde oynar.",
+   "Bütün sekmeleri tek seferde kapat; telefonda sekmeyi sola kaydırıp kapat.",
+   "Trendyol gibi sitelerde geri tuşu, ürünü açtığın sayfaya döner."
+  ],
+  "en": [
+   "Windows: copy-protected streams such as Netflix, Disney+ and TV+ play inside the tab.",
+   "Close all tabs at once; on your phone, swipe a tab left to close it.",
+   "On sites like Trendyol, Back returns to the page you opened the product from."
+  ]
+ },
+ {
+  "date": "2026-11-04",
+  "app": "pusula",
+  "version": "0.18.0",
+  "tr": [
+   "Yeni ad: OA Tarayıcı artık Pusula Browser. Yeni simgesi koyu karede bir rüzgâr gülü.",
+   "Yer imlerin, şifrelerin ve ayarların olduğu gibi kalır; güncelleme eski kurulumun üstüne yapılır."
+  ],
+  "en": [
+   "New name: OA Browser is now Pusula Browser, with a new compass rose icon.",
+   "Your bookmarks, passwords and settings stay as they are; the update installs over the old version."
+  ]
+ },
+ {
+  "date": "2026-11-04",
+  "app": "pusula",
+  "version": "0.17.0",
+  "tr": [
+   "OA Akış: cihazların arasında not, bağlantı, fotoğraf ve dosya gönder.",
+   "Oyun köşesi: Epic’te ücretsiz oyunlar ve Steam indirimleri başlangıç sayfasında."
+  ],
+  "en": [
+   "OA Flow: send notes, links, photos and files between your devices.",
+   "Game corner: free games on Epic and Steam deals on the start page."
+  ]
+ },
+ {
+  "date": "2026-11-04",
+  "app": "pusula",
+  "version": "0.16.0",
+  "tr": [
+   "Yan yana görünüm, sekme önizlemesi ve sesli oku."
+  ],
+  "en": [
+   "Split view, tab previews and read aloud."
+  ]
+ },
+ {
+  "date": "2026-11-02",
+  "app": "pusula",
+  "version": "0.14.4",
+  "tr": [
+   "Yeni OA Labs logosu: sekme çubuğunda, başlangıç sayfasında ve hesap penceresinde.",
+   "Hakkında penceresinde OA Labs mühürü."
+  ],
+  "en": [
+   "The new OA Labs logo in the tab bar, start page and account window.",
+   "The OA Labs seal in the About window."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.14.3",
+  "tr": [
+   "Windows: kenar çubuğunda WhatsApp açılınca yaşanan çökme düzeltildi."
+  ],
+  "en": [
+   "Windows: fixed a crash when opening WhatsApp in the sidebar."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.14.2",
+  "tr": [
+   "Kenar çubuğu daha ince."
+  ],
+  "en": [
+   "A slimmer sidebar."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.14.1",
+  "tr": [
+   "Windows: kenar çubuğu adres çubuğunun altına taşındı."
+  ],
+  "en": [
+   "Windows: the sidebar now sits below the address bar."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.14.0",
+  "tr": [
+   "Kenar çubuğu ve sekme uyutma."
+  ],
+  "en": [
+   "Sidebar and tab sleeping."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.13.0",
+  "tr": [
+   "Ayarlar ayrı bir ekranda; menü kısaldı."
+  ],
+  "en": [
+   "Settings now have their own screen; the menu is shorter."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.12.0",
+  "tr": [
+   "Eşitleme: öbür cihazlardaki sekmeler, sekme gönderme, geçmiş ve şifreler."
+  ],
+  "en": [
+   "Sync: tabs on other devices, sending tabs, history and passwords."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.11.0",
+  "tr": [
+   "Haber akışı, döviz ve altın, sonra oku, sekme grupları ve dikey sekmeler."
+  ],
+  "en": [
+   "News feed, currency and gold, read later, tab groups and vertical tabs."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.10.0",
+  "tr": [
+   "Chrome, Edge ve Firefox’tan içe aktarma, çerez pencerelerini kendiliğinden reddetme, sesli arama, sitelere karanlık mod, site başına yakınlaştırma, tam sayfa ekran görüntüsü."
+  ],
+  "en": [
+   "Import from Chrome, Edge and Firefox, automatic cookie pop-up declining, voice search, dark mode for websites, per-site zoom, full-page screenshots."
+  ]
+ },
+ {
+  "date": "2026-11-01",
+  "app": "pusula",
+  "version": "0.9.0",
+  "tr": [
+   "Android ana ekran widget’ları ve simge kısayolları."
+  ],
+  "en": [
+   "Android home screen widgets and icon shortcuts."
+  ]
+ },
+ {
+  "date": "2026-10-31",
+  "app": "pusula",
+  "version": "0.8.2",
+  "tr": [
+   "İlk kararlı sürüm.",
+   "Reklam engelleme, Tablo, akıllı adres çubuğu, okuma modu, şifre yöneticisi, gizli sekme kilidi.",
+   "Başlangıç sayfasında saat, tarih ve hava durumu; yerleşik OA Radyo.",
+   "OA Labs hesabıyla bilgisayar ve telefon eşitlemesi; uygulamaya dönünce ve açıkken birkaç dakikada bir."
+  ],
+  "en": [
+   "First stable release.",
+   "Ad blocking, Tiles, a smart address bar, reader mode, a password manager and private tab lock.",
+   "Time, date and weather on the start page; built-in OA Radyo.",
+   "PC and phone sync with an OA Labs account, when you return to the app and every few minutes while it’s open."
+  ]
+ },
+ {
+  "date": "2026-10-22",
+  "app": "harrier",
+  "version": "0.1.1",
+  "tr": [
+   "Medya Küçültücü ve Konum Bilgisi Temizleyici’de “Klasör seç” düğmesi, OneDrive yedeklemesi açık olan bilgisayarlarda çalışmıyordu. Düzeltildi."
+  ],
+  "en": [
+   "The “Choose folder” button in Photo Compressor and Photo Location Remover didn’t work on computers with OneDrive backup turned on. Fixed."
+  ]
+ },
+ {
+  "date": "2026-10-22",
+  "app": "harrier",
+  "version": "0.1.0",
+  "tr": [
+   "İlk sürüm: Akıllı Tarama, Gereksiz Dosyalar, Kopya Dosyalar, Disk Haritası, Medya Küçültücü, Sistem Bilgisi, Uygulama Kaldırıcı, Başlangıç Programları, Pil ve Sağlık, Konum Bilgisi Temizleyici.",
+   "Türkçe ve İngilizce arayüz, otomatik güncelleme."
+  ],
+  "en": [
+   "First release: Smart Scan, Junk Files, Duplicate Files, Disk Map, Photo Compressor, System Info, Uninstaller, Startup Apps, Battery & Health, Photo Location Remover.",
+   "Turkish and English interface, automatic updates."
+  ]
+ },
+ {
+  "date": "2026-10-20",
+  "app": "radyo",
+  "version": "0.9.1",
+  "tr": [
+   "Yeni kategori: “En çok dinlenen 20”. Türkiye’nin en çok dinlenen 20 radyosu, sıra numarasıyla."
+  ],
+  "en": [
+   "New category: “Top 20”, Turkey’s 20 most-listened stations, ranked."
+  ]
+ },
+ {
+  "date": "2026-10-19",
+  "app": "radyo",
+  "version": "0.9.0",
+  "tr": [
+   "Canlı sohbet: aynı radyoyu dinleyenlerle sohbet et.",
+   "İsimsiz kullanım istatistiği, yalnızca izin verirsen; Ayarlar’dan kapatılabilir."
+  ],
+  "en": [
+   "Live chat with people listening to the same station.",
+   "Anonymous usage statistics, only if you allow them; you can turn them off in Settings."
+  ]
+ },
+ {
+  "date": "2026-10-19",
+  "app": "radyo",
+  "version": "0.8.0",
+  "tr": [
+   "Uygulamanın yeni adı: OA Radyo. Favorilerin, ayarların ve kayıtların olduğu gibi duruyor."
+  ],
+  "en": [
+   "The app’s new name: OA Radyo. Your favourites, settings and recordings stay as they were."
+  ]
+ },
+ {
+  "date": "2026-10-18",
+  "app": "radyo",
+  "version": "0.7.0",
+  "tr": [
+   "Kurulum dosyası: Başlat menüsü ve masaüstü kısayolu.",
+   "İngilizce arayüz, ses çıkışı seçimi, her yerden çalışan klavye kısayolları.",
+   "“Çalışmıyor, bildir”: açılmayan radyoyu tek tıkla bildir."
+  ],
+  "en": [
+   "An installer with Start menu and desktop shortcuts.",
+   "English interface, audio output choice, global keyboard shortcuts.",
+   "“Not working? Report it”: report a station that won’t play in one click."
+  ]
+ }
+]

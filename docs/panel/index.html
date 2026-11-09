@@ -153,6 +153,8 @@
         <p class="note" style="margin:0 0 12px">Siteden gelen hata ve öneri bildirimleri, fikir panosu ve yol haritası. Kullanıcıların eklediği fikirler “Onay bekliyor” durumunda gelir; “Oylamada” yapınca panoda görünür. “Planlandı”, “Yapılıyor” ve “Yayında” olanlar yol haritasında da görünür.</p>
         <h3 style="margin:14px 0 6px;font-size:15px">Bildirimler <span id="fb-open" class="note"></span></h3>
         <table><tbody id="fb-list"></tbody></table>
+        <h3 style="margin:22px 0 6px;font-size:15px">Yorumlar <span class="note">· yayımlanmasına izin verilenler; “Yayımla” deyince Pusula sayfasında görünür</span></h3>
+        <table><tbody id="rv-admin"></tbody></table>
         <h3 style="margin:22px 0 6px;font-size:15px">Fikirler ve yol haritası</h3>
         <form id="idea-new" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px">
           <input name="title" placeholder="Yol haritasına madde ekle (başlık)" maxlength="120" style="flex:1 1 260px">
@@ -359,6 +361,11 @@
           <td style="white-space:pre-line">${esc(x.text)}${x.email ? `<br><a href="mailto:${esc(x.email)}">${esc(x.email)}</a>` : ''}</td>
           <td><div class="msg-actions"><button type="button" data-fbdone="${x.id}" data-v="${x.done ? 0 : 1}">${x.done ? 'Geri al' : 'Ele alındı'}</button><button type="button" class="danger" data-fbdel="${x.id}">Sil</button></div></td></tr>`).join('')
           : '<tr><td class="note">Henüz bildirim yok.</td></tr>';
+        const rv = await call('/v1/admin/reviews');
+        $('#rv-admin').innerHTML = rv.items.length ? rv.items.map((x) => `<tr${x.published ? '' : ' style="opacity:.8"'}><td style="white-space:nowrap">${esc(when2(x.created))}<br><span class="note">${esc(APP[x.app] || x.app)} · ${esc(x.name || 'İsimsiz')}</span></td>
+          <td style="white-space:pre-line">${esc(x.text)}</td>
+          <td><div class="msg-actions"><button type="button" data-rvpub="${x.id}" data-v="${x.published ? 0 : 1}">${x.published ? 'Yayından kaldır' : 'Yayımla'}</button><button type="button" class="danger" data-rvdel="${x.id}">Sil</button></div></td></tr>`).join('')
+          : '<tr><td class="note">Henüz yorum yok.</td></tr>';
         const i = await call('/v1/admin/ideas');
         const opts = (v) => Object.entries(ST).map(([k, n]) => `<option value="${k}"${k === v ? ' selected' : ''}>${n}</option>`).join('');
         $('#idea-list').innerHTML = i.items.length ? i.items.map((x) => `<tr data-idea="${x.id}"><td><b>${esc(x.title)}</b> <span class="note">${esc(APP[x.app] || '')} · ${x.votes} oy${x.email ? ' · ' + esc(x.email) : ''}</span>${x.body ? `<br><span class="note" style="white-space:pre-line">${esc(x.body)}</span>` : ''}
@@ -375,6 +382,8 @@
       try {
         if (b.dataset.fbdone) await call('/v1/admin/feedback', { method: 'POST', body: JSON.stringify({ id: +b.dataset.fbdone, done: b.dataset.v === '1' }) });
         else if (b.dataset.fbdel) { if (!confirm('Bu bildirim silinsin mi?')) return; await call('/v1/admin/feedback', { method: 'POST', body: JSON.stringify({ id: +b.dataset.fbdel, action: 'delete' }) }); }
+        else if (b.dataset.rvpub) await call('/v1/admin/reviews', { method: 'POST', body: JSON.stringify({ id: +b.dataset.rvpub, published: b.dataset.v === '1' }) });
+        else if (b.dataset.rvdel) { if (!confirm('Bu yorum silinsin mi?')) return; await call('/v1/admin/reviews', { method: 'POST', body: JSON.stringify({ id: +b.dataset.rvdel, action: 'delete' }) }); }
         else if (b.dataset.isave) { const tr = b.closest('tr'); await call('/v1/admin/ideas', { method: 'POST', body: JSON.stringify({ id: +b.dataset.isave, status: tr.querySelector('[data-status]').value, reply: tr.querySelector('[data-reply]').value }) }); }
         else if (b.dataset.idel) { if (!confirm('Bu fikir ve oyları silinsin mi?')) return; await call('/v1/admin/ideas', { method: 'POST', body: JSON.stringify({ id: +b.dataset.idel, action: 'delete' }) }); }
         else return;

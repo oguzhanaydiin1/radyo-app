@@ -9,7 +9,7 @@ import { sessionUserPublic as sessionUser } from './auth.js';
 
 const now = () => new Date().toISOString();
 const APPS = new Set(['pusula', 'radyo', 'harrier', 'site', 'diger']);
-const KINDS = new Set(['hata', 'oneri', 'diger']);
+const KINDS = new Set(['hata', 'oneri', 'diger', 'yorum']);
 const PUBLIC = ['open', 'planned', 'progress', 'done'];
 const STATUSES = new Set(['pending', 'open', 'planned', 'progress', 'done', 'rejected']);
 const EMAIL_RE = /^[^\s@<>()",;:]{1,64}@[A-Za-z0-9.-]{1,253}\.[A-Za-z]{2,}$/;
@@ -29,8 +29,14 @@ export async function sendFeedback(req, env, ipHash) {
   const n = await env.DB.prepare('SELECT COUNT(*) AS n FROM feedback WHERE ip_hash = ?1 AND created > ?2').bind(ipHash, hour).first();
   if (n && n.n >= 6) return ok({ error: 'cok' }, 429);
   const u = await sessionUser(req, env);
-  await env.DB.prepare('INSERT INTO feedback (created, kind, app, text, email, page, ip_hash, user_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
-    .bind(now(), kind, app, text, email || (u && u.email) || null, txt(b.page, 200) || null, ipHash, u ? u.id : null).run();
+  const t = now();
+  const fb = await env.DB.prepare('INSERT INTO feedback (created, kind, app, text, email, page, ip_hash, user_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8) RETURNING id')
+    .bind(t, kind, app, text, email || (u && u.email) || null, txt(b.page, 200) || null, ipHash, u ? u.id : null).first();
+  // Yorum ve yayımlama izni: yönetici onaylayana kadar görünmez
+  if (kind === 'yorum' && b.consent === true && text.length <= 600) {
+    await env.DB.prepare('INSERT INTO reviews (created, app, text, name, lang, feedback_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6)')
+      .bind(t, app, text, txt(b.name, 40) || null, b.lang === 'en' ? 'en' : 'tr', fb ? fb.id : null).run();
+  }
   return ok({});
 }
 
@@ -137,5 +143,27 @@ export async function adminIdeas(req, env) {
     `SELECT i.id, i.app, i.title, i.body, i.status, i.reply, i.votes, i.created, u.email FROM ideas i LEFT JOIN users u ON u.id = i.user_id
      ORDER BY CASE i.status WHEN 'pending' THEN 0 ELSE 1 END, i.votes DESC, i.created DESC LIMIT 300`,
   ).all();
+  return { ok: true, items: rows.results };
+}
+
+// ---------- Yorumlar ----------
+export async function listReviews(url, env) {
+  const app = url.searchParams.get('app');
+  const rows = APPS.has(app)
+    ? await env.DB.prepare('SELECT id, app, text, name, lang, created FROM reviews WHERE published = 1 AND app = ?1 ORDER BY created DESC LIMIT 30').bind(app).all()
+    : await env.DB.prepare('SELECT id, app, text, name, lang, created FROM reviews WHERE published = 1 ORDER BY created DESC LIMIT 30').all();
+  return { ok: true, reviews: rows.results };
+}
+
+export async function adminReviews(req, env) {
+  if (req.method === 'POST') {
+    let b; try { b = await req.json(); } catch { b = {}; }
+    const id = parseInt(b.id, 10);
+    if (!id) return { ok: false, error: 'id' };
+    if (b.action === 'delete') await env.DB.prepare('DELETE FROM reviews WHERE id = ?1').bind(id).run();
+    else await env.DB.prepare('UPDATE reviews SET published = ?2 WHERE id = ?1').bind(id, b.published ? 1 : 0).run();
+    return { ok: true };
+  }
+  const rows = await env.DB.prepare('SELECT id, created, app, text, name, lang, published FROM reviews ORDER BY published ASC, created DESC LIMIT 200').all();
   return { ok: true, items: rows.results };
 }

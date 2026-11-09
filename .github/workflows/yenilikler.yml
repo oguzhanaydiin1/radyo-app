@@ -1,0 +1,38 @@
+# Yenilikler sayfasını Pusula Browser'ın sürüm notlarından günceller.
+# Her 3 saatte bir (ve elle) çalışır; değişiklik varsa sayfayı yazıp gönderir, GitHub Pages yayınlar.
+name: Yenilikler
+
+on:
+  schedule:
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: yenilikler
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sayfaları yeniden yaz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/yenilikler.py
+      - name: Değiştiyse gönder
+        run: |
+          if git diff --quiet; then echo "Değişiklik yok"; exit 0; fi
+          git config user.name "OA Labs"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/yenilikler/index.html docs/en/yenilikler/index.html
+          git commit -m "Yenilikler: Pusula sürüm notları güncellendi"
+          git push
+          # GITHUB_TOKEN ile yapılan gönderim Pages derlemesini her zaman başlatmayabilir; elle iste
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

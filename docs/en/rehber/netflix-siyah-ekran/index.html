@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sound but no picture on Netflix: the black screen problem — OA Labs</title>
+  <meta name="description" content="Why Netflix, Disney+, Prime Video or TV+ can play sound with a black picture in the browser, and how to fix it.">
+  <meta name="theme-color" content="#0D0F16">
+  <meta property="og:title" content="Sound but no picture on Netflix: the black screen problem — OA Labs">
+  <meta property="og:description" content="Why Netflix, Disney+, Prime Video or TV+ can play sound with a black picture in the browser, and how to fix it.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OA Labs">
+  <meta property="og:url" content="https://oalabs.dev/en/rehber/netflix-siyah-ekran/">
+  <meta property="og:image" content="https://oalabs.dev/img/paylas/tar-en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://oalabs.dev/img/paylas/tar-en.png">
+  <link rel="canonical" href="https://oalabs.dev/en/rehber/netflix-siyah-ekran/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/rehber/netflix-siyah-ekran/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/rehber/netflix-siyah-ekran/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/rehber/netflix-siyah-ekran/">
+  <link rel="icon" href="/img/oa-labs.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    .page-head { padding: 64px 0 8px; }
+    .page-head h1 { margin: 0; font: 800 clamp(36px, 6vw, 64px)/1.02 var(--display); letter-spacing: -0.035em; text-wrap: balance; }
+    .page-head p { margin: 16px 0 0; font-size: 20px; color: var(--text-2); max-width: 38em; }
+    .page-head .crumb { font-size: 14px; margin: 0 0 14px; color: var(--faint); }
+    .page-head .crumb a { color: var(--text-2); }
+    .prose { padding: 8px 0 72px; }
+    .prose > * { max-width: 760px; }
+    .prose h2 { margin: 44px 0 10px; font: 800 26px/1.15 var(--display); letter-spacing: -0.02em; scroll-margin-top: 96px; }
+    .prose h3 { margin: 28px 0 6px; font: 700 19px/1.3 var(--display); }
+    .prose p, .prose li { color: var(--text-2); font-size: 17.5px; line-height: 1.7; }
+    .prose strong, .prose b { color: var(--text); }
+    .prose ol, .prose ul { padding-left: 24px; }
+    .prose li { margin: 8px 0; }
+    .prose kbd { font: 600 14px/1 var(--body); padding: 3px 7px; border-radius: 6px; border: 1px solid var(--border-2); background: var(--surface); color: var(--text); }
+    .note { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 18px 22px; margin: 24px 0; }
+    .note p { margin: 0; }
+    .cta-box { margin-top: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 26px 28px; display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
+    .cta-box p { margin: 0; color: var(--text); font-weight: 600; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/en/"><span class="oa-mark" aria-hidden="true"><svg viewBox="2 0 100 100" width="100%" height="100%"><path d="M26 86 L52 14 L78 86" fill="none" style="stroke:var(--amber)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="28" fill="none" stroke="currentColor" stroke-width="10"/></svg></span>OA Labs</a>
+      <div class="nav-links">
+        <a href="/en/#uygulamalar">Apps</a>
+        <a href="/en/rehber/" aria-current="page" style="color: var(--text)">Guides</a>
+        <a href="/en/yenilikler/">What’s new</a>
+        <a href="/en/yardim/">Help</a>
+        <a href="/en/iletisim/">Contact</a>
+      </div>
+      <a class="lang-sw" data-lang-switch href="/rehber/netflix-siyah-ekran/">TR</a>
+      <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Sign in</b><small>or sign up</small></span></a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap page-head" aria-labelledby="h1">
+      <p class="crumb"><a href="/en/rehber/">Guides</a> · Updated: 9 November 2026</p>
+      <h1 id="h1">Sound but no picture on Netflix: the black screen problem</h1>
+      <p>The episode starts, you hear the sound, but the screen stays black. This usually isn’t a fault: it means the copy protection (DRM) thinks something is recording.</p>
+    </section>
+    <article class="wrap prose">
+      <h2>Why does it happen?</h2>
+      <p>Services such as Netflix, Disney+, Prime Video and TV+ stream with copy protection (DRM) to stop videos from being copied. If the browser or computer suspects the screen could be recorded, the picture is shown black while the sound keeps playing. Common causes:</p>
+      <ul>
+        <li>A screen recording or screen share that’s running (OBS, a Discord stream, Teams/Zoom screen sharing, some screenshot tools).</li>
+        <li>Graphics acceleration turned off in the browser, or an outdated graphics driver.</li>
+        <li>A monitor, cable or adapter that doesn’t support copy protection (HDCP), especially on a second screen.</li>
+        <li>Some apps and browsers that embed the video inside another web view (browser windows inside desktop apps).</li>
+      </ul>
+      <h2>Try these in order</h2>
+      <ol>
+        <li><b>Stop screen recording and sharing.</b> If OBS, Discord, Teams or similar is streaming or sharing, stop it and reload the page.</li>
+        <li><b>Turn on graphics acceleration.</b> In Chrome, <b>Settings → System → Use graphics acceleration when available</b>; in Edge, the same option under <b>Settings → System and performance</b>. Then restart the browser.</li>
+        <li><b>Update your graphics driver</b> from NVIDIA, AMD or Intel’s own app, or from Windows Update.</li>
+        <li><b>Check the monitor.</b> Try the video on your main screen; unplug the second screen or adapter for a moment.</li>
+        <li><b>Open it another way.</b> The service’s Windows app or another browser shows where the problem is.</li>
+      </ol>
+      <h2>In Pusula Browser</h2>
+      <p>The Windows version of Pusula recognises copy-protected streams (Netflix, Disney+, Prime Video, TV+, Exxen and similar) and plays the video in a separate layer inside the tab so the picture shows; you don’t need to do anything. If the picture still stays black on a site that isn’t on the list, choose <b>Fix video not showing</b> from the menu.</p>
+      <div class="note"><p>If the problem continues, <a href="/en/geri-bildirim/?tur=hata&amp;app=pusula">let us know</a>; just tell us which site and which video.</p></div>
+      <div class="cta-box"><p>Pusula Browser is free, for Windows and Android.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="https://api.oalabs.dev/indir/pusula/windows">Download for Windows</a><a class="btn" href="https://api.oalabs.dev/indir/pusula/android">Download for Android</a></div></div>
+      <p style="margin-top:28px"><a href="/en/rehber/">← All guides</a></p>
+    </article>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot">
+      <div class="foot-imza">
+        <svg class="muhur" width="96" height="96" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs mühürü">
+          <defs><path id="muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
+          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
+          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="12" letter-spacing="1.6" fill="#EEEAE2"><textPath href="#muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · ATÖLYE · 2026 · OA LABS · ATÖLYE · 2026 ·</textPath></text></g>
+          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="/en/yenilikler/">What’s new</a>
+        <a class="quiet" href="/en/rehber/">Guides</a>
+        <a class="quiet" href="/en/yol-haritasi/">Roadmap</a>
+        <a class="quiet" href="/en/geri-bildirim/">Feedback</a>
+        <a class="quiet" href="/en/destek-ol/">Support us</a>
+        <a class="quiet" href="/en/yardim/">Help</a>
+        <a class="quiet" href="/en/iletisim/">Contact</a>
+        <a class="quiet" href="/en/hakkimizda/">About</a>
+        <a class="quiet" href="/en/kosullar/">Terms of use</a>
+        <a class="quiet" href="/gizlilik/#en">Privacy policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/i18n-site.js"></script>
+  <script src="/hesap.js"></script>
+  <script src="/indir.js" defer></script>
+  <script src="/sayac.js" defer></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Sound but no picture on Netflix: the black screen problem", "description": "Why Netflix, Disney+, Prime Video or TV+ can play sound with a black picture in the browser, and how to fix it.", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "en", "author": {"@type": "Organization", "name": "OA Labs", "url": "https://oalabs.dev/"}, "mainEntityOfPage": "https://oalabs.dev/en/rehber/netflix-siyah-ekran/"}</script>
+</body>
+</html>
