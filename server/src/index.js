@@ -5,6 +5,8 @@
  *   POST /v1/report            Uygulama hata raporu (isimsiz, kullanıcı kapatabilir)
  *   GET  /v1/admin/errors      Son hata raporları (yönetici)
  *   GET  /v1/stats             Toplu istatistikler (yalnızca yönetici anahtarıyla)
+ *   GET  /indir/pusula/{windows|android|zip}  Pusula'nın son sürüm dosyası (GitHub'dan, önbellekli)
+ *   GET  /v1/pusula/latest     Son sürüm numarası ve dosya boyutları
  *   POST /v1/site/visit        Site sayfa görüntüleme (oalabs.dev, çerezsiz)
  *   POST /v1/site/live         "Şu an sitede" sinyali (25 sn'de bir); { live } döner
  *   GET  /v1/admin/site        Site ziyaret istatistikleri ve anlık ziyaretçiler (yönetici)
@@ -115,6 +117,59 @@ async function adminErrors(url, env) {
                     FROM error_reports WHERE app = ?1 AND created > ?2 GROUP BY message ORDER BY n DESC LIMIT 20`).bind(app, since),
   ]);
   return { ok: true, app, reports: rows.results, top: top.results };
+}
+
+// ---------- Pusula Browser indirmeleri ----------
+// Site düğmeleri dosyayı GitHub yerine buradan indirir: GitHub'ın dosya sunucusu ara sıra 504 veriyor.
+// Son sürümün bilgisi 10 dakika, dosyanın kendisi (sürüm adıyla) Cloudflare önbelleğinde tutulur;
+// önbellekte yoksa GitHub'dan alınıp aynı anda hem kullanıcıya akar hem önbelleğe yazılır.
+
+const PUSULA_REPO = 'oguzhanaydiin1/oa-tarayici';
+const PUSULA_FILES = { windows: 'Pusula-Kurulum.exe', android: 'Pusula-Android.apk', zip: 'Pusula-Windows.zip' };
+
+async function pusulaLatest(ctx) {
+  const cache = caches.default;
+  const key = new Request('https://api.oalabs.dev/_cache/pusula-latest');
+  const hit = await cache.match(key);
+  if (hit) return hit.json();
+  const r = await fetch(`https://api.github.com/repos/${PUSULA_REPO}/releases/latest`, {
+    headers: { 'User-Agent': 'oalabs-api', Accept: 'application/vnd.github+json' },
+  });
+  if (!r.ok) throw new Error('github ' + r.status);
+  const j = await r.json();
+  const files = {};
+  for (const [k, name] of Object.entries(PUSULA_FILES)) {
+    const a = (j.assets || []).find((x) => x.name === name);
+    if (a) files[k] = { name, size: a.size, url: a.browser_download_url };
+  }
+  const out = { version: String(j.tag_name || '').replace(/^v/, ''), date: j.published_at, files };
+  ctx.waitUntil(cache.put(key, new Response(JSON.stringify(out), { headers: { 'Cache-Control': 'max-age=600' } })));
+  return out;
+}
+
+async function pusulaDownload(kind, ctx) {
+  let info;
+  try { info = await pusulaLatest(ctx); } catch {
+    return Response.redirect(`https://github.com/${PUSULA_REPO}/releases/latest/download/${PUSULA_FILES[kind]}`, 302);
+  }
+  const f = info.files[kind];
+  if (!f) return new Response('Bulunamadı', { status: 404 });
+  const headers = {
+    'Content-Type': kind === 'android' ? 'application/vnd.android.package-archive' : 'application/octet-stream',
+    'Content-Disposition': `attachment; filename="${f.name}"`,
+    'Content-Length': String(f.size),
+    'Cache-Control': 'public, max-age=86400',
+    'Access-Control-Allow-Origin': '*',
+  };
+  const cache = caches.default;
+  const key = new Request(`https://api.oalabs.dev/_cache/pusula/${info.version}/${f.name}`);
+  const hit = await cache.match(key);
+  if (hit) return new Response(hit.body, { headers });
+  const r = await fetch(f.url, { headers: { 'User-Agent': 'oalabs-api' } });
+  if (!r.ok || !r.body) return Response.redirect(f.url, 302);
+  const [a, b] = r.body.tee();
+  ctx.waitUntil(cache.put(key, new Response(b, { headers: { 'Cache-Control': 'public, max-age=2592000', 'Content-Length': String(f.size) } })).catch(() => {}));
+  return new Response(a, { headers });
 }
 
 // ---------- Site ziyaretçi sayacı (oalabs.dev) ----------
@@ -282,7 +337,7 @@ async function stats(url, env) {
 // ---------- Yönlendirme ----------
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const origin = req.headers.get('Origin') || '';
     const adminPath = url.pathname === '/v1/stats' || url.pathname.startsWith('/v1/admin/');
@@ -309,6 +364,14 @@ export default {
         return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
       }
 
+      const dl = url.pathname.match(/^\/indir\/pusula\/(windows|android|zip)$/);
+      if (dl && (req.method === 'GET' || req.method === 'HEAD')) return await pusulaDownload(dl[1], ctx);
+      if (url.pathname === '/v1/pusula/latest' && req.method === 'GET') {
+        const i = await pusulaLatest(ctx);
+        return new Response(JSON.stringify({ ok: true, version: i.version, date: i.date,
+          files: Object.fromEntries(Object.entries(i.files).map(([k, v]) => [k, { name: v.name, size: v.size }])) }),
+          { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', ...h } });
+      }
       if (url.pathname === '/v1/site/visit' && req.method === 'POST') return await withCors(siteVisit(req, env), h);
       if (url.pathname === '/v1/site/live' && req.method === 'POST') return await withCors(siteLive(req, env, url.searchParams.has('leave')), h);
       if (url.pathname === '/v1/admin/site' && req.method === 'GET') {
