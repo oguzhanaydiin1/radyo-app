@@ -38,6 +38,10 @@
     .date { color: var(--muted); margin: 0 0 36px; }
     .short { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; margin: 0 0 40px; font-size: 19px; }
     h2 { font: 800 22px/1.3 var(--display); margin: 40px 0 10px; }
+    h3 { font: 700 18px/1.35 var(--display); margin: 26px 0 8px; }
+    h2 + .short { margin-top: 6px; }
+    .toc { color: var(--muted); font-size: 15px; }
+    .toc a { color: var(--accent); }
     p, li { color: var(--text); }
     ul { padding-left: 22px; }
     li { margin: 6px 0; }
@@ -52,21 +56,53 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 9 Kasım 2026 (site ziyaretçi sayacı eklendi) · Geçerli olduğu yerler: OA Radyo (Windows), Harrier Cleaner ve oalabs.dev</p>
+      <p class="date">Son güncelleme: 9 Kasım 2026 (Pusula Browser ve site ziyaretçi sayacı eklendi) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), OA Radyo (Windows), Harrier Cleaner ve oalabs.dev</p>
 
-      <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam içermez. Favorilerin, ayarların ve dinleme geçmişin bilgisayarında durur. Yalnızca izin verirsen isimsiz kullanım sayıları gönderilir; sohbete yazdıkların o odadaki herkese görünür.</p>
+      <p class="short">Kısaca: OA Labs uygulamaları reklam içermez, seni izlemez ve kullanmak için hesap istemez. Verilerinin çoğu kendi cihazında kalır. Sunucumuza yalnızca senin açtığın özelliklerin (hesapla eşitleme, sohbet, izin verirsen isimsiz kullanım sayıları) gerektirdiği bilgiler ve isimsiz hata raporları gider. Her uygulamada neyin nereye gittiği aşağıda ayrı ayrı yazılı.</p>
+
+      <p class="toc">Bu sayfada: <a href="#pusula">Pusula Browser</a> · <a href="#radyo">OA Radyo</a> · <a href="#harrier">Harrier Cleaner</a> · <a href="#site">oalabs.dev ve OA Labs hesabı</a></p>
 
       <h2>Toplamadığımız şeyler</h2>
       <ul>
-        <li>Uygulamalarda adın, e-posta adresin, telefon numaran ya da konumun. (Bunları yalnızca sitede kendin üye olursan alırız; aşağıya bak.)</li>
-        <li>Senin hangi radyoları ne kadar dinlediğin. İstatistikler ekranındaki bilgiler senin bilgisayarında hesaplanır.</li>
-        <li>Reklam kimliği, çerez ya da seni internette izleyen takip araçları.</li>
+        <li>Uygulamalarda adın, e-posta adresin, telefon numaran ya da konumun. (Ad ve e-postayı yalnızca kendin OA Labs hesabı açarsan alırız; aşağıya bak.)</li>
+        <li>Hangi siteleri gezdiğin, hangi radyoları ne kadar dinlediğin. Pusula Browser’ın geçmişi ve ekran süresi, OA Radyo’nun istatistikleri senin cihazında tutulur ve hesaplanır. (Pusula Browser’da hesapla eşitlemeyi kendin açarsan geçmişin hesabına kaydedilir; aşağıya bak.)</li>
+        <li>Reklam kimliği, reklam ya da takip çerezi, seni internette izleyen takip araçları.</li>
       </ul>
 
-      <h2>Bilgisayarında tutulanlar</h2>
+      <h2 id="pusula">Pusula Browser</h2>
+      <p class="short">Kısaca: Pusula Browser reklam göstermez, seni izlemez ve kullanmak için hesap istemez. Geçmişin, yer imlerin, şifrelerin ve ekran süren cihazında durur. Uygulama bize hangi siteleri gezdiğini bildirmez. OA Labs hesabınla giriş yapıp eşitlemeyi açarsan seçtiğin veriler hesabına kaydedilir; şifreler yalnızca senin parolanla şifrelenmiş olarak gider.</p>
+
+      <h3>Cihazında tutulanlar</h3>
+      <p>Geçmiş, yer imleri, hızlı erişimdeki siteler, açık sekmeler, sonra okumak için kaydettiklerin, indirme listesi, ekran süresi kayıtları (hangi sitede ne kadar kaldığın), site izinleri ve ayarlar uygulamanın kendi klasöründe tutulur. Şifreler cihazın güvenli deposunda (Android Keystore, Windows DPAPI) saklanır. Gizli sekme kilidi parmak izi, yüz, ekran kilidi ya da Windows Hello ile açılır; bu doğrulama tamamen cihazında yapılır. Gizli sekmelerde gezdiğin sayfalar geçmişe yazılmaz. Android’de ekran süresinin haftalık özet bildirimi de cihazın kendisinde hazırlanır. Uygulamayı kaldırınca bunların hepsi silinir.</p>
+
+      <h3>OA Labs hesabıyla eşitleme (isteğe bağlı)</h3>
+      <ul>
+        <li><strong>Eşitlenenler:</strong> giriş yapıp eşitlemeyi açarsan yer imlerin, hızlı erişimdeki siteler, geçmişin ve her cihazın açık sekmeleri (cihaz adıyla birlikte) hesabına, yani sunucumuza (api.oalabs.dev, Cloudflare) kaydedilir. Neyin eşitleneceğini menüdeki “Eşitleme ayarları”ndan seçersin; bir cihazda sildiğin öbüründen ve sunucudan da silinir.</li>
+        <li><strong>Şifreler, uçtan uca şifreli:</strong> yalnızca bir eşitleme parolası belirlersen eşitlenir. Şifrelerin cihazında bu parolayla (AES-256) şifrelenir; sunucuya yalnızca şifreli hâli gider. Parolan hiçbir yere gönderilmez; bu yüzden OA Labs dahil kimse şifrelerini açamaz.</li>
+        <li><strong>OA Akış ve “öbür cihaza gönder”:</strong> gönderdiğin not, bağlantı, fotoğraf ve dosyalar (600 KB’a kadar) alıcı cihaz alana kadar sunucuda bekler, alınınca sunucudan silinir.</li>
+        <li><strong>Ekran süresi:</strong> “Cihazları birleştir”i açarsan her cihazın son 30 günlük günlük özeti (o günkü toplam süre ve en çok vakit geçirilen en fazla 40 site) hesabına kaydedilir. Kapalıyken ekran süresi verileri cihazından hiç çıkmaz.</li>
+        <li>Hesabını sildiğinde eşitlenmiş bütün verilerin de sunucudan silinir.</li>
+      </ul>
+
+      <h3>Uygulamanın bağlandığı yerler</h3>
+      <ul>
+        <li><strong>Açtığın siteler:</strong> her tarayıcıda olduğu gibi ziyaret ettiğin site IP adresini ve tarayıcı bilgini görür, kendi çerezlerini koyabilir. Sayfaları Windows’ta Microsoft Edge WebView2, Android’de Android System WebView gösterir; bunlar cihazındaki sistem bileşenleridir.</li>
+        <li><strong>Arama önerileri:</strong> adres çubuğuna yazdıkların, yazarken öneri göstermek için seçtiğin arama motoruna gönderilir (varsayılan DuckDuckGo; Ecosia ve Startpage seçiliyse öneriler DuckDuckGo’dan gelir).</li>
+        <li><strong>Başlangıç sayfası:</strong> hava durumu için seçtiğin şehir Open-Meteo’ya gönderilir (konumunu otomatik almayız). Döviz ve altın için frankfurter.dev ve Truncgil Finans’a, haber akışı için seçtiğin haber sitelerinin RSS beslemelerine, oyun köşesi için Epic Games ve Steam mağazalarına bağlanılır. Hızlı erişimdeki sitelerin simgeleri Google’ın site simgesi hizmetinden alınır. Haber akışını, kurları ve oyun köşesini Ayarlar → Başlangıç sayfası’ndan kapatabilirsin.</li>
+        <li><strong>Türkçeye çevir:</strong> bu komutu kullanırsan sayfanın adresi Google Çeviri’ye gönderilir ve sayfa Google Çeviri üzerinden açılır.</li>
+        <li><strong>Yerleşik OA Radyo:</strong> istasyon listesi Radio Browser’dan, yayın radyonun kendi sunucusundan gelir.</li>
+        <li><strong>Güncelleme denetimi:</strong> yeni sürüm GitHub’dan denetlenir ve indirilir.</li>
+        <li><strong>Reklam engelleme</strong> tamamen cihazında çalışır; engellenecek adreslerin listesi uygulamanın içinde gelir, gezdiğin sayfalar bunun için hiçbir yere gönderilmez.</li>
+      </ul>
+      <p>Pusula Browser’da kullanım sayımı, hata raporu ya da reklam kimliği yoktur.</p>
+
+      <h2 id="radyo">OA Radyo (Windows)</h2>
+      <p class="short">Kısaca: OA Radyo hesap istemez, seni tanımlayan hiçbir bilgi toplamaz, reklam içermez. Favorilerin, ayarların ve dinleme geçmişin bilgisayarında durur. Yalnızca izin verirsen isimsiz kullanım sayıları gönderilir; sohbete yazdıkların o odadaki herkese görünür.</p>
+
+      <h3>Bilgisayarında tutulanlar</h3>
       <p>Favoriler ve klasörleri, son dinlenenler, eklediğin istasyonlar, alarmlar, zamanlanmış kayıtlar, ayarlar, ekolayzır seçimleri, dinleme istatistikleri, son çalan şarkılar ve indirilen istasyon logoları Windows’taki uygulama klasöründe (<span class="muted">%APPDATA%\Radyo</span>) tutulur. Yaptığın kayıtlar Müzik klasöründeki “Radyo Kayıtları”na kaydedilir. Uygulamayı kaldırıp bu klasörleri silersen hepsi silinir.</p>
 
-      <h2>Uygulamanın bağlandığı yerler</h2>
+      <h3>Uygulamanın bağlandığı yerler</h3>
       <p>Radyo dinlemek için uygulamanın internete bağlanması gerekir. Bu bağlantılarda karşı taraf, her internet bağlantısında olduğu gibi IP adresini görür. Bunların dışında bir bilgi gönderilmez.</p>
       <ul>
         <li><strong>Radio Browser</strong> (radio-browser.info): istasyon listeleri buradan gelir. Bir istasyonu açtığında o istasyonun dinlenme sayacı artırılır; “Beğendim”e basarsan oyun iletilir. İkisinde de sadece istasyonun kimliği gönderilir.</li>
@@ -76,28 +112,13 @@
         <li><strong>Google Fonts:</strong> uygulamanın yazı tipleri, yalnızca 0.9.1 ve önceki sürümlerde. Sonraki sürümlerde yazı tipleri uygulamanın içinde gelir; Google’a bağlanılmaz.</li>
       </ul>
 
-      <h2>İsimsiz kullanım sayımı (yalnızca izin verirsen)</h2>
+      <h3>İsimsiz kullanım sayımı (yalnızca izin verirsen)</h3>
       <p>Uygulama ilk açılışta izin ister; Ayarlar → Gizlilik ve sohbet’ten istediğin zaman kapatabilirsin. İzin verirsen 15 dakikada bir sunucumuza (api.oalabs.dev) şunlar gönderilir: uygulamanın rastgele ürettiği bir kurulum kimliği, uygulama sürümü, arayüz dili ve son dakikalarda hangi radyonun kaç dakika dinlendiği. Kendi eklediğin istasyonların adı gönderilmez. Kurulum kimliği sunucuda tek yönlü olarak özetlenip saklanır; adın, e-postan ya da IP adresin kaydedilmez. Bu sayılar yalnızca toplu olarak (kaç kişi, toplam kaç saat, en çok dinlenen radyolar) görüntülenir.</p>
 
-      <h2 id="site-sayaci">oalabs.dev ziyaretçi sayacı</h2>
-      <p>Bu sitede kaç kişinin hangi sayfalara baktığını görmek için çerezsiz bir sayaç kullanıyoruz. Sayfa açıldığında sunucumuza (api.oalabs.dev) yalnızca sayfanın yolu, geldiğin sitenin adı (örneğin google.com) ve sayfanın dili gönderilir; sayfa açık kaldıkça 25 saniyede bir “buradayım” sinyali gider. Aynı kişiyi gün içinde bir kez saymak için IP adresin ve tarayıcı bilgin o güne özel, tek yönlü bir özete çevrilir; IP adresinin kendisi saklanmaz ve ertesi gün aynı kişi tanınamaz. Cihaz türü yalnızca telefon, tablet ya da bilgisayar olarak kaydedilir. Bu sayılar yalnızca toplu olarak görüntülenir; sitede aynı anda en az 3 kişi varsa köşede kaç kişinin sitede olduğu herkese gösterilir.</p>
-
-      <h2>Canlı sohbet</h2>
+      <h3>Canlı sohbet</h3>
       <p>Sohbet panelini açtığında o radyonun sohbet odasına bağlanırsın; panel kapalıyken bağlantı kurulmaz. Yazdığın takma ad ve mesajlar o odadaki herkese görünür ve odada son 100 mesaj saklanır, eskileri silinir. Kötüye kullanımı (spam, hakaret) önlemek için IP adresinin tek yönlü bir özeti mesajla birlikte tutulur; IP adresinin kendisi saklanmaz. Kurallara aykırı mesajlar silinebilir, yazan kişi o odadan engellenebilir. Kişisel bilgilerini (telefon, adres gibi) sohbette paylaşmamanı öneririz. Bir mesajı bildirmek ya da kendi mesajının silinmesini istemek için destek@oalabs.dev’e yazabilirsin.</p>
 
-      <h2 id="uyelik">Üyelik (isteğe bağlı) — aydınlatma metni</h2>
-      <p>Uygulamaları kullanmak için üye olman gerekmez. oalabs.dev’de üye olursan veri sorumlusu olarak Oğuzhan Aydın (OA Labs) şu bilgileri işler:</p>
-      <ul>
-        <li><strong>İşlenen bilgiler:</strong> adın soyadın, e-posta adresin, üyelik ve son giriş tarihin, duyuru e-postası tercihin, “çıkınca haber ver” dediğin uygulamalar ve onayladığın metnin sürümü. Güvenlik ve oturumlar sayfası için her oturumun cihaz adı (örneğin “Chrome · Windows”) ve son etkinlik zamanı tutulur. Şifre tutulmaz. Giriş kodları ve oturum anahtarları yalnızca tek yönlü özet olarak saklanır; kötüye kullanımı önlemek için giriş isteklerinde IP adresinin tek yönlü özeti tutulur.</li>
-        <li><strong>Profil fotoğrafı (isteğe bağlı):</strong> bir fotoğraf eklersen, gönderilmeden önce tarayıcında kare olarak kırpılır, 256×256 boyutuna küçültülür ve yeniden kaydedilir; böylece konum ve cihaz bilgisi gibi ek bilgiler sunucuya hiç gelmez. Fotoğrafı yalnızca sen, kendi oturumunla görebilirsin; başka üyelere ya da herkese açık bir sayfada gösterilmez. Hesabım sayfasından istediğin an kaldırabilirsin; kaldırdığında ya da hesabını sildiğinde sunucudan da silinir.</li>
-        <li><strong>Amaç ve hukuki sebep:</strong> üyeliğini açmak, giriş yapmanı sağlamak ve hesabını yönetmek (sözleşmenin kurulması ve ifası). Duyuru e-postaları yalnızca o kutuyu işaretlersen gönderilir (açık rıza); Hesabım sayfasından istediğin zaman kapatabilirsin.</li>
-        <li><strong>Aktarım:</strong> bilgiler sunucumuzda (Cloudflare) tutulur. Giriş kodları ve duyurular Resend adlı e-posta gönderim hizmetiyle gönderilir; bunun için e-posta adresin bu hizmete iletilir. Bu hizmetlerin sunucuları yurt dışında olabilir. Bilgilerin satılmaz, reklam için kullanılmaz, başka kimseyle paylaşılmaz.</li>
-        <li><strong>Saklama süresi:</strong> hesabın açık kaldığı sürece. Hesabım sayfasından “Hesabımı sil” dediğinde bilgilerin ve oturumların hemen ve kalıcı olarak silinir. Onaylanmayan kayıt istekleri 10 dakika içinde geçersiz olur.</li>
-        <li><strong>Çerez:</strong> giriş yaptığında oturumun açık kalması için tek bir zorunlu çerez (oa_s) kullanılır. Takip ya da reklam çerezi kullanılmaz.</li>
-        <li><strong>Hakların:</strong> KVKK’nın 11. maddesi kapsamında bilgilerine erişme, düzeltme, silme ve itiraz haklarına sahipsin. Bilgilerini Hesabım sayfasından düzeltebilir ya da silebilirsin; diğer istekler için destek@oalabs.dev’e yazabilirsin.</li>
-      </ul>
-
-      <h2>Senin açtığın özellikler</h2>
+      <h3>Senin açtığın özellikler</h3>
       <ul>
         <li><strong>Bilgisayarlar arası eşitleme:</strong> açarsan favorilerin ve listelerin, seçtiğin klasöre (örneğin OneDrive ya da Google Drive) bir dosya olarak yazılır. O dosyaya bulut hizmetinin kendi gizlilik koşulları uygulanır.</li>
         <li><strong>Discord durumu:</strong> açarsan dinlediğin istasyonun ve şarkının adı bilgisayarındaki Discord uygulamasına iletilir ve Discord profilinde görünür.</li>
@@ -116,8 +137,24 @@
       </ul>
       <p>Her internet bağlantısında olduğu gibi bağlanılan sunucular IP adresini görebilir.</p>
 
+      <h2 id="site">oalabs.dev ve OA Labs hesabı</h2>
+      <h3 id="site-sayaci">Ziyaretçi sayacı</h3>
+      <p>Bu sitede kaç kişinin hangi sayfalara baktığını görmek için çerezsiz bir sayaç kullanıyoruz. Sayfa açıldığında sunucumuza (api.oalabs.dev) yalnızca sayfanın yolu, geldiğin sitenin adı (örneğin google.com) ve sayfanın dili gönderilir; sayfa açık kaldıkça 25 saniyede bir “buradayım” sinyali gider. Aynı kişiyi gün içinde bir kez saymak için IP adresin ve tarayıcı bilgin o güne özel, tek yönlü bir özete çevrilir; IP adresinin kendisi saklanmaz ve ertesi gün aynı kişi tanınamaz. Cihaz türü yalnızca telefon, tablet ya da bilgisayar olarak kaydedilir. Bu sayılar yalnızca toplu olarak görüntülenir; sitede aynı anda en az 3 kişi varsa köşede kaç kişinin sitede olduğu herkese gösterilir.</p>
+
+      <h3 id="uyelik">OA Labs hesabı (isteğe bağlı): aydınlatma metni</h3>
+      <p>Uygulamaları kullanmak için üye olman gerekmez. oalabs.dev’de ya da Pusula Browser’da OA Labs hesabı açarsan veri sorumlusu olarak Oğuzhan Aydın (OA Labs) şu bilgileri işler:</p>
+      <ul>
+        <li><strong>İşlenen bilgiler:</strong> adın soyadın, e-posta adresin, üyelik ve son giriş tarihin, duyuru e-postası tercihin, “çıkınca haber ver” dediğin uygulamalar ve onayladığın metnin sürümü. Güvenlik ve oturumlar sayfası için her oturumun cihaz adı (örneğin “Chrome · Windows”) ve son etkinlik zamanı tutulur. Pusula Browser’da eşitlemeyi açarsan eşitlenen veriler de hesabına bağlı tutulur (yukarıdaki Pusula Browser bölümüne bak). Şifre tutulmaz. Giriş kodları ve oturum anahtarları yalnızca tek yönlü özet olarak saklanır; kötüye kullanımı önlemek için giriş isteklerinde IP adresinin tek yönlü özeti tutulur.</li>
+        <li><strong>Profil fotoğrafı (isteğe bağlı):</strong> bir fotoğraf eklersen, gönderilmeden önce tarayıcında kare olarak kırpılır, 256×256 boyutuna küçültülür ve yeniden kaydedilir; böylece konum ve cihaz bilgisi gibi ek bilgiler sunucuya hiç gelmez. Fotoğrafı yalnızca sen, kendi oturumunla görebilirsin; başka üyelere ya da herkese açık bir sayfada gösterilmez. Hesabım sayfasından istediğin an kaldırabilirsin; kaldırdığında ya da hesabını sildiğinde sunucudan da silinir.</li>
+        <li><strong>Amaç ve hukuki sebep:</strong> üyeliğini açmak, giriş yapmanı sağlamak ve hesabını yönetmek (sözleşmenin kurulması ve ifası). Duyuru e-postaları yalnızca o kutuyu işaretlersen gönderilir (açık rıza); Hesabım sayfasından istediğin zaman kapatabilirsin.</li>
+        <li><strong>Aktarım:</strong> bilgiler sunucumuzda (Cloudflare) tutulur. Giriş kodları ve duyurular Resend adlı e-posta gönderim hizmetiyle gönderilir; bunun için e-posta adresin bu hizmete iletilir. Bu hizmetlerin sunucuları yurt dışında olabilir. Bilgilerin satılmaz, reklam için kullanılmaz, başka kimseyle paylaşılmaz.</li>
+        <li><strong>Saklama süresi:</strong> hesabın açık kaldığı sürece. Hesabım sayfasından “Hesabımı sil” dediğinde bilgilerin ve oturumların hemen ve kalıcı olarak silinir. Onaylanmayan kayıt istekleri 10 dakika içinde geçersiz olur.</li>
+        <li><strong>Çerez:</strong> giriş yaptığında oturumun açık kalması için tek bir zorunlu çerez (oa_s) kullanılır. Takip ya da reklam çerezi kullanılmaz.</li>
+        <li><strong>Hakların:</strong> KVKK’nın 11. maddesi kapsamında bilgilerine erişme, düzeltme, silme ve itiraz haklarına sahipsin. Bilgilerini Hesabım sayfasından düzeltebilir ya da silebilirsin; diğer istekler için destek@oalabs.dev’e yazabilirsin.</li>
+      </ul>
+
       <h2>Çocuklar</h2>
-      <p>Uygulama hiçbir yaştan kullanıcıdan kişisel bilgi toplamaz.</p>
+      <p>Uygulamalarımız kullanmak için hiçbir yaştan kullanıcıdan kişisel bilgi istemez. OA Labs hesabı isteğe bağlıdır.</p>
 
       <h2>Değişiklikler ve iletişim</h2>
       <p>Bu politika değişirse bu sayfa ve üstteki tarih güncellenir. Sorun ya da isteklerin için: <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
@@ -126,23 +163,41 @@
 
       <h1 lang="en" id="en">Privacy policy</h1>
       <div lang="en">
-        <p class="date">Last updated: 9 November 2026 · Applies to: OA Radyo (Windows), Harrier Cleaner and oalabs.dev</p>
-        <p class="short">In short: OA Radyo needs no account, collects no information that identifies you, and contains no ads or trackers. Your favourites, settings and listening history stay on your computer.</p>
+        <p class="date">Last updated: 9 November 2026 · Applies to: Pusula Browser (Windows and Android), OA Radyo (Windows), Harrier Cleaner and oalabs.dev</p>
+        <p class="short">In short: OA Labs apps contain no ads, don’t track you and don’t need an account. Most of your data stays on your own device. Our server only receives what the features you turn on need (account sync, chat, anonymous usage counts if you allow them) and anonymous error reports. What goes where is described below, app by app.</p>
+        <p class="toc">On this page: <a href="#pusula-en">Pusula Browser</a> · <a href="#radyo-en">OA Radyo</a> · <a href="#harrier-en">Harrier Cleaner</a> · <a href="#site-en">oalabs.dev and your OA Labs account</a></p>
         <h2>What we don’t collect</h2>
-        <p>No name, email, phone number or location; no record of what you listen to (the Statistics screen is calculated on your computer only); no analytics, advertising IDs, cookies or similar tracking.</p>
-        <h2>Stored on your computer</h2>
+        <p>No name, email, phone number or location in the apps (we only get a name and email if you create an OA Labs account yourself). No record of the sites you visit or the stations you listen to: Pusula Browser’s history and screen time and OA Radyo’s statistics are kept and calculated on your device (if you turn on sync in Pusula Browser, your history is saved to your account; see below). No advertising IDs, ad or tracking cookies, or similar tracking.</p>
+
+        <h2 id="pusula-en">Pusula Browser</h2>
+        <p class="short">In short: Pusula Browser shows no ads, doesn’t track you and doesn’t need an account. Your history, bookmarks, passwords and screen time stay on your device, and the app doesn’t tell us which sites you visit. If you sign in with your OA Labs account and turn on sync, the data you choose is saved to your account; passwords only leave your device encrypted with your own passphrase.</p>
+        <h3>Stored on your device</h3>
+        <p>History, bookmarks, quick-access sites, open tabs, items saved to read later, the download list, screen time records (how long you spent on each site), site permissions and settings are kept in the app’s own folder. Passwords are kept in the device’s secure storage (Android Keystore, Windows DPAPI). The private tab lock opens with your fingerprint, face, screen lock or Windows Hello, and that check happens entirely on your device. Pages you visit in private tabs aren’t written to your history. On Android, the weekly screen time summary notification is also prepared on the device itself. Uninstalling the app removes all of this.</p>
+        <h3>Sync with your OA Labs account (optional)</h3>
+        <p><b>What syncs:</b> if you sign in and turn on sync, your bookmarks, quick-access sites, history and each device’s open tabs (with the device name) are saved to your account on our server (api.oalabs.dev, Cloudflare). You choose what syncs in “Sync settings” in the menu; what you delete on one device is also deleted on the other and on the server.</p>
+        <p><b>Passwords, end-to-end encrypted:</b> they only sync if you set a sync passphrase. Your passwords are encrypted on your device with that passphrase (AES-256), and only the encrypted form reaches the server. The passphrase is never sent anywhere, so no one, including OA Labs, can read your passwords.</p>
+        <p><b>OA Flow and “send to other device”:</b> notes, links, photos and files you send (up to 600 KB) wait on the server until the receiving device picks them up, and are then deleted from the server.</p>
+        <p><b>Screen time:</b> if you turn on “Merge devices”, a daily summary for each device for the last 30 days (the day’s total time and up to 40 sites you spent the most time on) is saved to your account. When it’s off, screen time data never leaves your device.</p>
+        <p>Deleting your account also deletes all your synced data from the server.</p>
+        <h3>Services the app connects to</h3>
+        <p><b>Sites you open:</b> as in any browser, the site you visit sees your IP address and browser details and can set its own cookies. Pages are shown by Microsoft Edge WebView2 on Windows and Android System WebView on Android, which are system components on your device.</p>
+        <p><b>Search suggestions:</b> what you type in the address bar is sent to the search engine you chose to show suggestions as you type (DuckDuckGo by default; with Ecosia or Startpage, suggestions come from DuckDuckGo).</p>
+        <p><b>Start page:</b> for the weather, the city you choose is sent to Open-Meteo (we never take your location automatically). Currency and gold rates come from frankfurter.dev and Truncgil Finans, the news feed from the RSS feeds of the news sites you choose, and the game corner from the Epic Games and Steam stores. Icons for quick-access sites come from Google’s favicon service. You can turn off the news feed, rates and game corner in Settings → Start page.</p>
+        <p><b>Translate to Turkish:</b> if you use it, the page’s address is sent to Google Translate and the page opens through Google Translate.</p>
+        <p><b>Built-in OA Radyo:</b> the station list comes from Radio Browser and the stream from the station’s own server. <b>Update checks:</b> new versions are checked for and downloaded from GitHub. <b>Ad blocking</b> runs entirely on your device; the block list ships inside the app, and the pages you visit aren’t sent anywhere for it.</p>
+        <p>Pusula Browser has no usage counting, error reporting or advertising ID.</p>
+
+        <h2 id="radyo-en">OA Radyo (Windows)</h2>
+        <p class="short">In short: OA Radyo needs no account, collects no information that identifies you, and contains no ads or trackers. Your favourites, settings and listening history stay on your computer.</p>
+        <h3>Stored on your computer</h3>
         <p>Favourites, history, added stations, alarms, schedules, settings, equalizer choices, listening statistics, recent songs and cached station logos are kept in <span class="muted">%APPDATA%\Radyo</span>. Recordings are saved to “Radyo Kayıtları” in your Music folder.</p>
-        <h2>Services the app connects to</h2>
+        <h3>Services the app connects to</h3>
         <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and, in version 0.9.1 and earlier only, Google Fonts (later versions ship the fonts inside the app). As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
-        <h2>Anonymous usage counts (only with your permission)</h2>
+        <h3>Anonymous usage counts (only with your permission)</h3>
         <p>If you allow it (you can turn it off in Settings), every 15 minutes the app sends our server (api.oalabs.dev) a random install ID, the app version, the interface language and how many minutes each station was played. Names of stations you added yourself are not sent. The install ID is stored only as a one-way hash; no name, email or IP address is stored. The numbers are only viewed in aggregate.</p>
-        <h2>oalabs.dev visitor counter</h2>
-        <p>To see how many people visit which pages of this site, we use a cookie-free counter. When a page opens, only the page path, the name of the site you came from (for example google.com) and the page language are sent to our server (api.oalabs.dev); while the page stays open, a “still here” signal is sent every 25 seconds. To count the same person once a day, your IP address and browser details are turned into a one-way hash valid for that day only; the IP address itself is not stored and you cannot be recognised the next day. Device type is recorded only as phone, tablet or computer. The numbers are only viewed in aggregate; when at least 3 people are on the site at once, the number of people currently on the site is shown to everyone in the corner.</p>
-        <h2>Live chat</h2>
+        <h3>Live chat</h3>
         <p>Opening the chat panel connects you to that station’s room; nothing connects while it is closed. Your nickname and messages are visible to everyone in the room, and the last 100 messages are kept. A one-way hash of your IP address is stored with each message to prevent abuse; the IP address itself is not stored. Messages that break the rules may be deleted and their authors blocked from the room. To report a message or ask for yours to be removed, write to destek@oalabs.dev.</p>
-        <h2>Membership (optional)</h2>
-        <p>You don’t need an account to use the apps. If you sign up on oalabs.dev, we process your name, email address, sign-up and last sign-in dates, your announcement-email preference, the apps you asked to be notified about, the version of the notice you accepted, and for each signed-in session a device name (such as “Chrome · Windows”) and last-activity time. If you add a profile photo, your browser crops it to a square, shrinks it to 256×256 and re-saves it before upload, so extra details such as location never reach our server. Only you can see it, while signed in; it isn’t shown to other members or on any public page, and removing it or deleting your account deletes it from the server. No password is stored; sign-in codes and session keys are kept only as one-way hashes, and a one-way hash of your IP address is kept with sign-in requests to prevent abuse. Data is stored on our server (Cloudflare) and sign-in codes and announcements are sent through the Resend email service. Announcement emails are only sent if you opt in, and you can turn them off in your account. One essential cookie (oa_s) keeps you signed in. Deleting your account on the account page removes your data immediately. Questions: destek@oalabs.dev.</p>
-        <h2>Features you turn on</h2>
+        <h3>Features you turn on</h3>
         <p>Sync writes your lists to a file in a folder you choose (such as OneDrive). Discord status sends the current station and song to the Discord app on your computer. Search, share and “report” buttons open your browser or email app; you see and send the content yourself.</p>
         <h2 id="harrier-en">Harrier Cleaner</h2>
         <p class="short">In short: Harrier Cleaner scans and cleans your computer entirely on the computer itself. The names and contents of your files and your photos are never sent anywhere. It only goes online to check for new versions and, unless you turn it off, to send anonymous error reports.</p>
@@ -153,6 +208,13 @@
         <p><b>Error reports:</b> If something unexpected goes wrong, a short report is sent to our server (api.oalabs.dev): a random install ID, the app and Windows versions, the interface language, the error message and a technical stack trace. Your user name and folder paths are removed before sending. The install ID is stored only as a one-way hash; no name, email or IP address is stored. Reports are deleted after 90 days. This is on by default; you can turn it off in Settings &gt; General.</p>
         <p><b>Reporting a problem:</b> The “Write an email” button opens your email app with a ready-made draft; you see and send the content yourself.</p>
         <p>As with any internet connection, the servers the app connects to can see your IP address.</p>
+        <h2 id="site-en">oalabs.dev and your OA Labs account</h2>
+        <h3>Visitor counter</h3>
+        <p>To see how many people visit which pages of this site, we use a cookie-free counter. When a page opens, only the page path, the name of the site you came from (for example google.com) and the page language are sent to our server (api.oalabs.dev); while the page stays open, a “still here” signal is sent every 25 seconds. To count the same person once a day, your IP address and browser details are turned into a one-way hash valid for that day only; the IP address itself is not stored and you cannot be recognised the next day. Device type is recorded only as phone, tablet or computer. The numbers are only viewed in aggregate; when at least 3 people are on the site at once, the number of people currently on the site is shown to everyone in the corner.</p>
+        <h3>OA Labs account (optional)</h3>
+        <p>You don’t need an account to use the apps. If you create an OA Labs account on oalabs.dev or in Pusula Browser, we process your name, email address, sign-up and last sign-in dates, your announcement-email preference, the apps you asked to be notified about, the version of the notice you accepted, and for each signed-in session a device name (such as “Chrome · Windows”) and last-activity time. If you add a profile photo, your browser crops it to a square, shrinks it to 256×256 and re-saves it before upload, so extra details such as location never reach our server. Only you can see it, while signed in; it isn’t shown to other members or on any public page, and removing it or deleting your account deletes it from the server. If you turn on sync in Pusula Browser, the synced data is also kept with your account (see the Pusula Browser section above). No password is stored; sign-in codes and session keys are kept only as one-way hashes, and a one-way hash of your IP address is kept with sign-in requests to prevent abuse. Data is stored on our server (Cloudflare) and sign-in codes and announcements are sent through the Resend email service. Announcement emails are only sent if you opt in, and you can turn them off in your account. One essential cookie (oa_s) keeps you signed in. Deleting your account on the account page removes your data immediately. Questions: destek@oalabs.dev.</p>
+        <h2>Children</h2>
+        <p>Our apps don’t ask users of any age for personal information in order to use them. An OA Labs account is optional.</p>
         <h2>Contact</h2>
         <p><a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
       </div>
