@@ -47,4 +47,8 @@
   <url><loc>https://oalabs.dev/rehber/chrome-dan-gecis/</loc><lastmod>2026-11-09</lastmod></url>
   <url><loc>https://oalabs.dev/rehber/telefon-bilgisayar-dosya-gonderme/</loc><lastmod>2026-11-09</lastmod></url>
   <url><loc>https://oalabs.dev/rehber/ekran-suresi-sinirlama/</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://oalabs.dev/iletisim/</loc><lastmod>2026-11-09</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/iletisim/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/iletisim/"/></url>
+  <url><loc>https://oalabs.dev/en/iletisim/</loc><lastmod>2026-11-09</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/iletisim/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/iletisim/"/></url>
 </urlset>

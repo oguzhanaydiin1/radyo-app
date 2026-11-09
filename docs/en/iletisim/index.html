@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — OA Labs</title>
+  <meta name="description" content="Get in touch with OA Labs: report a bug, suggest an idea, ask a question or email destek@oalabs.dev.">
+  <meta name="theme-color" content="#0D0F16">
+  <meta property="og:title" content="Contact — OA Labs">
+  <meta property="og:description" content="Get in touch with OA Labs: report a bug, suggest an idea, ask a question or email destek@oalabs.dev.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OA Labs">
+  <meta property="og:url" content="https://oalabs.dev/en/iletisim/">
+  <meta property="og:image" content="https://oalabs.dev/img/paylas/home-en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://oalabs.dev/img/paylas/home-en.png">
+  <link rel="canonical" href="https://oalabs.dev/en/iletisim/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/iletisim/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/iletisim/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/iletisim/">
+  <link rel="icon" href="/img/oa-labs.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    .page-head { padding: 64px 0 8px; }
+    .page-head h1 { margin: 0; font: 800 clamp(36px, 6vw, 64px)/1.02 var(--display); letter-spacing: -0.035em; text-wrap: balance; }
+    .page-head p { margin: 16px 0 0; font-size: 20px; color: var(--text-2); max-width: 38em; }
+    .page-head .crumb { font-size: 14px; margin: 0 0 14px; color: var(--faint); }
+    .page-head .crumb a { color: var(--text-2); }
+    .prose { padding: 8px 0 72px; }
+    .prose > * { max-width: 760px; }
+    .prose h2 { margin: 44px 0 10px; font: 800 26px/1.15 var(--display); letter-spacing: -0.02em; scroll-margin-top: 96px; }
+    .prose h3 { margin: 28px 0 6px; font: 700 19px/1.3 var(--display); }
+    .prose p, .prose li { color: var(--text-2); font-size: 17.5px; line-height: 1.7; }
+    .prose strong, .prose b { color: var(--text); }
+    .prose ol, .prose ul { padding-left: 24px; }
+    .prose li { margin: 8px 0; }
+    .prose kbd { font: 600 14px/1 var(--body); padding: 3px 7px; border-radius: 6px; border: 1px solid var(--border-2); background: var(--surface); color: var(--text); }
+    .note { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 18px 22px; margin: 24px 0; }
+    .note p { margin: 0; }
+    .cta-box { margin-top: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 26px 28px; display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
+    .cta-box p { margin: 0; color: var(--text); font-weight: 600; font-size: 18px; }
+    .ways { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 8px 0 28px; }
+    .way { display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 24px; background: var(--surface); border: 1px solid var(--border); color: var(--text); text-decoration: none; transition: border-color .15s, transform .15s; }
+    a.way:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .way .ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; }
+    .way .ic svg { width: 22px; height: 22px; }
+    .way h2 { margin: 0; font: 800 21px/1.2 var(--display); letter-spacing: -0.015em; }
+    .way p { margin: 0; color: var(--text-2); flex: 1; }
+    .way .go { color: var(--amber); font-weight: 600; }
+    @media (max-width: 860px) { .ways { grid-template-columns: 1fr; } }
+    .contact { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; padding: 0 0 80px; }
+    @media (max-width: 860px) { .contact { grid-template-columns: 1fr; } }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 26px 28px; }
+    @media (max-width: 640px) { .card { padding: 22px 18px; } }
+    .card h2 { margin: 0 0 6px; font: 800 24px/1.15 var(--display); letter-spacing: -0.02em; }
+    .card > p { margin: 0 0 18px; color: var(--text-2); }
+    label.f { display: grid; gap: 6px; font-weight: 600; font-size: 15px; margin-bottom: 14px; }
+    label.f small { color: var(--faint); font-weight: 500; }
+    .in { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border-2); background: var(--bg); color: var(--text); font: 16px/1.4 var(--body); }
+    .in:focus { outline: 2px solid var(--amber); outline-offset: 1px; border-color: transparent; }
+    textarea.in { min-height: 140px; resize: vertical; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .msg { font-size: 15px; color: var(--text-2); } .msg.ok { color: var(--green); } .msg.err { color: #F2707A; }
+    .mail { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 4px 0 18px; }
+    .mail a.addr { font: 700 20px/1.2 var(--display); color: var(--text); text-decoration: none; }
+    .copy { height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--border-2); background: transparent; color: var(--text-2); font: 600 14px var(--body); cursor: pointer; }
+    .topics { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+    .topics a { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); color: var(--text); text-decoration: none; }
+    .topics a:hover span:last-child { color: var(--amber); }
+    .topics span:last-child { color: var(--faint); font-size: 14px; white-space: nowrap; }
+    .who { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--text-2); font-size: 15px; }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/en/"><span class="oa-mark" aria-hidden="true"><svg viewBox="2 0 100 100" width="100%" height="100%"><path d="M26 86 L52 14 L78 86" fill="none" style="stroke:var(--amber)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="28" fill="none" stroke="currentColor" stroke-width="10"/></svg></span>OA Labs</a>
+      <div class="nav-links">
+        <a href="/en/#uygulamalar">Apps</a>
+        <a href="/en/yenilikler/">What’s new</a>
+        <a href="/en/yardim/">Help</a>
+        <a href="/en/iletisim/">Contact</a>
+      </div>
+      <a class="lang-sw" data-lang-switch href="/iletisim/">TR</a>
+      <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Sign in</b><small>or sign up</small></span></a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap page-head" aria-labelledby="h1">
+      <h1 id="h1">Contact</h1>
+      <p>Pick what you’re writing about and we’ll point you to the quickest way. We read every message.</p>
+    </section>
+    <section class="wrap ways" aria-label="Why are you writing?">
+      <a class="way" href="/en/geri-bildirim/?tur=hata"><span class="ic" style="background:rgba(242,112,122,.14);color:#F2707A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8a4 4 0 1 1 8 0v1H8z"/><rect x="7" y="9" width="10" height="11" rx="5"/><path d="M12 13v7M3 13h4M17 13h4M4 7l3 2M20 7l-3 2M4 20l3-2M20 20l-3-2"/></svg></span><h2>Something isn’t working</h2><p>Found a bug in an app or on the site? Tell us what happened and we’ll fix it.</p><span class="go">Report a bug →</span></a>
+      <a class="way" href="/en/geri-bildirim/#fikirler"><span class="ic" style="background:rgba(242,165,65,.14);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></span><h2>I have an idea</h2><p>Is there a feature you wish we had? Add it to the idea board or vote on other people’s ideas.</p><span class="go">Idea board →</span></a>
+      <a class="way" href="/en/yardim/"><span class="ic" style="background:rgba(110,168,254,.14);color:#6EA8FE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg></span><h2>I have a question</h2><p>Answers to common questions about installing, updates, accounts and privacy are most likely here.</p><span class="go">Help page →</span></a>
+    </section>
+    <section class="wrap contact">
+      <form class="card" id="c-form" novalidate>
+        <h2>Write to us directly</h2>
+        <p>No account needed. Add your email so we can reply.</p>
+        <label class="f">Your email address<input class="in" type="email" name="email" autocomplete="email" maxlength="200" required></label>
+        <label class="f">Topic<select class="in" name="app"><option value="diger">General</option><option value="pusula">Pusula Browser</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="site">Website and account</option></select></label>
+        <label class="f">Your message<textarea class="in" name="text" maxlength="4000" required></textarea></label>
+        <div class="actions"><button class="btn primary" type="submit">Send</button><span class="msg" role="status" aria-live="polite"></span></div>
+      </form>
+      <aside class="card" aria-labelledby="mail-h">
+        <h2 id="mail-h">Email</h2>
+        <p>Prefer not to use the form? Write to us directly:</p>
+        <div class="mail"><a class="addr" href="mailto:destek@oalabs.dev">destek@oalabs.dev</a><button class="copy" type="button" data-copy="destek@oalabs.dev">Copy</button></div>
+        <ul class="topics">
+          <li><a href="mailto:destek@oalabs.dev?subject=Account%20and%20personal%20data"><span>Your account and personal data</span><span>Email →</span></a></li>
+          <li><a href="mailto:destek@oalabs.dev?subject=Chat%20message%20report"><span>Report a message in radio chat</span><span>Email →</span></a></li>
+          <li><a href="mailto:destek@oalabs.dev?subject=Partnerships%20and%20press"><span>Partnerships and press</span><span>Email →</span></a></li>
+        </ul>
+        <p class="who">OA Labs is Oğuzhan Aydın’s software workshop. <a href="/en/hakkimizda/">About</a> · <a href="https://oguzhanaydin.com.tr">oguzhanaydin.com.tr</a></p>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot">
+      <div class="foot-imza">
+        <svg class="muhur" width="96" height="96" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs mühürü">
+          <defs><path id="muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
+          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
+          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="11" letter-spacing="2" fill="#EEEAE2"><textPath href="#muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · ATÖLYE · 2026 · OA LABS · ATÖLYE · 2026 ·</textPath></text></g>
+          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="/en/yenilikler/">What’s new</a>
+        <a class="quiet" href="/en/yol-haritasi/">Roadmap</a>
+        <a class="quiet" href="/en/geri-bildirim/">Feedback</a>
+        <a class="quiet" href="/en/yardim/">Help</a>
+        <a class="quiet" href="/en/iletisim/">Contact</a>
+        <a class="quiet" href="/en/hakkimizda/">About</a>
+        <a class="quiet" href="/en/kosullar/">Terms of use</a>
+        <a class="quiet" href="/gizlilik/#en">Privacy policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/i18n-site.js"></script>
+  <script src="/hesap.js"></script>
+  <script src="/sayac.js" defer></script>
+  <script>
+  (function () {
+    var T = {"e_mail": "Please enter a valid email so we can reply.", "e_short": "Please add a bit more detail.", "ok": "Your message reached us. We’ll email you as soon as we can.", "e_many": "Too many messages were sent, try again a little later.", "e_fail": "Couldn’t send. You can write to destek@oalabs.dev instead.", "copy": "Copy", "copied": "Copied"};
+    var f = document.getElementById('c-form');
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var m = f.querySelector('.msg'), b = f.querySelector('button[type=submit]');
+      var email = f.elements.email.value.trim(), text = f.elements.text.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { m.className = 'msg err'; m.textContent = T.e_mail; f.elements.email.focus(); return; }
+      if (text.length < 5) { m.className = 'msg err'; m.textContent = T.e_short; f.elements.text.focus(); return; }
+      b.disabled = true;
+      fetch('https://api.oalabs.dev/v1/feedback', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kind: 'diger', app: f.elements.app.value, text: text, email: email, page: location.pathname }) })
+        .then(function (r) { return r.json(); }).catch(function () { return { ok: false, error: 'ag' }; })
+        .then(function (r) {
+          b.disabled = false;
+          if (r && r.ok) { m.className = 'msg ok'; m.textContent = T.ok; f.elements.text.value = ''; }
+          else { m.className = 'msg err'; m.textContent = r && r.error === 'cok' ? T.e_many : T.e_fail; }
+        });
+    });
+    document.querySelectorAll('[data-copy]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copy) : Promise.reject()).then(function () { b.textContent = T.copied; setTimeout(function () { b.textContent = T.copy; }, 1800); }).catch(function () {});
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
