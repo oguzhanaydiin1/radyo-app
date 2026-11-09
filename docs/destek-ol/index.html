@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bize destek ol — OA Labs</title>
+  <meta name="description" content="OA Labs uygulamalarını ücretsiz ve reklamsız tutmamıza yardım et: paylaş, hata bildir, fikirlere oy ver ya da bir kahve ısmarla.">
+  <meta name="theme-color" content="#0D0F16">
+  <meta property="og:title" content="Bize destek ol — OA Labs">
+  <meta property="og:description" content="OA Labs uygulamalarını ücretsiz ve reklamsız tutmamıza yardım et: paylaş, hata bildir, fikirlere oy ver ya da bir kahve ısmarla.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OA Labs">
+  <meta property="og:url" content="https://oalabs.dev/destek-ol/">
+  <meta property="og:image" content="https://oalabs.dev/img/paylas/home-tr.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://oalabs.dev/img/paylas/home-tr.png">
+  <link rel="canonical" href="https://oalabs.dev/destek-ol/">
+  <link rel="alternate" hreflang="tr" href="https://oalabs.dev/destek-ol/">
+  <link rel="alternate" hreflang="en" href="https://oalabs.dev/en/destek-ol/">
+  <link rel="alternate" hreflang="x-default" href="https://oalabs.dev/destek-ol/">
+  <link rel="icon" href="/img/oa-labs.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    .page-head { padding: 64px 0 8px; }
+    .page-head h1 { margin: 0; font: 800 clamp(36px, 6vw, 64px)/1.02 var(--display); letter-spacing: -0.035em; text-wrap: balance; }
+    .page-head p { margin: 16px 0 0; font-size: 20px; color: var(--text-2); max-width: 38em; }
+    .page-head .crumb { font-size: 14px; margin: 0 0 14px; color: var(--faint); }
+    .page-head .crumb a { color: var(--text-2); }
+    .prose { padding: 8px 0 72px; }
+    .prose > * { max-width: 760px; }
+    .prose h2 { margin: 44px 0 10px; font: 800 26px/1.15 var(--display); letter-spacing: -0.02em; scroll-margin-top: 96px; }
+    .prose h3 { margin: 28px 0 6px; font: 700 19px/1.3 var(--display); }
+    .prose p, .prose li { color: var(--text-2); font-size: 17.5px; line-height: 1.7; }
+    .prose strong, .prose b { color: var(--text); }
+    .prose ol, .prose ul { padding-left: 24px; }
+    .prose li { margin: 8px 0; }
+    .prose kbd { font: 600 14px/1 var(--body); padding: 3px 7px; border-radius: 6px; border: 1px solid var(--border-2); background: var(--surface); color: var(--text); }
+    .note { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 18px 22px; margin: 24px 0; }
+    .note p { margin: 0; }
+    .cta-box { margin-top: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 26px 28px; display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; }
+    .cta-box p { margin: 0; color: var(--text); font-weight: 600; font-size: 18px; }
+    .dz { padding-top: 24px !important; padding-bottom: 0 !important; margin: 0 auto !important; }
+    .sec-t { margin: 8px 0 14px; font: 800 26px/1.15 var(--display); letter-spacing: -0.02em; }
+    .free { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 1000px) { .free { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .free { grid-template-columns: 1fr; } }
+    .c { display: flex; flex-direction: column; gap: 10px; padding: 22px; border-radius: 24px; background: var(--surface); border: 1px solid var(--border); }
+    .c .ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; }
+    .c .ic svg { width: 22px; height: 22px; }
+    .c h3 { margin: 0; font: 800 19px/1.2 var(--display); }
+    .c p { margin: 0; color: var(--text-2); flex: 1; font-size: 15.5px; }
+    .c a.go { color: var(--amber); font-weight: 600; text-decoration: none; }
+    .share { display: flex; flex-wrap: wrap; gap: 8px; }
+    .share a, .share button { height: 36px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--border-2); background: transparent; color: var(--text); font: 600 14px var(--body); text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
+    .share a:hover, .share button:hover { border-color: var(--faint); }
+    .money { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; padding-bottom: 80px; }
+    @media (max-width: 860px) { .money { grid-template-columns: 1fr; } }
+    .give { padding: 28px; border-radius: 28px; background: linear-gradient(160deg, rgba(242,165,65,.16), rgba(242,165,65,.03) 60%), var(--surface); border: 1px solid rgba(242,165,65,.35); }
+    .give h3 { margin: 0 0 8px; font: 800 26px/1.15 var(--display); }
+    .give > p { margin: 0 0 18px; color: var(--text-2); }
+    .amts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .amts button { height: 44px; min-width: 84px; padding: 0 16px; border-radius: 14px; border: 1px solid var(--border-2); background: var(--bg); color: var(--text); font: 700 16px var(--display); cursor: pointer; }
+    .amts button[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); background: rgba(242,165,65,.1); }
+    .give .small { color: var(--faint); font-size: 13.5px; margin-top: 12px; }
+    .draft { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 8px; background: rgba(110,168,254,.15); color: #6EA8FE; font: 600 12px var(--body); vertical-align: middle; }
+    .where { padding: 26px 28px; border-radius: 28px; background: var(--surface); border: 1px solid var(--border); }
+    .where h3 { margin: 0 0 12px; font: 800 22px/1.2 var(--display); }
+    .where ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+    .where li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; color: var(--text-2); }
+    .where li b { color: var(--text); display: block; }
+    .where li span.n { color: var(--amber); font: 800 18px var(--display); }
+    .where .fair { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--text-2); font-size: 15px; }
+  </style>
+</head>
+<body>
+  <header class="site-head">
+    <nav class="wrap nav" aria-label="Site">
+      <a class="logo" href="/"><span class="oa-mark" aria-hidden="true"><svg viewBox="2 0 100 100" width="100%" height="100%"><path d="M26 86 L52 14 L78 86" fill="none" style="stroke:var(--amber)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="28" fill="none" stroke="currentColor" stroke-width="10"/></svg></span>OA Labs</a>
+      <div class="nav-links">
+        <a href="/#uygulamalar">Uygulamalar</a>
+        <a href="/rehber/">Rehberler</a>
+        <a href="/yenilikler/">Yenilikler</a>
+        <a href="/yardim/">Yardım</a>
+        <a href="/iletisim/">İletişim</a>
+      </div>
+      <a class="lang-sw" data-lang-switch href="/en/destek-ol/">EN</a>
+      <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Giriş yap</b><small>veya üye ol</small></span></a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap page-head" aria-labelledby="h1">
+      <h1 id="h1">Bize destek ol</h1>
+      <p>OA Labs uygulamaları ücretsiz ve reklamsız; böyle kalmasını istiyoruz. Bize yardım etmenin birkaç yolu var ve çoğu tek kuruş tutmuyor.</p>
+    </section>
+    <section class="wrap dz" aria-labelledby="free-h">
+      <h2 class="sec-t" id="free-h">Ücretsiz yollar</h2>
+      <div class="free">
+        <div class="c"><span class="ic" style="background:rgba(91,196,140,.14);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></span>
+          <h3>Bir arkadaşına öner</h3><p>En büyük destek bu. Beğendiğin uygulamayı bir arkadaşınla paylaş.</p>
+          <div class="share">
+            <a href="https://wa.me/?text=%C3%9Ccretsiz%20ve%20reklams%C4%B1z%20bir%20taray%C4%B1c%C4%B1%20buldum%3A%20Pusula%20Browser.%20Windows%20ve%20Android%20i%C3%A7in.%20https%3A//oalabs.dev/tarayici/" target="_blank" rel="noopener">WhatsApp</a>
+            <a href="https://x.com/intent/post?text=%C3%9Ccretsiz%20ve%20reklams%C4%B1z%20bir%20taray%C4%B1c%C4%B1%20buldum%3A%20Pusula%20Browser.%20Windows%20ve%20Android%20i%C3%A7in.&amp;url=https%3A//oalabs.dev/tarayici/" target="_blank" rel="noopener">X</a>
+            <a href="https://t.me/share/url?url=https%3A//oalabs.dev/tarayici/&amp;text=%C3%9Ccretsiz%20ve%20reklams%C4%B1z%20bir%20taray%C4%B1c%C4%B1%20buldum%3A%20Pusula%20Browser.%20Windows%20ve%20Android%20i%C3%A7in." target="_blank" rel="noopener">Telegram</a>
+            <button type="button" data-share>Bağlantıyı kopyala</button>
+          </div>
+        </div>
+        <div class="c"><span class="ic" style="background:rgba(242,112,122,.14);color:#F2707A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8a4 4 0 1 1 8 0v1H8z"/><rect x="7" y="9" width="10" height="11" rx="5"/><path d="M12 13v7M3 13h4M17 13h4"/></svg></span>
+          <h3>Hata bildir</h3><p>Bulduğun her hata, uygulamayı herkes için daha iyi yapar.</p><a class="go" href="/geri-bildirim/?tur=hata">Hata bildir →</a></div>
+        <div class="c"><span class="ic" style="background:rgba(242,165,65,.14);color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></span>
+          <h3>Fikirlere oy ver</h3><p>Sıradaki özelliği sen seç. En çok oy alanları önce yapıyoruz.</p><a class="go" href="/geri-bildirim/#fikirler">Fikir panosu →</a></div>
+        <div class="c"><span class="ic" style="background:rgba(110,168,254,.14);color:#6EA8FE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></span>
+          <h3>GitHub’da yıldız ver</h3><p>Pusula Browser’ın kodu GitHub’da. Bir yıldız, projenin daha çok kişiye ulaşmasını sağlar.</p><a class="go" href="https://github.com/oguzhanaydiin1/oa-tarayici" target="_blank" rel="noopener">GitHub’da aç →</a></div>
+      </div>
+    </section>
+    <section class="wrap dz" aria-labelledby="money-h" style="padding-bottom:80px !important">
+      <h2 class="sec-t" id="money-h">Maddi destek</h2>
+      <div class="where" style="max-width:760px">
+        <h3>Çok yakında</h3>
+        <p style="margin:0 0 14px;color:var(--text-2)">Maddi destek seçeneklerini hazırlıyoruz. Hazır olunca burada olacak. Desteğin şunlara gidecek:</p>
+        <ul>
+          <li><span class="n">1</span><div><b>Windows kod imzalama sertifikası</b>Kurulumda çıkan “bilgisayarınız korundu” uyarısını kaldırmak için.</div></li>
+          <li><span class="n">2</span><div><b>Sunucular ve alan adı</b>Eşitleme, OA Akış, radyo sohbeti ve indirmeler için.</div></li>
+          <li><span class="n">3</span><div><b>Yeni uygulamalar</b>OA Score ve OA Barkod’u bitirmek için zaman.</div></li>
+        </ul>
+        <p class="fair">Destek tamamen isteğe bağlı olacak. Destek olanlara özel bir özellik yok; uygulamalar herkes için aynı, ücretsiz ve reklamsız kalır.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot">
+      <div class="foot-imza">
+        <svg class="muhur" width="96" height="96" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs mühürü">
+          <defs><path id="muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
+          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
+          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="12" letter-spacing="1.6" fill="#EEEAE2"><textPath href="#muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · ATÖLYE · 2026 · OA LABS · ATÖLYE · 2026 ·</textPath></text></g>
+          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div><div class="foot-brand">OA Labs</div><div>© 2026 · Oğuzhan Aydın</div></div>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
+        <a class="quiet" href="/yenilikler/">Yenilikler</a>
+        <a class="quiet" href="/rehber/">Rehberler</a>
+        <a class="quiet" href="/yol-haritasi/">Yol haritası</a>
+        <a class="quiet" href="/geri-bildirim/">Geri bildirim</a>
+        <a class="quiet" href="/destek-ol/">Destek ol</a>
+        <a class="quiet" href="/yardim/">Yardım</a>
+        <a class="quiet" href="/iletisim/">İletişim</a>
+        <a class="quiet" href="/hakkimizda/">Hakkımızda</a>
+        <a class="quiet" href="/kosullar/">Kullanım koşulları</a>
+        <a class="quiet" href="/gizlilik/">Gizlilik politikası</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/i18n-site.js"></script>
+  <script src="/hesap.js"></script>
+  <script src="/indir.js" defer></script>
+  <script src="/sayac.js" defer></script>
+  <script>
+  (function () {
+    var s = document.querySelector('[data-share]');
+    s.addEventListener('click', function () {
+      var u = 'https://oalabs.dev/tarayici/';
+      if (navigator.share) { navigator.share({ title: 'Pusula Browser', url: u }).catch(function () {}); return; }
+      (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { s.textContent = 'Kopyalandı'; setTimeout(function () { s.textContent = 'Bağlantıyı kopyala'; }, 1800); }).catch(function () {});
+    });
+  })();
+  </script>
+</body>
+</html>

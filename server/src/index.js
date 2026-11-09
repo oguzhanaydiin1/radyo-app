@@ -20,7 +20,7 @@
  * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
 
-import { sendFeedback, listIdeas, addIdea, voteIdea, adminFeedback, adminIdeas } from './ideas.js';
+import { sendFeedback, listIdeas, addIdea, voteIdea, adminFeedback, adminIdeas, listReviews, adminReviews } from './ideas.js';
 import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
 
 const APPS = new Set(['radyo']);
@@ -424,6 +424,13 @@ export default {
       if (url.pathname === '/v1/ideas' && req.method === 'GET') return send(await listIdeas(req, env));
       if (url.pathname === '/v1/ideas' && req.method === 'POST') return send(await addIdea(req, env));
       if (url.pathname === '/v1/ideas/vote' && req.method === 'POST') return send(await voteIdea(req, env));
+      if (url.pathname === '/v1/reviews' && req.method === 'GET') {
+        return new Response(JSON.stringify(await listReviews(url, env)), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', ...h } });
+      }
+      if (url.pathname === '/v1/admin/reviews') {
+        if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
+        return json(await adminReviews(req, env), 200, h);
+      }
       if (url.pathname === '/v1/admin/feedback' || url.pathname === '/v1/admin/ideas') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
         return json(await (url.pathname === '/v1/admin/feedback' ? adminFeedback : adminIdeas)(req, env), 200, h);
