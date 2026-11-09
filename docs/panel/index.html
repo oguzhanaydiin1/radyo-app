@@ -148,6 +148,21 @@
         <section class="card" aria-labelledby="c5"><h2 id="c5">Dil</h2><table><tbody id="langs"></tbody></table></section>
       </div>
 
+      <section class="card" aria-labelledby="cf" id="feedback">
+        <h2 id="cf">Geri bildirim ve fikirler</h2>
+        <p class="note" style="margin:0 0 12px">Siteden gelen hata ve öneri bildirimleri, fikir panosu ve yol haritası. Kullanıcıların eklediği fikirler “Onay bekliyor” durumunda gelir; “Oylamada” yapınca panoda görünür. “Planlandı”, “Yapılıyor” ve “Yayında” olanlar yol haritasında da görünür.</p>
+        <h3 style="margin:14px 0 6px;font-size:15px">Bildirimler <span id="fb-open" class="note"></span></h3>
+        <table><tbody id="fb-list"></tbody></table>
+        <h3 style="margin:22px 0 6px;font-size:15px">Fikirler ve yol haritası</h3>
+        <form id="idea-new" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px">
+          <input name="title" placeholder="Yol haritasına madde ekle (başlık)" maxlength="120" style="flex:1 1 260px">
+          <select name="app"><option value="pusula">Pusula</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier</option><option value="site">Site</option><option value="diger">Diğer</option></select>
+          <select name="status"><option value="planned">Planlandı</option><option value="progress">Yapılıyor</option><option value="open">Oylamada</option><option value="done">Yayında</option></select>
+          <button class="btn small" type="submit">Ekle</button>
+        </form>
+        <table><tbody id="idea-list"></tbody></table>
+      </section>
+
       <section class="card" aria-labelledby="c8" id="errors">
         <h2 id="c8">Harrier Cleaner hata raporları</h2>
         <p class="note" id="err-info">Son 7 günde en sık görülen hatalar. Raporlar isimsizdir; kullanıcı adı ve klasör yolları uygulamada temizlenir.</p>
@@ -295,6 +310,7 @@
         loadErrors();
         loadUsers();
         loadSite();
+        loadFeedback();
         $('#updated').textContent = 'Güncellendi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
         $('#status').innerHTML = `<span class="err">${esc(err.message === 'Failed to fetch' ? 'Sunucuya ulaşılamadı.' : err.message)}</span>`;
@@ -329,6 +345,49 @@
       $('#s-livepages').textContent = l.now ? 'Şu an açık sayfalar: ' + l.pages.map((x) => `${x.path} (${x.n})`).join(', ') : 'Şu an sitede kimse yok.';
     }
     setInterval(() => { if (key && !$('#dash').hidden && document.visibilityState === 'visible') call('/v1/admin/site?days=1').then((r) => showLive(r.live)).catch(() => {}); }, 20000);
+
+    // Geri bildirim ve fikir panosu
+    const ST = { pending: 'Onay bekliyor', open: 'Oylamada', planned: 'Planlandı', progress: 'Yapılıyor', done: 'Yayında', rejected: 'Reddedildi' };
+    const APP = { pusula: 'Pusula', radyo: 'OA Radyo', harrier: 'Harrier', site: 'Site', diger: 'Diğer' };
+    const KIND = { hata: 'Hata', oneri: 'Öneri', diger: 'Diğer' };
+    const when2 = (d) => new Date(d).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    async function loadFeedback() {
+      try {
+        const f = await call('/v1/admin/feedback');
+        $('#fb-open').textContent = f.open ? `· ${f.open} açık` : '· hepsi ele alındı';
+        $('#fb-list').innerHTML = f.items.length ? f.items.map((x) => `<tr${x.done ? ' style="opacity:.55"' : ''}><td style="white-space:nowrap">${esc(when2(x.created))}<br><span class="note">${esc(KIND[x.kind] || x.kind)} · ${esc(APP[x.app] || x.app || '')}</span></td>
+          <td style="white-space:pre-line">${esc(x.text)}${x.email ? `<br><a href="mailto:${esc(x.email)}">${esc(x.email)}</a>` : ''}</td>
+          <td><div class="msg-actions"><button type="button" data-fbdone="${x.id}" data-v="${x.done ? 0 : 1}">${x.done ? 'Geri al' : 'Ele alındı'}</button><button type="button" class="danger" data-fbdel="${x.id}">Sil</button></div></td></tr>`).join('')
+          : '<tr><td class="note">Henüz bildirim yok.</td></tr>';
+        const i = await call('/v1/admin/ideas');
+        const opts = (v) => Object.entries(ST).map(([k, n]) => `<option value="${k}"${k === v ? ' selected' : ''}>${n}</option>`).join('');
+        $('#idea-list').innerHTML = i.items.length ? i.items.map((x) => `<tr data-idea="${x.id}"><td><b>${esc(x.title)}</b> <span class="note">${esc(APP[x.app] || '')} · ${x.votes} oy${x.email ? ' · ' + esc(x.email) : ''}</span>${x.body ? `<br><span class="note" style="white-space:pre-line">${esc(x.body)}</span>` : ''}
+          <br><input data-reply placeholder="Yanıt (herkese görünür, isteğe bağlı)" value="${esc(x.reply || '')}" maxlength="600" style="width:100%;margin-top:6px;height:36px"></td>
+          <td style="width:150px"><select data-status style="height:36px">${opts(x.status)}</select></td>
+          <td><div class="msg-actions"><button type="button" data-isave="${x.id}">Kaydet</button><button type="button" class="danger" data-idel="${x.id}">Sil</button></div></td></tr>`).join('')
+          : '<tr><td class="note">Henüz fikir yok.</td></tr>';
+      } catch (err) {
+        $('#fb-list').innerHTML = `<tr><td class="err">${esc(err.message)}</td></tr>`;
+      }
+    }
+    $('#feedback').addEventListener('click', async (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      try {
+        if (b.dataset.fbdone) await call('/v1/admin/feedback', { method: 'POST', body: JSON.stringify({ id: +b.dataset.fbdone, done: b.dataset.v === '1' }) });
+        else if (b.dataset.fbdel) { if (!confirm('Bu bildirim silinsin mi?')) return; await call('/v1/admin/feedback', { method: 'POST', body: JSON.stringify({ id: +b.dataset.fbdel, action: 'delete' }) }); }
+        else if (b.dataset.isave) { const tr = b.closest('tr'); await call('/v1/admin/ideas', { method: 'POST', body: JSON.stringify({ id: +b.dataset.isave, status: tr.querySelector('[data-status]').value, reply: tr.querySelector('[data-reply]').value }) }); }
+        else if (b.dataset.idel) { if (!confirm('Bu fikir ve oyları silinsin mi?')) return; await call('/v1/admin/ideas', { method: 'POST', body: JSON.stringify({ id: +b.dataset.idel, action: 'delete' }) }); }
+        else return;
+        loadFeedback();
+      } catch (err) { alert(err.message); }
+    });
+    $('#idea-new').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      if (f.elements.title.value.trim().length < 5) return;
+      try { await call('/v1/admin/ideas', { method: 'POST', body: JSON.stringify({ action: 'create', title: f.elements.title.value, app: f.elements.app.value, status: f.elements.status.value }) }); f.elements.title.value = ''; loadFeedback(); }
+      catch (err) { alert(err.message); }
+    });
 
     async function loadErrors() {
       try {

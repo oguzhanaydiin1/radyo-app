@@ -25,6 +25,18 @@
   <link rel="stylesheet" href="/fonts/fonts.css">
   <link rel="stylesheet" href="/site.css">
   <style>
+    .cmp { margin-top: 8px; overflow-x: auto; }
+    .cmp table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: 15px; }
+    .cmp th, .cmp td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+    .cmp th:first-child, .cmp td:first-child { text-align: left; color: var(--text); }
+    .cmp thead th { font: 700 15px/1.2 var(--display); color: var(--text-2); }
+    .cmp thead th.me { color: var(--amber); }
+    .cmp td.me { background: rgba(242,165,65,.06); }
+    .cmp .y { color: var(--green); font-weight: 700; }
+    .cmp .n { color: var(--faint); }
+    .cmp .p { color: var(--text-2); font-size: 13.5px; }
+    .cmp-note { color: var(--faint); font-size: 13.5px; margin-top: 12px; }
+
     body { overflow-x: clip; }
     .dsp { font-family: var(--display); font-weight: 800; letter-spacing: -0.035em; }
     .meta { margin: 16px 0 0; color: var(--faint); font-size: 14px; }
@@ -216,6 +228,7 @@
       <div class="nav-links" style="justify-content: flex-end">
         <a href="#esitleme">Sync</a>
         <a href="#ozellikler">Features</a>
+        <a href="#compare">Compare</a>
         <a href="#kurulum">Install</a>
         <a href="#sss">Questions</a>
       </div>
@@ -411,6 +424,32 @@
       </div>
     </section>
 
+    <section class="wrap" id="compare" aria-labelledby="compare-h">
+      <div class="feat-head">
+        <h2 id="compare-h" class="dsp">How is it different from Chrome and Edge?</h2>
+        <p>All three use the same web engine, so sites look the same in each. The difference is what they do out of the box.</p>
+      </div>
+      <div class="cmp">
+        <table>
+          <thead><tr><th scope="col">Feature</th><th scope="col" class="me">Pusula</th><th scope="col">Chrome</th><th scope="col">Edge</th></tr></thead>
+          <tbody>
+            <tr><td>Ad blocking</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="p">With an extension</span></td><td><span class="p">With an extension</span></td></tr>
+            <tr><td>Tracker blocking</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="n" aria-label="No">—</span></td><td><span class="y" aria-label="Yes">✓</span></td></tr>
+            <tr><td>Skips YouTube video ads</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="n" aria-label="No">—</span></td><td><span class="n" aria-label="No">—</span></td></tr>
+            <tr><td>Declines cookie pop-ups automatically</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="n" aria-label="No">—</span></td><td><span class="n" aria-label="No">—</span></td></tr>
+            <tr><td>Per-site screen time and time limits</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="n" aria-label="No">—</span></td><td><span class="n" aria-label="No">—</span></td></tr>
+            <tr><td>Send notes and files between phone and PC</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="p">Tabs only</span></td><td><span class="y" aria-label="Yes">✓</span></td></tr>
+            <tr><td>WhatsApp, Instagram, Spotify in a sidebar</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="n" aria-label="No">—</span></td><td><span class="p">Some apps</span></td></tr>
+            <tr><td>Built-in radio</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="n" aria-label="No">—</span></td><td><span class="n" aria-label="No">—</span></td></tr>
+            <tr><td>Weather, rates and news on an ad-free start page</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="p">No news</span></td><td><span class="p">News feed with ads</span></td></tr>
+            <tr><td>Split view, vertical tabs, reader mode</td><td class="me"><span class="y" aria-label="Yes">✓</span></td><td><span class="y" aria-label="Yes">✓</span></td><td><span class="y" aria-label="Yes">✓</span></td></tr>
+            <tr><td>Extension store</td><td class="me"><span class="n" aria-label="No">—</span></td><td><span class="y" aria-label="Yes">✓</span></td><td><span class="y" aria-label="Yes">✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cmp-note">As of November 2026, with default settings on Windows. Chrome and Edge can fill some gaps with extensions; Pusula doesn’t support extensions.</p>
+    </section>
+
     <section class="wrap" aria-label="Pusula Browser’s promises">
       <div class="vals">
         <div class="val"><span class="dsp big">$0</span><h3 class="dsp">Completely free.</h3><p>No subscription, no hidden fees.</p></div>
@@ -473,6 +512,10 @@
         <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a>
         <a class="quiet" href="/gizlilik/">Privacy policy</a>
         <a class="quiet" href="/en/radyo/">OA Radyo</a>
+        <a class="quiet" href="/en/yol-haritasi/">Roadmap</a>
+        <a class="quiet" href="/en/geri-bildirim/">Feedback</a>
+        <a class="quiet" href="/en/hakkimizda/">About</a>
+        <a class="quiet" href="/en/kosullar/">Terms of use</a>
       </div>
     </div>
   </footer>

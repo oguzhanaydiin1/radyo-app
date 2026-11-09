@@ -203,6 +203,9 @@ async function sessionUser(req, env) {
   ).bind(await hash(env, `s:${t}`), now()).first();
 }
 
+/** Oturum açmış kullanıcı (öbür modüller için) ya da null. */
+export async function sessionUserPublic(req, env) { return sessionUser(req, env); }
+
 export async function logout(req, env, secure) {
   const t = readCookie(req);
   if (t) {
@@ -349,6 +352,10 @@ async function removeUser(env, id) {
     env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM app_notify WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM user_sync WHERE user_id = ?1').bind(id),
+    // Fikir panosu: oyları silinir, yazdığı fikirler isimsiz kalır
+    env.DB.prepare('DELETE FROM idea_votes WHERE user_id = ?1').bind(id),
+    env.DB.prepare('UPDATE ideas SET votes = (SELECT COUNT(*) FROM idea_votes v WHERE v.idea_id = ideas.id), user_id = CASE WHEN user_id = ?1 THEN NULL ELSE user_id END').bind(id),
+    env.DB.prepare('UPDATE feedback SET user_id = NULL WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM users WHERE id = ?1').bind(id),
   ]);
 }

@@ -5,6 +5,7 @@
  *   POST /v1/report            Uygulama hata raporu (isimsiz, kullanıcı kapatabilir)
  *   GET  /v1/admin/errors      Son hata raporları (yönetici)
  *   GET  /v1/stats             Toplu istatistikler (yalnızca yönetici anahtarıyla)
+ *   POST /v1/feedback, GET/POST /v1/ideas, POST /v1/ideas/vote  Geri bildirim ve fikir panosu (ideas.js)
  *   GET  /indir/pusula/{windows|android|zip}  Pusula'nın son sürüm dosyası (GitHub'dan, önbellekli)
  *   GET  /v1/pusula/latest     Son sürüm numarası ve dosya boyutları
  *   POST /v1/site/visit        Site sayfa görüntüleme (oalabs.dev, çerezsiz)
@@ -19,6 +20,7 @@
  * Gizli değerler (Cloudflare'de "secret" olarak): ADMIN_KEY, PEPPER, RESEND_API_KEY (isteğe bağlı).
  */
 
+import { sendFeedback, listIdeas, addIdea, voteIdea, adminFeedback, adminIdeas } from './ideas.js';
 import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
 
 const APPS = new Set(['radyo']);
@@ -341,7 +343,7 @@ export default {
     const url = new URL(req.url);
     const origin = req.headers.get('Origin') || '';
     const adminPath = url.pathname === '/v1/stats' || url.pathname.startsWith('/v1/admin/');
-    const accountPath = url.pathname.startsWith('/v1/auth/') || url.pathname.startsWith('/v1/me');
+    const accountPath = url.pathname.startsWith('/v1/auth/') || url.pathname.startsWith('/v1/me') || url.pathname.startsWith('/v1/ideas') || url.pathname === '/v1/feedback';
     const h = cors(origin, adminPath, accountPath, env);
     const secure = url.protocol === 'https:' && url.hostname.endsWith('oalabs.dev');
     const send = (r) => {
@@ -415,6 +417,17 @@ export default {
       }
       if (url.pathname === '/v1/me/avatar' && req.method === 'POST') return send(await setAvatar(req, env));
       if (url.pathname === '/v1/me/avatar/delete' && req.method === 'POST') return send(await deleteAvatar(req, env));
+      if (url.pathname === '/v1/feedback' && req.method === 'POST') {
+        const ip = await sha(`${env.PEPPER || 'oa'}:ip:${req.headers.get('CF-Connecting-IP') || ''}`);
+        return send(await sendFeedback(req, env, ip));
+      }
+      if (url.pathname === '/v1/ideas' && req.method === 'GET') return send(await listIdeas(req, env));
+      if (url.pathname === '/v1/ideas' && req.method === 'POST') return send(await addIdea(req, env));
+      if (url.pathname === '/v1/ideas/vote' && req.method === 'POST') return send(await voteIdea(req, env));
+      if (url.pathname === '/v1/admin/feedback' || url.pathname === '/v1/admin/ideas') {
+        if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
+        return json(await (url.pathname === '/v1/admin/feedback' ? adminFeedback : adminIdeas)(req, env), 200, h);
+      }
       if (url.pathname === '/v1/admin/users') {
         if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
         return json(await adminUsers(req, url, env), 200, h);
