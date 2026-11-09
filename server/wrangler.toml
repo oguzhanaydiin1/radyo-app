@@ -20,6 +20,14 @@ bucket_name = "oa-avatars"
 name = "CHAT"
 class_name = "ChatRoom"
 
+[[durable_objects.bindings]]
+name = "SITELIVE"
+class_name = "SiteLive"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["ChatRoom"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["SiteLive"]
