@@ -16,6 +16,8 @@
  *   POST /v1/me/avatar/delete  Fotoğrafı sil
  *   GET  /v1/me/sync        Eşitlenen tarayıcı verisi (OA Tarayıcı: yer imleri, hızlı erişim)
  *   POST /v1/me/sync        { items: { <ad>: { updated, data } } } daha yeni olanlar kaydedilir
+ *   POST /v1/auth/handoff   { app }  (oturum çereziyle) → { code }: öbür OA uygulaması için tek kullanımlık giriş kodu
+ *   POST /v1/auth/redeem    { code } → o uygulamanın kendi oturum çerezi (tek giriş, OA Labs Center)
  *   GET  /v1/admin/users    Üye sayıları ve listesi (yönetici)
  *   POST /v1/admin/users    { action: "remove", id } (yönetici)
  *
@@ -50,7 +52,7 @@ const NOTIFY_APPS = new Set(['score', 'barkod', 'radyo-android', 'harrier']);
 // Tarayıcı bilgisinden kısa bir cihaz adı: "Chrome · Windows"
 function deviceName(req) {
   const ua = req.headers.get('User-Agent') || '';
-  const b = /OATarayici\//.test(ua) ? 'OA Tarayıcı' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
+  const b = /OALabsCenter\//.test(ua) ? 'OA Labs Center' : /OATarayici\//.test(ua) ? 'Pusula Browser' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
   const o = /Windows/.test(ua) ? 'Windows' : /iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Mac OS X/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'Bilinmeyen cihaz';
   return `${b} · ${o}`;
 }
@@ -193,6 +195,52 @@ export async function verify(req, env, secure) {
   stmts.push(env.DB.prepare('INSERT OR REPLACE INTO session_info (token, device, last_seen) VALUES (?1, ?2, ?3)').bind(th, deviceName(req), now()));
   await env.DB.batch(stmts);
   return { status: 200, data: { ok: true, created: !!(row.pending && JSON.parse(row.pending).name) }, cookie: cookie(token, SESSION_DAYS * 86400, secure) };
+}
+
+// ---------- Tek giriş ----------
+// Bir OA uygulamasındaki açık oturum, öbür OA uygulamasının kendi oturumunu açmasını sağlar
+// (OA Labs Center ile Pusula arasında). Kod tek kullanımlıktır, 2 dakika geçerlidir ve yalnız özeti tutulur.
+// Yeni uygulama kendi oturumunu alır: cihaz listesinde ayrı görünür, ayrı çıkış yapılabilir.
+
+const HANDOFF_APPS = new Set(['center', 'pusula', 'kopru', 'radyo', 'harrier', 'score', 'barkod']);
+
+export async function handoff(req, env) {
+  const u = await sessionUser(req, env);
+  if (!u) return fail('giris', 401);
+  let b;
+  try { b = await req.json(); } catch { b = {}; }
+  const app = String((b && b.app) || '');
+  if (!HANDOFF_APPS.has(app)) return fail('uygulama');
+  const recent = await env.DB.prepare('SELECT COUNT(*) AS n FROM auth_handoff WHERE user_id = ?1 AND created > ?2').bind(u.id, ago(3600e3)).first();
+  if (recent && recent.n >= 30) return fail('cok', 429);
+  const code = rand(24);
+  await env.DB.batch([
+    env.DB.prepare('DELETE FROM auth_handoff WHERE expires < ?1').bind(now()),
+    env.DB.prepare('INSERT INTO auth_handoff (code, user_id, app, created, expires) VALUES (?1, ?2, ?3, ?4, ?5)')
+      .bind(await hash(env, `h:${code}`), u.id, app, now(), new Date(Date.now() + 120e3).toISOString()),
+  ]);
+  return { status: 200, data: { ok: true, code } };
+}
+
+export async function redeem(req, env, secure) {
+  let b;
+  try { b = await req.json(); } catch { return fail('istek'); }
+  const code = String((b && b.code) || '');
+  if (!/^[0-9a-f]{48}$/.test(code)) return fail('kod');
+  // Silerek okunur: aynı kod iki kez kullanılamaz.
+  const row = await env.DB.prepare('DELETE FROM auth_handoff WHERE code = ?1 RETURNING user_id, expires').bind(await hash(env, `h:${code}`)).first();
+  if (!row) return fail('kod');
+  if (row.expires < now()) return fail('sure');
+  const user = await env.DB.prepare('SELECT id FROM users WHERE id = ?1').bind(row.user_id).first();
+  if (!user) return fail('uye-yok', 404);
+  const token = rand(32);
+  const th = await hash(env, `s:${token}`);
+  await env.DB.batch([
+    env.DB.prepare('INSERT INTO sessions (token, user_id, created, expires) VALUES (?1, ?2, ?3, ?4)')
+      .bind(th, user.id, now(), new Date(Date.now() + SESSION_DAYS * 86400e3).toISOString()),
+    env.DB.prepare('INSERT OR REPLACE INTO session_info (token, device, last_seen) VALUES (?1, ?2, ?3)').bind(th, deviceName(req), now()),
+  ]);
+  return { status: 200, data: { ok: true }, cookie: cookie(token, SESSION_DAYS * 86400, secure) };
 }
 
 async function sessionUser(req, env) {

@@ -24,7 +24,7 @@
  */
 
 import { sendFeedback, listIdeas, addIdea, voteIdea, adminFeedback, adminIdeas, listReviews, adminReviews } from './ideas.js';
-import { start, verify, logout, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
+import { start, verify, logout, handoff, redeem, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
 
 const APPS = new Set(['radyo']);
 const REPORT_APPS = new Set(['harrier']);
@@ -435,6 +435,8 @@ export default {
         return send(await start(req, env, ip));
       }
       if (url.pathname === '/v1/auth/verify' && req.method === 'POST') return send(await verify(req, env, secure));
+      if (url.pathname === '/v1/auth/handoff' && req.method === 'POST') return send(await handoff(req, env));
+      if (url.pathname === '/v1/auth/redeem' && req.method === 'POST') return send(await redeem(req, env, secure));
       if (url.pathname === '/v1/auth/logout' && req.method === 'POST') return send(await logout(req, env, secure));
       if (url.pathname === '/v1/me' && (req.method === 'GET' || req.method === 'POST')) return send(await me(req, env, secure));
       if (url.pathname === '/v1/me/delete' && req.method === 'POST') return send(await deleteMe(req, env, secure));
