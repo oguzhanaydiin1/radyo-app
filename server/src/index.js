@@ -8,6 +8,7 @@
  *   POST /v1/feedback, GET/POST /v1/ideas, POST /v1/ideas/vote  Geri bildirim ve fikir panosu (ideas.js)
  *   GET  /indir/pusula/{windows|android|zip}  Pusula'nın son sürüm dosyası (GitHub'dan, önbellekli)
  *   GET  /v1/pusula/latest     Son sürüm numarası ve dosya boyutları
+ *   GET  /indir/kopru/{windows|android|zip}, /v1/kopru/latest  Aynısı, Pusula Köprü için
  *   POST /v1/site/visit        Site sayfa görüntüleme (oalabs.dev, çerezsiz)
  *   POST /v1/site/live         "Şu an sitede" sinyali (25 sn'de bir); { live } döner
  *   GET  /v1/admin/site        Site ziyaret istatistikleri ve anlık ziyaretçiler (yönetici)
@@ -126,12 +127,21 @@ async function adminErrors(url, env) {
 // Son sürümün bilgisi 10 dakika, dosyanın kendisi (sürüm adıyla) Cloudflare önbelleğinde tutulur;
 // önbellekte yoksa GitHub'dan alınıp aynı anda hem kullanıcıya akar hem önbelleğe yazılır.
 
-const PUSULA_REPO = 'oguzhanaydiin1/oa-tarayici';
-const PUSULA_FILES = { windows: 'Pusula-Kurulum.exe', android: 'Pusula-Android.apk', zip: 'Pusula-Windows.zip' };
+const DL_APPS = {
+  pusula: {
+    repo: 'oguzhanaydiin1/oa-tarayici',
+    files: { windows: 'Pusula-Kurulum.exe', android: 'Pusula-Android.apk', zip: 'Pusula-Windows.zip' },
+  },
+  kopru: {
+    repo: 'oguzhanaydiin1/pusula-kopru',
+    files: { windows: 'Pusula-Kopru-Kurulum.exe', android: 'Pusula-Kopru-Android.apk', zip: 'Pusula-Kopru-Windows.zip' },
+  },
+};
 
-async function pusulaLatest(ctx) {
+async function appLatest(app, ctx) {
+  const { repo: PUSULA_REPO, files: PUSULA_FILES } = DL_APPS[app];
   const cache = caches.default;
-  const key = new Request('https://api.oalabs.dev/_cache/pusula-latest');
+  const key = new Request(`https://api.oalabs.dev/_cache/${app}-latest`);
   const hit = await cache.match(key);
   if (hit) return hit.json();
   const r = await fetch(`https://api.github.com/repos/${PUSULA_REPO}/releases/latest`, {
@@ -149,9 +159,10 @@ async function pusulaLatest(ctx) {
   return out;
 }
 
-async function pusulaDownload(kind, ctx) {
+async function appDownload(app, kind, ctx) {
+  const { repo: PUSULA_REPO, files: PUSULA_FILES } = DL_APPS[app];
   let info;
-  try { info = await pusulaLatest(ctx); } catch {
+  try { info = await appLatest(app, ctx); } catch {
     return Response.redirect(`https://github.com/${PUSULA_REPO}/releases/latest/download/${PUSULA_FILES[kind]}`, 302);
   }
   const f = info.files[kind];
@@ -164,7 +175,7 @@ async function pusulaDownload(kind, ctx) {
     'Access-Control-Allow-Origin': '*',
   };
   const cache = caches.default;
-  const key = new Request(`https://api.oalabs.dev/_cache/pusula/${info.version}/${f.name}`);
+  const key = new Request(`https://api.oalabs.dev/_cache/${app}/${info.version}/${f.name}`);
   const hit = await cache.match(key);
   if (hit) return new Response(hit.body, { headers });
   const r = await fetch(f.url, { headers: { 'User-Agent': 'oalabs-api' } });
@@ -366,10 +377,11 @@ export default {
         return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
       }
 
-      const dl = url.pathname.match(/^\/indir\/pusula\/(windows|android|zip)$/);
-      if (dl && (req.method === 'GET' || req.method === 'HEAD')) return await pusulaDownload(dl[1], ctx);
-      if (url.pathname === '/v1/pusula/latest' && req.method === 'GET') {
-        const i = await pusulaLatest(ctx);
+      const dl = url.pathname.match(/^\/indir\/(pusula|kopru)\/(windows|android|zip)$/);
+      if (dl && (req.method === 'GET' || req.method === 'HEAD')) return await appDownload(dl[1], dl[2], ctx);
+      const lt = url.pathname.match(/^\/v1\/(pusula|kopru)\/latest$/);
+      if (lt && req.method === 'GET') {
+        const i = await appLatest(lt[1], ctx);
         return new Response(JSON.stringify({ ok: true, version: i.version, date: i.date,
           files: Object.fromEntries(Object.entries(i.files).map(([k, v]) => [k, { name: v.name, size: v.size }])) }),
           { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', ...h } });

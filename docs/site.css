@@ -97,6 +97,15 @@ section { padding: 72px 0; }
 .t-radyo { min-height: 208px; background: var(--amber); color: var(--amber-ink); }
 .t-radyo p { max-width: 22em; color: #3A2A10; }
 .t-radyo .tile-state { color: #5A3B0C; }
+.t-kopru { flex: 1 1 100%; min-height: 0; padding: 30px 32px; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.t-kopru .k-text { max-width: 640px; display: flex; flex-direction: column; gap: 10px; }
+.t-kopru h3 { font-size: clamp(30px, 3.4vw, 40px); margin-top: 6px; }
+.t-kopru p { max-width: 34em; color: var(--text-2); }
+.t-kopru .tile-plats { color: var(--muted); }
+.t-kopru .tile-state { height: 28px; padding: 0 12px; border-radius: 14px; background: rgba(242,165,65,.16); color: var(--amber-hi); display: inline-flex; align-items: center; }
+.t-kopru .tile-head img { width: 60px; height: 60px; border-radius: 16px; box-shadow: 0 0 0 1px var(--border-2); }
+.t-kopru .tile-actions { margin-top: 4px; }
+.t-kopru .btn.ghost-amber { background: var(--surface); }
 .t-harrier { flex: 1 1 250px; min-height: 208px; padding: 24px; gap: 8px; background: #1E3A8A; color: #fff; }
 .t-harrier h3 { font-size: 24px; line-height: 1.1; margin-top: 6px; }
 .t-harrier p { font-size: 14px; color: #DCE6FF; }
@@ -145,6 +154,7 @@ section { padding: 72px 0; }
   .tile { padding: 24px; }
   .t-tarayici { min-height: 0; }
   .t-tarayici .tile-art { opacity: .6; }
+  .t-kopru .tile-art { opacity: .5; }
 }
 
 /* Yapboz: Uygulamalar başlığının yanındaki dört karo. Sayfada görününce bir kez oynar. */
