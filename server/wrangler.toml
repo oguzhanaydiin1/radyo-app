@@ -24,6 +24,11 @@ class_name = "ChatRoom"
 name = "SITELIVE"
 class_name = "SiteLive"
 
+# Pusula Köprü aktarımı: cihaz çifti başına bir posta kutusu
+[[durable_objects.bindings]]
+name = "KOPRU"
+class_name = "KopruBox"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["ChatRoom"]
@@ -31,3 +36,16 @@ new_sqlite_classes = ["ChatRoom"]
 [[migrations]]
 tag = "v2"
 new_sqlite_classes = ["SiteLive"]
+
+[[migrations]]
+tag = "v3"
+new_sqlite_classes = ["KopruBox"]
+
+# Pusula Köprü: farklı ağdaki cihazlara giden şifreli dosyalar (geçici). Depo yayın sırasında yoksa açılır.
+[[r2_buckets]]
+binding = "KOPRU_FILES"
+bucket_name = "oa-kopru"
+
+# Alınmamış eski Köprü dosyalarını saatte bir sil
+[triggers]
+crons = ["23 * * * *"]

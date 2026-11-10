@@ -9,6 +9,8 @@
  *   GET  /indir/pusula/{windows|android|zip}  Pusula'nın son sürüm dosyası (GitHub'dan, önbellekli)
  *   GET  /v1/pusula/latest     Son sürüm numarası ve dosya boyutları
  *   GET  /indir/kopru/{windows|android|zip}, /v1/kopru/latest  Aynısı, Pusula Köprü için
+ *   GET  /v1/kopru/ws/:kutu    Pusula Köprü aktarımı (WebSocket): eşleşmiş iki cihaz farklı ağdayken
+ *   PUT/GET/DELETE /v1/kopru/file/:kutu/:id   Aktarılan dosya (geçici, en fazla 100 MB, 24 saat)
  *   POST /v1/site/visit        Site sayfa görüntüleme (oalabs.dev, çerezsiz)
  *   POST /v1/site/live         "Şu an sitede" sinyali (25 sn'de bir); { live } döner
  *   GET  /v1/admin/site        Site ziyaret istatistikleri ve anlık ziyaretçiler (yönetici)
@@ -350,6 +352,10 @@ async function stats(url, env) {
 // ---------- Yönlendirme ----------
 
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(kopruCleanup(env).catch(() => {}));
+  },
+
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const origin = req.headers.get('Origin') || '';
@@ -366,6 +372,16 @@ export default {
 
     try {
       if (url.pathname === '/' || url.pathname === '/v1/health') return json({ ok: true, service: 'OA Labs' }, 200, h);
+
+      // Pusula Köprü aktarımı. İçerik cihazlarda uçtan uca şifrelidir; sunucu yalnız şifreli baytları taşır.
+      const kw = url.pathname.match(/^\/v1\/kopru\/ws\/([A-Za-z0-9_-]{22,64})$/);
+      if (kw) {
+        if (req.headers.get('Upgrade') !== 'websocket') return new Response('WebSocket gerekli', { status: 426 });
+        if (!env.KOPRU) return new Response('Kapalı', { status: 503 });
+        return env.KOPRU.get(env.KOPRU.idFromName(kw[1])).fetch(req);
+      }
+      const kf = url.pathname.match(/^\/v1\/kopru\/file\/([A-Za-z0-9_-]{22,64})\/([A-Za-z0-9_-]{8,40})$/);
+      if (kf) return await kopruFile(req, env, kf[1], kf[2]);
 
       if (url.pathname === '/v1/ping' && req.method === 'POST') {
         const r = await ping(req, env);
@@ -590,4 +606,141 @@ export class ChatRoom {
     }
     return json({ ok: false }, 400);
   }
+}
+
+
+// ---------- Pusula Köprü aktarımı ----------
+// Eşleşmiş iki cihaz aynı ağda değilken iletiler ve dosyalar buradan geçer. "Kutu" adı iki cihazın
+// ortak anahtarından türetilir; yalnız o iki cihaz bilir. İçerik şifrelidir, sunucu açamaz.
+
+const KOPRU_FILE_MAX = 100 * 1024 * 1024;
+const KOPRU_MSG_MAX = 300 * 1024;
+const KOPRU_KEEP_MS = 3 * 24 * 3600 * 1000;
+
+async function kopruFile(req, env, box, id) {
+  if (!env.KOPRU_FILES) return new Response('Kapalı', { status: 503 });
+  const key = `${box}/${id}`;
+  if (req.method === 'PUT') {
+    // Uygulama şifreli dosyanın tam boyutunu önceden bilir; R2'ye bellekte tutmadan akıtılır.
+    const len = Number(req.headers.get('Content-Length') || 0);
+    if (!len) return new Response('Boyut gerekli', { status: 411 });
+    if (len > KOPRU_FILE_MAX + 1024 * 1024) return new Response('Çok büyük', { status: 413 });
+    if (!req.body) return new Response('Boş', { status: 400 });
+    try {
+      await env.KOPRU_FILES.put(key, req.body, { customMetadata: { ts: String(Date.now()) } });
+    } catch {
+      return new Response('Yüklenemedi', { status: 413 });
+    }
+    return json({ ok: true });
+  }
+  if (req.method === 'GET') {
+    const o = await env.KOPRU_FILES.get(key);
+    if (!o) return new Response('Yok', { status: 404 });
+    return new Response(o.body, { headers: { 'Content-Type': 'application/octet-stream', 'Content-Length': String(o.size), 'Cache-Control': 'no-store' } });
+  }
+  if (req.method === 'DELETE') {
+    await env.KOPRU_FILES.delete(key);
+    return json({ ok: true });
+  }
+  return new Response('Yöntem yok', { status: 405 });
+}
+
+/** Saatlik temizlik: alınmamış eski dosyalar (24 saatten eski). */
+async function kopruCleanup(env) {
+  if (!env.KOPRU_FILES) return;
+  const old = Date.now() - 24 * 3600 * 1000;
+  let cursor;
+  for (let i = 0; i < 20; i++) {
+    const l = await env.KOPRU_FILES.list({ cursor, limit: 500, include: ['customMetadata'] });
+    const del = l.objects.filter((o) => (o.uploaded ? o.uploaded.getTime() : 0) < old).map((o) => o.key);
+    if (del.length) await env.KOPRU_FILES.delete(del);
+    if (!l.truncated) break;
+    cursor = l.cursor;
+  }
+}
+
+/**
+ * Bir cihaz çiftinin posta kutusu. Her cihaz "?d=<cihaz kimliği>" ile bağlanır. Karşı cihaz bağlıysa
+ * ileti hemen iletilir; değilse (en fazla 3 gün, 200 ileti) saklanır ve bağlanınca verilir.
+ */
+export class KopruBox {
+  constructor(ctx, env) {
+    this.ctx = ctx;
+    this.env = env;
+    this.sql = ctx.storage.sql;
+    this.sql.exec(`CREATE TABLE IF NOT EXISTS q (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, ts INTEGER NOT NULL, dst TEXT NOT NULL, src TEXT NOT NULL, data TEXT NOT NULL)`);
+    ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping', 'pong'));
+  }
+
+  devices() {
+    const out = new Set();
+    for (const ws of this.ctx.getWebSockets()) {
+      const a = ws.deserializeAttachment();
+      if (a && a.d) out.add(a.d);
+    }
+    return [...out];
+  }
+
+  broadcast(obj, except) {
+    const msg = JSON.stringify(obj);
+    for (const ws of this.ctx.getWebSockets()) {
+      if (ws === except) continue;
+      try { ws.send(msg); } catch { /* kopmuş */ }
+    }
+  }
+
+  async fetch(req) {
+    const url = new URL(req.url);
+    const d = url.searchParams.get('d') || '';
+    if (!/^[A-Za-z0-9_-]{8,40}$/.test(d)) return new Response('Kimlik yok', { status: 400 });
+    // Bir kutuda en fazla birkaç bağlantı (iki cihaz, yeniden bağlanma payıyla)
+    const socks = this.ctx.getWebSockets();
+    for (const ws of socks) {
+      const a = ws.deserializeAttachment();
+      if (a && a.d === d) { try { ws.close(4000, 'yeni bağlantı'); } catch { /* */ } }
+    }
+    if (this.ctx.getWebSockets().length > 8) return new Response('Dolu', { status: 429 });
+    const pair = new WebSocketPair();
+    const [client, server] = Object.values(pair);
+    this.ctx.acceptWebSocket(server);
+    server.serializeAttachment({ d });
+    server.send(JSON.stringify({ t: 'hello', online: this.devices() }));
+    this.broadcast({ t: 'presence', d, on: true }, server);
+    // Bekleyen iletiler
+    this.sql.exec('DELETE FROM q WHERE ts < ?', Date.now() - KOPRU_KEEP_MS);
+    const rows = this.sql.exec('SELECT id, src, data FROM q WHERE dst = ? ORDER BY id', d).toArray();
+    for (const r of rows) server.send(JSON.stringify({ t: 'msg', from: r.src, data: r.data, queued: true }));
+    if (rows.length) this.sql.exec('DELETE FROM q WHERE dst = ?', d);
+    return new Response(null, { status: 101, webSocket: client });
+  }
+
+  async webSocketMessage(ws, raw) {
+    if (typeof raw !== 'string' || raw.length > KOPRU_MSG_MAX * 1.4) return;
+    let m;
+    try { m = JSON.parse(raw); } catch { return; }
+    const a = ws.deserializeAttachment() || {};
+    if (m.t !== 'msg' || typeof m.to !== 'string' || typeof m.data !== 'string' || !a.d) return;
+    const out = JSON.stringify({ t: 'msg', from: a.d, data: m.data });
+    let sent = false;
+    for (const s of this.ctx.getWebSockets()) {
+      const b = s.deserializeAttachment();
+      if (b && b.d === m.to) { try { s.send(out); sent = true; } catch { /* */ } }
+    }
+    if (!sent && m.keep !== false) {
+      this.sql.exec('INSERT INTO q (ts, dst, src, data) VALUES (?, ?, ?, ?)', Date.now(), m.to, a.d, m.data);
+      this.sql.exec('DELETE FROM q WHERE id NOT IN (SELECT id FROM q ORDER BY id DESC LIMIT 200)');
+    }
+    if (m.id) ws.send(JSON.stringify({ t: 'ack', id: m.id, live: sent }));
+  }
+
+  async webSocketClose(ws) {
+    const a = ws.deserializeAttachment() || {};
+    try { ws.close(); } catch { /* zaten kapalı */ }
+    if (a.d && !this.ctx.getWebSockets().some((s) => s !== ws && (s.deserializeAttachment() || {}).d === a.d)) {
+      this.broadcast({ t: 'presence', d: a.d, on: false }, ws);
+    }
+  }
+
+  async webSocketError(ws) { await this.webSocketClose(ws); }
 }

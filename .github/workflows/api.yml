@@ -99,6 +99,24 @@ jobs:
           PY
           fi
 
+      - name: Pusula Köprü deposu (R2) var mı, yoksa aç
+        if: steps.check.outputs.skip != '1'
+        run: |
+          if npx wrangler r2 bucket list 2>/dev/null | grep -q 'oa-kopru'; then
+            echo "oa-kopru deposu var."
+          elif npx wrangler r2 bucket create oa-kopru; then
+            echo "oa-kopru deposu açıldı."
+          else
+            echo "::warning title=r2::oa-kopru deposu açılamadı. Köprü'de farklı ağa dosya gönderme şimdilik kapalı (iletiler çalışır)."
+            python3 - <<'PY'
+          import re
+          p = 'wrangler.toml'
+          s = open(p).read()
+          s = re.sub(r'\n# Pusula Köprü: farklı ağdaki.*?bucket_name = "oa-kopru"\n', '\n', s, flags=re.S)
+          open(p, 'w').write(s)
+          PY
+          fi
+
       - name: Sunucuyu yükle
         if: steps.check.outputs.skip != '1'
         run: |
