@@ -94,8 +94,9 @@
           <div><h3 style="margin: 0 0 6px; font-size: 15px">En çok bakılan sayfalar</h3><table><tbody id="s-pages"></tbody></table></div>
           <div><h3 style="margin: 0 0 6px; font-size: 15px">Nereden geldiler</h3><table><tbody id="s-sources"></tbody></table></div>
           <div><h3 style="margin: 0 0 6px; font-size: 15px">Cihaz ve dil</h3><table><tbody id="s-devices"></tbody></table></div>
+          <div><h3 style="margin: 0 0 6px; font-size: 15px">Ülkeler</h3><table><tbody id="s-countries"></tbody></table></div>
         </div>
-        <p class="note" style="margin-top: 12px">Çerezsiz sayılır; kişi tanınmaz. Aynı kişi aynı gün içinde bir kez sayılır. Sayaç 9 Kasım 2026'da kuruldu; öncesi yok.</p>
+        <p class="note" style="margin-top: 12px">Çerezsiz sayılır; kişi tanınmaz. Ülke, bağlantıdan Cloudflare'in verdiği koddur; IP adresi saklanmaz; ülke sayımı 10 Kasım 2026'da başladı. Aynı kişi aynı gün içinde bir kez sayılır. Sayaç 9 Kasım 2026'da kuruldu; öncesi yok.</p>
       </section>
 
       <div class="tiles">
@@ -337,6 +338,9 @@
         const devs = [...r.devices.map((x) => ({ k: x.device ? x.device[0].toUpperCase() + x.device.slice(1) : '—', n: x.visitors })),
           ...r.langs.map((x) => ({ k: x.lang === 'en' ? 'İngilizce sayfa' : x.lang === 'tr' ? 'Türkçe sayfa' : (x.lang || '—'), n: x.visitors }))];
         $('#s-devices').innerHTML = tr(devs, (x) => x.k, (x) => x.n);
+        let dn = null; try { dn = new Intl.DisplayNames(['tr'], { type: 'region' }); } catch {}
+        const flag = (c) => c ? String.fromCodePoint(...[...c].map((ch) => 0x1F1A5 + ch.charCodeAt(0))) + ' ' : '';
+        $('#s-countries').innerHTML = tr(r.countries || [], (x) => x.country ? flag(x.country) + ((dn && dn.of(x.country)) || x.country) : 'Bilinmiyor', (x) => x.visitors);
       } catch (err) {
         $('#s-livepages').innerHTML = `<span class="err">${esc(err.message)}</span>`;
       }
