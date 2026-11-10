@@ -158,3 +158,11 @@ CREATE TABLE IF NOT EXISTS reviews (
   feedback_id INTEGER
 );
 CREATE INDEX IF NOT EXISTS reviews_pub ON reviews (published, app);
+
+-- Ziyaretçinin ülkesi (Cloudflare'in verdiği iki harfli kod; IP saklanmaz). Kişi başına günde bir satır.
+CREATE TABLE IF NOT EXISTS site_geo (
+  day TEXT NOT NULL,
+  visitor TEXT NOT NULL,
+  country TEXT,
+  PRIMARY KEY (day, visitor)
+);

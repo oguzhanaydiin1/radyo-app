@@ -232,8 +232,15 @@ async function siteVisit(req, env) {
                     ON CONFLICT (day, path) DO UPDATE SET views = views + 1`).bind(day, path),
     env.DB.prepare('INSERT OR IGNORE INTO site_visitors (day, visitor, source, lang, device) VALUES (?1, ?2, ?3, ?4, ?5)')
       .bind(day, visitor, siteSource(clean(b.r, 300)), clean(b.l, 5), siteDevice(ua)),
+    env.DB.prepare('INSERT OR IGNORE INTO site_geo (day, visitor, country) VALUES (?1, ?2, ?3)')
+      .bind(day, visitor, siteCountry(req)),
   ]);
   return json({ ok: true });
+}
+
+function siteCountry(req) {
+  const c = String((req.cf && req.cf.country) || '').toUpperCase();
+  return /^[A-Z]{2}$/.test(c) && c !== 'XX' && c !== 'T1' ? c : null;
 }
 
 async function siteLive(req, env, leave) {
@@ -250,7 +257,7 @@ async function siteLive(req, env, leave) {
 async function adminSite(url, env) {
   const days = Math.min(400, Math.max(1, parseInt(url.searchParams.get('days'), 10) || 30));
   const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
-  const [daily, views, total, pages, sources, langs, devices] = await env.DB.batch([
+  const [daily, views, total, pages, sources, langs, devices, countries] = await env.DB.batch([
     env.DB.prepare('SELECT day, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
     env.DB.prepare('SELECT day, SUM(views) AS views FROM site_daily WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
     env.DB.prepare('SELECT COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1').bind(from),
@@ -258,6 +265,7 @@ async function adminSite(url, env) {
     env.DB.prepare('SELECT source, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY source ORDER BY visitors DESC LIMIT 15').bind(from),
     env.DB.prepare('SELECT lang, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY lang ORDER BY visitors DESC').bind(from),
     env.DB.prepare('SELECT device, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY device ORDER BY visitors DESC').bind(from),
+    env.DB.prepare('SELECT country, COUNT(*) AS visitors FROM site_geo WHERE day >= ?1 GROUP BY country ORDER BY visitors DESC LIMIT 30').bind(from),
   ]);
   const stub = env.SITELIVE.get(env.SITELIVE.idFromName('oalabs.dev'));
   const live = await (await stub.fetch('https://live/admin')).json();
@@ -265,7 +273,7 @@ async function adminSite(url, env) {
     ok: true, days, from,
     visitors: (total.results[0] && total.results[0].visitors) || 0,
     daily: daily.results, views: views.results, pages: pages.results,
-    sources: sources.results, langs: langs.results, devices: devices.results,
+    sources: sources.results, langs: langs.results, devices: devices.results, countries: countries.results,
     live,
   };
 }
