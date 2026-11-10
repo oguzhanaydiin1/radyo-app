@@ -319,11 +319,11 @@
         </article>
         <article class="grp">
           <div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-          <h3>Bildirim aynası</h3>
+          <h3>Bildirim aynası <span class="chip" style="vertical-align:4px;margin-left:6px">Yakında</span></h3>
           <ul>
             <li>Telefona gelen <b>WhatsApp, SMS</b> ve diğer bildirimler bilgisayarda</li>
             <li>Mesajlara <b>bilgisayardan yanıt</b> yaz</li>
-            <li>İstersen açarsın; kapalıyken hiçbir bildirim gitmez</li>
+            <li>Google Play'e gelince açılacak: Google, Play dışından kurulan uygulamalarda bildirim erişimine izin vermiyor</li>
           </ul>
         </article>
         <article class="grp">
@@ -415,7 +415,8 @@
       <details><summary>Ne kadar güvenli?</summary><p>Eşleştirmede iki cihaz, QR koddaki tek kullanımlık sırla birbirini doğrular ve yalnız ikisinin bildiği bir anahtar oluşturur. Sonraki her ileti ve dosya parçası bu anahtarla şifrelenir (X25519, HKDF, ChaCha20-Poly1305). Aynı ağdaki başka biri ne gönderildiğini göremez, araya bir şey ekleyemez. Farklı ağdayken sunucudan geçse de OA Labs dahil kimse içeriği göremez.</p></details>
       <details><summary>Telefon bilgisayarı göremiyor, ne yapmalıyım?</summary><p>İki cihazın aynı Wi-Fi'de olduğunu kontrol et (misafir ağları cihazların birbirini görmesini engelleyebilir). Windows'ta ilk açılışta çıkan güvenlik duvarı sorusuna "İzin ver" demediysen: Ayarlar → Gizlilik ve güvenlik → Windows Güvenliği → Güvenlik duvarı → "Bir uygulamaya güvenlik duvarından izin ver" bölümünden Pusula Köprü'yü işaretle.</p></details>
       <details><summary>Telefonda uygulama kapalıyken dosya gelir mi?</summary><p>Evet. Pusula Köprü arka planda çalışır; bildirim çubuğunda sessiz bir "Pusula Köprü açık" bildirimi durur. Telefon yeniden başlayınca kendiliğinden açılır. Ayarlar'dan kapatabilirsin.</p></details>
-      <details><summary>Bildirim aynası nasıl açılır?</summary><p>Telefonda Pusula Köprü → Ayarlar → "Bildirimleri bilgisayara ilet". Android "Bildirim erişimi" izni ister. İzin gri ve açılmıyorsa: Ayarlar → Uygulamalar → Pusula Köprü → sağ üstteki ⋮ → "Kısıtlanmış ayarlara izin ver", sonra tekrar dene.</p></details>
+      <details><summary>Bildirim aynası ne zaman gelecek?</summary><p>Hazır, ama Google Play Protect, Play Store dışından kurulan ve bildirim erişimi isteyen uygulamaların kurulmasını engelliyor. Bu yüzden şimdilik indirilen sürümde kapalı; Pusula Köprü Google Play'e geldiğinde açılacak.</p></details>
+      <details><summary>Google Play Protect kurulumu engelledi</summary><p>0.3.2 ve sonrasında bu olmamalı. Eski bir sürümü kuruyorsan en yenisini bu sayfadan indir. Play Protect "tanınmayan geliştirici" uyarısı gösterirse "Diğer ayrıntılar" → "Yine de yükle".</p></details>
       <details><summary>iPhone ya da Mac sürümü var mı?</summary><p>Henüz yok. Pusula Köprü şimdilik Windows ve Android için.</p></details>
       <details><summary>Windows neden uyarı veriyor?</summary><p>Uygulama henüz dijital olarak imzalı olmadığı için Windows ilk açılışta "bilgisayarınız korundu" diyebilir. "Ek bilgi"ye, sonra "Yine de çalıştır"a basman yeterli.</p></details>
       <details><summary>Nasıl güncellenir?</summary><p>Yeni sürüm çıkınca uygulama haber verir. Android sürümü hep aynı OA anahtarıyla imzalı; yeni sürümler eskisinin üzerine kurulur, eşleşmelerin silinmez.</p></details>

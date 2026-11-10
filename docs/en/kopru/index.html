@@ -319,11 +319,11 @@
         </article>
         <article class="grp">
           <div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-          <h3>Notification mirror</h3>
+          <h3>Notification mirror <span class="chip" style="vertical-align:4px;margin-left:6px">Coming soon</span></h3>
           <ul>
             <li>Your phone's <b>WhatsApp, SMS</b> and other notifications on your PC</li>
             <li><b>Reply from the PC</b></li>
-            <li>Off unless you turn it on</li>
+            <li>Arrives with the Google Play release: Google doesn't allow notification access for apps installed outside Play</li>
           </ul>
         </article>
         <article class="grp">
@@ -415,7 +415,8 @@
       <details><summary>How secure is it?</summary><p>When pairing, the two devices verify each other with a one-time secret in the QR code and create a key only they know. Every later message and file chunk is encrypted with that key (X25519, HKDF, ChaCha20-Poly1305). Others on the same network can't see what's sent or inject anything. Even when it goes through the server, nobody, including OA Labs, can read the content.</p></details>
       <details><summary>My phone can't see the PC. What now?</summary><p>Check that both devices are on the same Wi-Fi (guest networks can stop devices from seeing each other). If you didn't click "Allow" on the firewall prompt at first launch: Settings → Privacy &amp; security → Windows Security → Firewall → "Allow an app through firewall", and tick Pusula Köprü.</p></details>
       <details><summary>Can the phone receive files when the app is closed?</summary><p>Yes. Pusula Köprü runs in the background with a quiet "Pusula Köprü is on" notification, and starts again after a reboot. You can turn this off in Settings.</p></details>
-      <details><summary>How do I turn on the notification mirror?</summary><p>On the phone: Pusula Köprü → Settings → "Send notifications to the PC". Android asks for notification access. If the switch is greyed out: Settings → Apps → Pusula Köprü → ⋮ (top right) → "Allow restricted settings", then try again.</p></details>
+      <details><summary>When is the notification mirror coming?</summary><p>It's ready, but Google Play Protect blocks installing apps from outside the Play Store that ask for notification access. So it's off in the downloadable version for now and will be turned on when Pusula Köprü is on Google Play.</p></details>
+      <details><summary>Google Play Protect blocked the install</summary><p>This shouldn't happen from 0.3.2 on. If you're installing an older version, download the latest from this page. If Play Protect says it doesn't recognise the developer, tap "More details" → "Install anyway".</p></details>
       <details><summary>Is there an iPhone or Mac version?</summary><p>Not yet. Pusula Köprü is for Windows and Android for now.</p></details>
       <details><summary>Why does Windows show a warning?</summary><p>The app isn't digitally signed yet, so Windows may say "Windows protected your PC" on first launch. Click "More info", then "Run anyway".</p></details>
       <details><summary>How does it update?</summary><p>The app tells you when a new version is out. The Android version is always signed with the same OA key, so updates install over the old one and your pairings stay.</p></details>
