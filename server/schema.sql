@@ -70,6 +70,15 @@ CREATE TABLE IF NOT EXISTS session_info (
   device TEXT,
   last_seen TEXT
 );
+-- Tek giriş: bir OA uygulamasının öbürüne verdiği tek kullanımlık kodlar (yalnız özet; 2 dakika geçerli).
+CREATE TABLE IF NOT EXISTS auth_handoff (
+  code TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  app TEXT NOT NULL,
+  created TEXT NOT NULL,
+  expires TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS auth_handoff_user ON auth_handoff (user_id, created);
 -- "Çıkınca haber ver": üyenin haber almak istediği uygulamalar.
 CREATE TABLE IF NOT EXISTS app_notify (
   user_id TEXT NOT NULL,
