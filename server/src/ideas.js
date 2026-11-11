@@ -8,7 +8,7 @@
 import { sessionUserPublic as sessionUser } from './auth.js';
 
 const now = () => new Date().toISOString();
-const APPS = new Set(['pusula', 'radyo', 'harrier', 'site', 'diger']);
+const APPS = new Set(['pusula', 'kopru', 'radyo', 'harrier', 'center', 'site', 'diger']);
 const KINDS = new Set(['hata', 'oneri', 'diger', 'yorum']);
 const PUBLIC = ['open', 'planned', 'progress', 'done'];
 const STATUSES = new Set(['pending', 'open', 'planned', 'progress', 'done', 'rejected']);

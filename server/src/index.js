@@ -5,6 +5,7 @@
  *   POST /v1/report            Uygulama hata raporu (isimsiz, kullanıcı kapatabilir)
  *   GET  /v1/admin/errors      Son hata raporları (yönetici)
  *   GET  /v1/stats             Toplu istatistikler (yalnızca yönetici anahtarıyla)
+ *   /v1/me/devices…, /v1/me/commands…, /v1/announcements  OA Labs Center: cihazlar, uzaktan kurulum, duyurular (center.js)
  *   POST /v1/feedback, GET/POST /v1/ideas, POST /v1/ideas/vote  Geri bildirim ve fikir panosu (ideas.js)
  *   GET  /indir/pusula/{windows|android|zip}  Pusula'nın son sürüm dosyası (GitHub'dan, önbellekli)
  *   GET  /v1/pusula/latest     Son sürüm numarası ve dosya boyutları
@@ -24,6 +25,7 @@
  */
 
 import { sendFeedback, listIdeas, addIdea, voteIdea, adminFeedback, adminIdeas, listReviews, adminReviews } from './ideas.js';
+import { syncDevice, listDevices, removeDevice, addCommand, finishCommand, listAnnouncements, adminAnnouncements } from './center.js';
 import { start, verify, logout, handoff, redeem, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
 
 const APPS = new Set(['radyo']);
@@ -455,6 +457,19 @@ export default {
       }
       if (url.pathname === '/v1/me/avatar' && req.method === 'POST') return send(await setAvatar(req, env));
       if (url.pathname === '/v1/me/avatar/delete' && req.method === 'POST') return send(await deleteAvatar(req, env));
+      if (url.pathname === '/v1/me/devices/sync' && req.method === 'POST') return send(await syncDevice(req, env));
+      if (url.pathname === '/v1/me/devices' && req.method === 'GET') return send(await listDevices(req, env));
+      if (url.pathname === '/v1/me/devices/remove' && req.method === 'POST') return send(await removeDevice(req, env));
+      if (url.pathname === '/v1/me/commands' && req.method === 'POST') return send(await addCommand(req, env));
+      if (url.pathname === '/v1/me/commands/done' && req.method === 'POST') return send(await finishCommand(req, env, false));
+      if (url.pathname === '/v1/me/commands/cancel' && req.method === 'POST') return send(await finishCommand(req, env, true));
+      if (url.pathname === '/v1/announcements' && req.method === 'GET') {
+        return new Response(JSON.stringify(await listAnnouncements(env)), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', ...h } });
+      }
+      if (url.pathname === '/v1/admin/announcements') {
+        if (!isAdmin(req, env)) return json({ ok: false, error: 'yetki' }, 401, h);
+        return json(await adminAnnouncements(req, env), 200, h);
+      }
       if (url.pathname === '/v1/feedback' && req.method === 'POST') {
         const ip = await sha(`${env.PEPPER || 'oa'}:ip:${req.headers.get('CF-Connecting-IP') || ''}`);
         return send(await sendFeedback(req, env, ip));

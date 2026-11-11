@@ -1,0 +1,195 @@
+{
+ "_aciklama": "OA Labs Center uygulama listesi. Center bunu açılışta okur; yeni bir uygulama eklemek için Center'ı güncellemek gerekmez. Android paketleri ayrıca Center deposundaki scripts/android_ayarla.py PACKAGES listesinde olmalı.",
+ "v": 1,
+ "apps": [
+  {
+   "id": "pusula",
+   "name": "Pusula Browser",
+   "state": "yayinda",
+   "repo": "oguzhanaydiin1/oa-tarayici",
+   "icon": "pusula",
+   "page": "https://oalabs.dev/tarayici/",
+   "page_en": "https://oalabs.dev/en/tarayici/",
+   "tagline": "Hızlı, sade, reklamsız tarayıcı. Bilgisayarın ve telefonun eşitlenir.",
+   "tagline_en": "A fast, simple, ad-free browser. Your PC and phone stay in sync.",
+   "features": [
+    "Reklam ve izleyici engelleme; YouTube video reklamlarını atlar",
+    "OA Labs hesabıyla yer imleri, sekmeler, geçmiş ve şifreler iki cihazda",
+    "Başlangıç sayfasında hava, döviz, haber ve hızlı erişim",
+    "Yerleşik OA Radyo, okuma modu, sesli okuma, sonra oku",
+    "Ekran süresi: site başına süre, sınır ve haftalık özet",
+    "Bilgisayarda kenar çubuğu, dikey sekmeler, yan yana görünüm"
+   ],
+   "features_en": [
+    "Blocks ads and trackers; skips YouTube video ads",
+    "Bookmarks, tabs, history and passwords on both devices with your OA Labs account",
+    "Weather, currency, news and quick links on the start page",
+    "Built-in OA Radyo, reader mode, read aloud, read later",
+    "Screen time: time per site, limits and a weekly summary",
+    "On the PC: sidebar, vertical tabs, split view"
+   ],
+   "windows": {
+    "asset": "^Pusula-Kurulum\\.exe$",
+    "key": "{5B0E2B3C-4F1A-4C7E-9A0F-0A1B2C3D4E5F}_is1",
+    "exe": "oa_tarayici.exe",
+    "silent": [
+     "/SILENT",
+     "/SUPPRESSMSGBOXES",
+     "/NORESTART",
+     "/CLOSEAPPLICATIONS"
+    ]
+   },
+   "android": {
+    "asset": "^Pusula-Android\\.apk$",
+    "package": "dev.oalabs.oa_tarayici"
+   }
+  },
+  {
+   "id": "kopru",
+   "name": "Pusula Köprü",
+   "state": "yayinda",
+   "repo": "oguzhanaydiin1/pusula-kopru",
+   "icon": "kopru",
+   "page": "https://oalabs.dev/kopru/",
+   "page_en": "https://oalabs.dev/en/kopru/",
+   "tagline": "Bilgisayarın ile telefonun arasında dosya, fotoğraf, bağlantı ve pano.",
+   "tagline_en": "Files, photos, links and your clipboard between your PC and phone.",
+   "features": [
+    "İki yönde dosya ve fotoğraf; boyut sınırı yok",
+    "Ortak pano ve pano geçmişi",
+    "Telefon bilgisayara fare, klavye ve sunum kumandası olur",
+    "Uzaktayken de çalışır; her şey uçtan uca şifreli",
+    "Fotoğraf yedeği ve telefonun dosyalarına bilgisayardan göz atma",
+    "Hesap gerekmez, veri toplanmaz"
+   ],
+   "features_en": [
+    "Files and photos both ways; no size limit",
+    "Shared clipboard and clipboard history",
+    "Your phone becomes a mouse, keyboard and presentation remote",
+    "Works when you are away too; everything end-to-end encrypted",
+    "Photo backup and browsing your phone’s files from the PC",
+    "No account needed, no data collected"
+   ],
+   "windows": {
+    "asset": "^Pusula-Kopru-Kurulum\\.exe$",
+    "key": "{8C1F4E2A-6B3D-4A57-9E21-3F5D7C9A0B14}_is1",
+    "exe": "pusula_kopru.exe",
+    "silent": [
+     "/SILENT",
+     "/SUPPRESSMSGBOXES",
+     "/NORESTART",
+     "/CLOSEAPPLICATIONS"
+    ]
+   },
+   "android": {
+    "asset": "^Pusula-Kopru-Android\\.apk$",
+    "package": "dev.oalabs.pusula_kopru"
+   }
+  },
+  {
+   "id": "radyo",
+   "name": "OA Radyo",
+   "state": "yayinda",
+   "repo": "oguzhanaydiin1/radyo-app",
+   "icon": "radyo",
+   "color": "#F2A541",
+   "ink": "#14110A",
+   "page": "https://oalabs.dev/radyo/",
+   "page_en": "https://oalabs.dev/en/radyo/",
+   "tagline": "Türkiye’nin ve dünyanın radyoları tek uygulamada.",
+   "tagline_en": "Turkish and international radio stations in one app.",
+   "features": [
+    "Türe, şehre ve en çok dinlenenlere göre keşfet",
+    "Çalan şarkının adı; tek tıkla YouTube ya da Spotify",
+    "Kayıt, zamanlı kayıt ve radyolu alarm",
+    "Ekolayzır ve hazır ses ayarları",
+    "Favori klasörleri ve dinleme istatistikleri",
+    "Pencereyi kapatınca saatin yanında çalmaya devam eder"
+   ],
+   "features_en": [
+    "Browse by genre, city and most played",
+    "See the song title; open it in YouTube or Spotify",
+    "Recording, scheduled recording and radio alarm",
+    "Equaliser with presets",
+    "Favourite folders and listening stats",
+    "Keeps playing next to the clock when you close the window"
+   ],
+   "shots": [
+    "https://oalabs.dev/radyo/img/app-kesfet.webp",
+    "https://oalabs.dev/radyo/img/app-favoriler.webp",
+    "https://oalabs.dev/radyo/img/app-ekolayzir.webp",
+    "https://oalabs.dev/radyo/img/app-istatistik.webp",
+    "https://oalabs.dev/radyo/img/app-acik-tema.webp"
+   ],
+   "windows": {
+    "asset": "^Radyo-Setup\\.exe$",
+    "displayName": "OA Radyo",
+    "exe": "Radyo.exe",
+    "silent": [
+     "/S"
+    ]
+   }
+  },
+  {
+   "id": "harrier",
+   "name": "Harrier Cleaner",
+   "state": "beta",
+   "repo": "oguzhanaydiin1/cihaz_bakim",
+   "icon": "harrier",
+   "color": "#1E3A8A",
+   "page": "https://oalabs.dev/harrier/",
+   "page_en": "https://oalabs.dev/en/harrier/",
+   "tagline": "Bilgisayarını derli toplu ve hızlı tutar.",
+   "tagline_en": "Keeps your PC tidy and fast.",
+   "features": [
+    "Gereksiz ve kopya dosyaları bulur",
+    "Disk haritası: en çok yer kaplayan klasörler",
+    "Başlangıç programları ve uygulama kaldırıcı",
+    "Canlı sistem bilgisi, pil ve disk sağlığı",
+    "Fotoğraf küçültücü ve konum bilgisi temizleyici",
+    "Onaysız silme yok: silinenler önce Geri Dönüşüm Kutusu’na"
+   ],
+   "features_en": [
+    "Finds junk and duplicate files",
+    "Disk map: the folders taking the most space",
+    "Startup apps and an app uninstaller",
+    "Live system info, battery and disk health",
+    "Photo shrinker and location data cleaner",
+    "Nothing deleted without asking: it goes to the Recycle Bin first"
+   ],
+   "windows": {
+    "asset": "^HarrierCleaner-Setup-.*\\.exe$",
+    "key": "{8C3B2C1E-6F1A-4C55-9E2E-6B8E0A4D1F21}_is1",
+    "exe": "harrier_cleaner.exe",
+    "silent": [
+     "/SILENT",
+     "/SUPPRESSMSGBOXES",
+     "/NORESTART",
+     "/CLOSEAPPLICATIONS"
+    ]
+   }
+  },
+  {
+   "id": "score",
+   "name": "OA Score",
+   "state": "yakinda",
+   "color": "#5BC48C",
+   "ink": "#0F2A1C",
+   "page": "https://oalabs.dev/#uygulamalar",
+   "page_en": "https://oalabs.dev/en/#uygulamalar",
+   "tagline": "Canlı skorlar ve maç haberleri.",
+   "tagline_en": "Live scores and match news."
+  },
+  {
+   "id": "barkod",
+   "name": "OA Barkod",
+   "state": "yakinda",
+   "color": "#6EA8FE",
+   "ink": "#0E1A30",
+   "page": "https://oalabs.dev/#uygulamalar",
+   "page_en": "https://oalabs.dev/en/#uygulamalar",
+   "tagline": "Hazırlanıyor.",
+   "tagline_en": "Coming soon."
+  }
+ ]
+}
