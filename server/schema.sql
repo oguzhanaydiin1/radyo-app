@@ -175,3 +175,40 @@ CREATE TABLE IF NOT EXISTS site_geo (
   country TEXT,
   PRIMARY KEY (day, visitor)
 );
+
+-- OA Labs Center: hesaba bağlı cihazlar ve kurulu OA uygulamaları (apps: [{id, version}] JSON).
+CREATE TABLE IF NOT EXISTS center_devices (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  platform TEXT NOT NULL,
+  apps TEXT NOT NULL DEFAULT '[]',
+  updated TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS center_devices_user ON center_devices (user_id, updated);
+
+-- OA Labs Center: bir cihazdan öbürüne "şu uygulamayı kur" istekleri (state: pending, done, failed, cancelled).
+CREATE TABLE IF NOT EXISTS center_commands (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  device_id TEXT NOT NULL,
+  from_device TEXT,
+  app TEXT NOT NULL,
+  created TEXT NOT NULL,
+  state TEXT NOT NULL DEFAULT 'pending',
+  finished TEXT
+);
+CREATE INDEX IF NOT EXISTS center_commands_device ON center_commands (user_id, device_id, state);
+
+-- OA Labs Center'da ve bildirimde görünen duyurular (yönetim panelinden).
+CREATE TABLE IF NOT EXISTS announcements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created TEXT NOT NULL,
+  app TEXT,
+  title TEXT NOT NULL,
+  body TEXT,
+  title_en TEXT,
+  body_en TEXT,
+  url TEXT,
+  active INTEGER NOT NULL DEFAULT 1
+);

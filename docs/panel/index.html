@@ -166,6 +166,21 @@
         <table><tbody id="idea-list"></tbody></table>
       </section>
 
+      <section class="card" aria-labelledby="ca" id="announce">
+        <h2 id="ca">OA Labs Center duyuruları</h2>
+        <p class="note" style="margin:0 0 12px">Buraya eklenen duyuru OA Labs Center’ın ana sayfasında görünür; Windows’ta ve Android’de bildirim olarak da gelir. İngilizce metin boşsa İngilizce kullanan herkese Türkçesi gösterilir. <span id="an-devices"></span></p>
+        <form id="an-new" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin:0 0 12px">
+          <input name="title" placeholder="Başlık (örn. OA Score çıktı)" maxlength="120" required>
+          <input name="title_en" placeholder="İngilizce başlık (isteğe bağlı)" maxlength="120">
+          <textarea name="body" placeholder="Kısa açıklama" maxlength="600" rows="2"></textarea>
+          <textarea name="body_en" placeholder="İngilizce açıklama (isteğe bağlı)" maxlength="600" rows="2"></textarea>
+          <select name="app"><option value="">Genel</option><option value="pusula">Pusula Browser</option><option value="kopru">Pusula Köprü</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="score">OA Score</option><option value="barkod">OA Barkod</option><option value="center">OA Labs Center</option></select>
+          <input name="url" placeholder="Bağlantı (https://…, isteğe bağlı)" maxlength="300">
+          <div><button class="btn small" type="submit">Duyuruyu yayımla</button></div>
+        </form>
+        <table><tbody id="an-list"></tbody></table>
+      </section>
+
       <section class="card" aria-labelledby="c8" id="errors">
         <h2 id="c8">Harrier Cleaner hata raporları</h2>
         <p class="note" id="err-info">Son 7 günde en sık görülen hatalar. Raporlar isimsizdir; kullanıcı adı ve klasör yolları uygulamada temizlenir.</p>
@@ -314,6 +329,7 @@
         loadUsers();
         loadSite();
         loadFeedback();
+        loadAnnounce();
         $('#updated').textContent = 'Güncellendi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
         $('#status').innerHTML = `<span class="err">${esc(err.message === 'Failed to fetch' ? 'Sunucuya ulaşılamadı.' : err.message)}</span>`;
@@ -400,6 +416,33 @@
       if (f.elements.title.value.trim().length < 5) return;
       try { await call('/v1/admin/ideas', { method: 'POST', body: JSON.stringify({ action: 'create', title: f.elements.title.value, app: f.elements.app.value, status: f.elements.status.value }) }); f.elements.title.value = ''; loadFeedback(); }
       catch (err) { alert(err.message); }
+    });
+
+    // OA Labs Center duyuruları
+    async function loadAnnounce(post) {
+      try {
+        const r = await call('/v1/admin/announcements', post ? { method: 'POST', body: JSON.stringify(post) } : undefined);
+        const dev = Object.fromEntries((r.devices || []).map((x) => [x.platform, x.n]));
+        $('#an-devices').textContent = `Son 30 günde hesabıyla OA Labs Center kullanan: Windows ${fmt(dev.windows || 0)}, Android ${fmt(dev.android || 0)} cihaz.`;
+        const dt = (x) => new Date(x).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        $('#an-list').innerHTML = r.items.length ? r.items.map((x) => `<tr><td style="white-space:nowrap">${dt(x.created)}</td><td><b>${esc(x.title)}</b>${x.body ? `<br><span class="note">${esc(x.body)}</span>` : ''}${x.url ? `<br><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.url)}</a>` : ''}</td><td>${x.active ? 'Yayında' : '<span class="note">Kapalı</span>'}</td>
+          <td><div class="msg-actions"><button type="button" data-an-toggle="${x.id}" data-on="${x.active ? 0 : 1}">${x.active ? 'Kapat' : 'Yeniden yayımla'}</button><button type="button" class="danger" data-an-del="${x.id}">Sil</button></div></td></tr>`).join('') : '<tr><td class="note">Henüz duyuru yok.</td></tr>';
+      } catch (err) {
+        $('#an-list').innerHTML = `<tr><td class="err">${esc(err.message)}</td></tr>`;
+      }
+    }
+    $('#an-new').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const f = e.target.elements;
+      if (f.title.value.trim().length < 3) return;
+      await loadAnnounce({ action: 'create', title: f.title.value, title_en: f.title_en.value, body: f.body.value, body_en: f.body_en.value, app: f.app.value, url: f.url.value.trim() });
+      e.target.reset();
+    });
+    $('#an-list').addEventListener('click', (e) => {
+      const t = e.target.closest('button');
+      if (!t) return;
+      if (t.dataset.anToggle) loadAnnounce({ action: 'toggle', id: Number(t.dataset.anToggle), active: t.dataset.on === '1' });
+      if (t.dataset.anDel && confirm('Duyuru silinsin mi?')) loadAnnounce({ action: 'delete', id: Number(t.dataset.anDel) });
     });
 
     async function loadErrors() {

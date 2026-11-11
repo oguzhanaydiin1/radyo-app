@@ -400,6 +400,9 @@ async function removeUser(env, id) {
     env.DB.prepare('DELETE FROM sessions WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM app_notify WHERE user_id = ?1').bind(id),
     env.DB.prepare('DELETE FROM user_sync WHERE user_id = ?1').bind(id),
+    env.DB.prepare('DELETE FROM center_devices WHERE user_id = ?1').bind(id),
+    env.DB.prepare('DELETE FROM center_commands WHERE user_id = ?1').bind(id),
+    env.DB.prepare('DELETE FROM auth_handoff WHERE user_id = ?1').bind(id),
     // Fikir panosu: oyları silinir, yazdığı fikirler isimsiz kalır
     env.DB.prepare('DELETE FROM idea_votes WHERE user_id = ?1').bind(id),
     env.DB.prepare('UPDATE ideas SET votes = (SELECT COUNT(*) FROM idea_votes v WHERE v.idea_id = ideas.id), user_id = CASE WHEN user_id = ?1 THEN NULL ELSE user_id END').bind(id),
