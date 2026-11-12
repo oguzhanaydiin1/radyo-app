@@ -96,6 +96,17 @@
           <div><h3 style="margin: 0 0 6px; font-size: 15px">Cihaz ve dil</h3><table><tbody id="s-devices"></tbody></table></div>
           <div><h3 style="margin: 0 0 6px; font-size: 15px">Ülkeler</h3><table><tbody id="s-countries"></tbody></table></div>
         </div>
+        <h3 style="margin: 22px 0 6px; font-size: 17px">İndirmeler (siteden)</h3>
+        <div class="tiles">
+          <div class="tile"><span>Bugün indirme</span><b id="d-today">—</b></div>
+          <div class="tile"><span>Bu dönemde indirme</span><b id="d-total">—</b></div>
+        </div>
+        <div class="chart" id="ch-dl" style="height: 100px; margin-top: 10px"></div><div class="axis" id="ax-dl"></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 16px">
+          <div><h3 style="margin: 0 0 6px; font-size: 15px">Hangi dosya</h3><table><tbody id="d-files"></tbody></table></div>
+          <div><h3 style="margin: 0 0 6px; font-size: 15px">Hangi ülkeden</h3><table><tbody id="d-countries"></tbody></table></div>
+        </div>
+        <p class="note" style="margin-top: 12px">Sitedeki “İndir” düğmeleri sayılır (aynı kişi aynı gün aynı dosyayı bir kez). Uygulamaların kendi kendini güncellemesi ve GitHub'dan doğrudan indirmeler burada yok. Senin indirmelerin de sayılır. Sayım 12 Kasım 2026'da başladı.</p>
         <p class="note" style="margin-top: 12px">Çerezsiz sayılır; kişi tanınmaz. Ülke, bağlantıdan Cloudflare'in verdiği koddur; IP adresi saklanmaz; ülke sayımı 10 Kasım 2026'da başladı. Aynı kişi aynı gün içinde bir kez sayılır. Sayaç 9 Kasım 2026'da kuruldu; öncesi yok.</p>
       </section>
 
@@ -357,6 +368,15 @@
         let dn = null; try { dn = new Intl.DisplayNames(['tr'], { type: 'region' }); } catch {}
         const flag = (c) => c ? String.fromCodePoint(...[...c].map((ch) => 0x1F1A5 + ch.charCodeAt(0))) + ' ' : '';
         $('#s-countries').innerHTML = tr(r.countries || [], (x) => x.country ? flag(x.country) + ((dn && dn.of(x.country)) || x.country) : 'Bilinmiyor', (x) => x.visitors);
+        const d = r.downloads || { byFile: [], daily: [], countries: [] };
+        $('#d-total').textContent = fmt(d.byFile.reduce((a, x) => a + x.n, 0));
+        $('#d-today').textContent = fmt(d.byFile.reduce((a, x) => a + (x.today || 0), 0));
+        const dv = Object.fromEntries(d.daily.map((x) => [x.day, x.n]));
+        bars($('#ch-dl'), $('#ax-dl'), fill(r.from, today).map((day) => ({ d: day, v: dv[day] || 0 })), (n) => fmt(n) + ' indirme');
+        const appName = { pusula: 'Pusula Browser', kopru: 'Pusula Köprü' };
+        const kindName = { windows: 'Windows kurulum', android: 'Android (APK)', zip: 'Windows zip' };
+        $('#d-files').innerHTML = tr(d.byFile, (x) => (appName[x.app] || x.app) + ' · ' + (kindName[x.kind] || x.kind), (x) => x.n);
+        $('#d-countries').innerHTML = tr(d.countries, (x) => x.country ? flag(x.country) + ((dn && dn.of(x.country)) || x.country) : 'Bilinmiyor', (x) => x.n);
       } catch (err) {
         $('#s-livepages').innerHTML = `<span class="err">${esc(err.message)}</span>`;
       }

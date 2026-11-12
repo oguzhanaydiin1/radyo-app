@@ -189,6 +189,16 @@ async function appDownload(app, kind, ctx) {
   return new Response(a, { headers });
 }
 
+// İndirme sayacı: botlar ve yarım kalan indirmenin devamı (Range: bytes=N-, N>0) sayılmaz.
+async function countDownload(req, env, app, kind) {
+  if (BOT_RE.test(req.headers.get('User-Agent') || '')) return;
+  const range = req.headers.get('Range');
+  if (range && !/^bytes=0-/.test(range)) return;
+  const visitor = await siteVisitor(req, env);
+  await env.DB.prepare('INSERT OR IGNORE INTO download_daily (day, app, kind, visitor, country) VALUES (?1, ?2, ?3, ?4, ?5)')
+    .bind(today(), app, kind, visitor, siteCountry(req)).run();
+}
+
 // ---------- Site ziyaretçi sayacı (oalabs.dev) ----------
 // Çerez kullanılmaz. Ziyaretçi, IP ve tarayıcı bilgisinin o güne özel tuzlanmış özetiyle sayılır
 // (ham IP saklanmaz, ertesi gün aynı kişi tanınamaz). Botlar sayılmaz.
@@ -259,7 +269,7 @@ async function siteLive(req, env, leave) {
 async function adminSite(url, env) {
   const days = Math.min(400, Math.max(1, parseInt(url.searchParams.get('days'), 10) || 30));
   const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
-  const [daily, views, total, pages, sources, langs, devices, countries] = await env.DB.batch([
+  const [daily, views, total, pages, sources, langs, devices, countries, dls, dlDaily, dlCountries] = await env.DB.batch([
     env.DB.prepare('SELECT day, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
     env.DB.prepare('SELECT day, SUM(views) AS views FROM site_daily WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
     env.DB.prepare('SELECT COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1').bind(from),
@@ -268,6 +278,9 @@ async function adminSite(url, env) {
     env.DB.prepare('SELECT lang, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY lang ORDER BY visitors DESC').bind(from),
     env.DB.prepare('SELECT device, COUNT(*) AS visitors FROM site_visitors WHERE day >= ?1 GROUP BY device ORDER BY visitors DESC').bind(from),
     env.DB.prepare('SELECT country, COUNT(*) AS visitors FROM site_geo WHERE day >= ?1 GROUP BY country ORDER BY visitors DESC LIMIT 30').bind(from),
+    env.DB.prepare('SELECT app, kind, COUNT(*) AS n, SUM(day = ?2) AS today FROM download_daily WHERE day >= ?1 GROUP BY app, kind ORDER BY n DESC').bind(from, today()),
+    env.DB.prepare('SELECT day, COUNT(*) AS n FROM download_daily WHERE day >= ?1 GROUP BY day ORDER BY day').bind(from),
+    env.DB.prepare('SELECT country, COUNT(*) AS n FROM download_daily WHERE day >= ?1 GROUP BY country ORDER BY n DESC LIMIT 15').bind(from),
   ]);
   const stub = env.SITELIVE.get(env.SITELIVE.idFromName('oalabs.dev'));
   const live = await (await stub.fetch('https://live/admin')).json();
@@ -276,6 +289,7 @@ async function adminSite(url, env) {
     visitors: (total.results[0] && total.results[0].visitors) || 0,
     daily: daily.results, views: views.results, pages: pages.results,
     sources: sources.results, langs: langs.results, devices: devices.results, countries: countries.results,
+    downloads: { byFile: dls.results, daily: dlDaily.results, countries: dlCountries.results },
     live,
   };
 }
@@ -404,7 +418,10 @@ export default {
       }
 
       const dl = url.pathname.match(/^\/indir\/(pusula|kopru)\/(windows|android|zip)$/);
-      if (dl && (req.method === 'GET' || req.method === 'HEAD')) return await appDownload(dl[1], dl[2], ctx);
+      if (dl && (req.method === 'GET' || req.method === 'HEAD')) {
+        if (req.method === 'GET') ctx.waitUntil(countDownload(req, env, dl[1], dl[2]).catch(() => {}));
+        return await appDownload(dl[1], dl[2], ctx);
+      }
       const lt = url.pathname.match(/^\/v1\/(pusula|kopru)\/latest$/);
       if (lt && req.method === 'GET') {
         const i = await appLatest(lt[1], ctx);
