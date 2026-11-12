@@ -131,6 +131,47 @@
    }
   },
   {
+   "id": "terazi",
+   "name": "Terazi",
+   "state": "beta",
+   "repo": "oguzhanaydiin1/oa-terazi",
+   "icon": "terazi",
+   "color": "#F2A541",
+   "page": "https://oalabs.dev/",
+   "page_en": "https://oalabs.dev/en/",
+   "tagline": "Gelir gider takibi: bu ay ne kaldı, günde ne kadar harcayabilirsin.",
+   "tagline_en": "Income and expense tracking: what's left this month and what you can spend per day.",
+   "features": [
+    "Gelir ve gider kaydı; ay sonuna kadar günde harcanabilecek tutar",
+    "Ödeme takvimi: kredi, kira, abonelik bir kez eklenir, her ay kendiliğinden gelir",
+    "Ödeme günü \"Ödendi mi?\" sorusu ve bildirim",
+    "Kategori bütçeleri ve aylık raporlar",
+    "Veriler yalnızca cihazında"
+   ],
+   "features_en": [
+    "Log income and expenses; see what you can spend per day until month end",
+    "Payment calendar: add a loan, rent or subscription once and it repeats every month",
+    "\"Paid yet?\" prompt and notification on the payment day",
+    "Category budgets and monthly reports",
+    "Your data stays on your device"
+   ],
+   "windows": {
+    "asset": "^Terazi-Kurulum\\.exe$",
+    "key": "{D99E23B6-9443-4E07-8548-3B2C66E92CFF}_is1",
+    "exe": "terazi.exe",
+    "silent": [
+     "/SILENT",
+     "/SUPPRESSMSGBOXES",
+     "/NORESTART",
+     "/CLOSEAPPLICATIONS"
+    ]
+   },
+   "android": {
+    "asset": "^Terazi-Android\\.apk$",
+    "package": "dev.oalabs.terazi"
+   }
+  },
+  {
    "id": "harrier",
    "name": "Harrier Cleaner",
    "state": "beta",
