@@ -19,7 +19,7 @@ import { sessionUserPublic as sessionUser } from './auth.js';
 const ok = (data, status = 200) => ({ status, data: { ok: status < 400, ...data } });
 const now = () => new Date().toISOString();
 const ago = (ms) => new Date(Date.now() - ms).toISOString();
-const APPS = new Set(['center', 'pusula', 'kopru', 'radyo', 'harrier', 'score', 'barkod']);
+const APPS = new Set(['center', 'pusula', 'kopru', 'radyo', 'harrier', 'terazi', 'score']);
 const PLATFORMS = new Set(['windows', 'android']);
 const ID_RE = /^[0-9a-f]{32}$/;
 const txt = (v, max) => String(v ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max);

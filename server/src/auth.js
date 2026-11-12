@@ -47,7 +47,7 @@ async function hash(env, text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${env.PEPPER || 'oa'}:auth:${text}`));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
-const NOTIFY_APPS = new Set(['score', 'barkod', 'radyo-android', 'harrier']);
+const NOTIFY_APPS = new Set(['score', 'radyo-android', 'harrier']);
 
 // Tarayıcı bilgisinden kısa bir cihaz adı: "Chrome · Windows"
 function deviceName(req) {
@@ -202,7 +202,7 @@ export async function verify(req, env, secure) {
 // (OA Labs Center ile Pusula arasında). Kod tek kullanımlıktır, 2 dakika geçerlidir ve yalnız özeti tutulur.
 // Yeni uygulama kendi oturumunu alır: cihaz listesinde ayrı görünür, ayrı çıkış yapılabilir.
 
-const HANDOFF_APPS = new Set(['center', 'pusula', 'kopru', 'radyo', 'harrier', 'score', 'barkod']);
+const HANDOFF_APPS = new Set(['center', 'pusula', 'kopru', 'radyo', 'harrier', 'terazi', 'score']);
 
 export async function handoff(req, env) {
   const u = await sessionUser(req, env);

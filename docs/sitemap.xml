@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://oalabs.dev/</loc><lastmod>2026-11-02</lastmod>
+  <url><loc>https://oalabs.dev/</loc><lastmod>2026-11-12</lastmod>
     <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/"/></url>
-  <url><loc>https://oalabs.dev/en/</loc><lastmod>2026-11-02</lastmod>
+  <url><loc>https://oalabs.dev/en/</loc><lastmod>2026-11-12</lastmod>
     <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/"/></url>
   <url><loc>https://oalabs.dev/radyo/</loc><lastmod>2026-11-02</lastmod>
     <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/radyo/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/radyo/"/></url>
@@ -12,6 +12,14 @@
     <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/kopru/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/kopru/"/></url>
   <url><loc>https://oalabs.dev/en/kopru/</loc><lastmod>2026-11-10</lastmod>
     <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/kopru/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/kopru/"/></url>
+  <url><loc>https://oalabs.dev/center/</loc><lastmod>2026-11-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/center/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/center/"/></url>
+  <url><loc>https://oalabs.dev/en/center/</loc><lastmod>2026-11-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/center/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/center/"/></url>
+  <url><loc>https://oalabs.dev/terazi/</loc><lastmod>2026-11-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/terazi/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/terazi/"/></url>
+  <url><loc>https://oalabs.dev/en/terazi/</loc><lastmod>2026-11-12</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/terazi/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/terazi/"/></url>
   <url><loc>https://oalabs.dev/tarayici/</loc><lastmod>2026-11-09</lastmod>
     <xhtml:link rel="alternate" hreflang="tr" href="https://oalabs.dev/tarayici/"/><xhtml:link rel="alternate" hreflang="en" href="https://oalabs.dev/en/tarayici/"/></url>
   <url><loc>https://oalabs.dev/en/tarayici/</loc><lastmod>2026-11-09</lastmod>

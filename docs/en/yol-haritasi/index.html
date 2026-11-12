@@ -119,7 +119,7 @@
   <script src="/sayac.js" defer></script>
   <script>
   (function () {
-    var T = {"empty": {"progress": "Nothing here right now.", "planned": "Nothing planned yet.", "done": "Released items will show up here."}, "votes": "votes", "apps": {"pusula": "Pusula Browser", "radyo": "OA Radyo", "harrier": "Harrier Cleaner", "site": "Website", "diger": "Other"}};
+    var T = {"empty": {"progress": "Nothing here right now.", "planned": "Nothing planned yet.", "done": "Released items will show up here."}, "votes": "votes", "apps": {"center": "OA Labs Center", "pusula": "Pusula Browser", "kopru": "Pusula Köprü", "radyo": "OA Radyo", "terazi": "Terazi", "harrier": "Harrier Cleaner", "site": "Website", "diger": "Other"}};
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     fetch('https://api.oalabs.dev/v1/ideas', { credentials: 'include' }).then(function (r) { return r.json(); }).then(function (r) {
       if (!r || !r.ok) return;

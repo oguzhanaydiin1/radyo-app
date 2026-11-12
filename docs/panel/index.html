@@ -170,7 +170,7 @@
         <h3 style="margin:22px 0 6px;font-size:15px">Fikirler ve yol haritası</h3>
         <form id="idea-new" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px">
           <input name="title" placeholder="Yol haritasına madde ekle (başlık)" maxlength="120" style="flex:1 1 260px">
-          <select name="app"><option value="pusula">Pusula</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier</option><option value="site">Site</option><option value="diger">Diğer</option></select>
+          <select name="app"><option value="center">Center</option><option value="pusula">Pusula</option><option value="kopru">Köprü</option><option value="radyo">OA Radyo</option><option value="terazi">Terazi</option><option value="harrier">Harrier</option><option value="site">Site</option><option value="diger">Diğer</option></select>
           <select name="status"><option value="planned">Planlandı</option><option value="progress">Yapılıyor</option><option value="open">Oylamada</option><option value="done">Yayında</option></select>
           <button class="btn small" type="submit">Ekle</button>
         </form>
@@ -185,7 +185,7 @@
           <input name="title_en" placeholder="İngilizce başlık (isteğe bağlı)" maxlength="120">
           <textarea name="body" placeholder="Kısa açıklama" maxlength="600" rows="2"></textarea>
           <textarea name="body_en" placeholder="İngilizce açıklama (isteğe bağlı)" maxlength="600" rows="2"></textarea>
-          <select name="app"><option value="">Genel</option><option value="pusula">Pusula Browser</option><option value="kopru">Pusula Köprü</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="score">OA Score</option><option value="barkod">OA Barkod</option><option value="center">OA Labs Center</option></select>
+          <select name="app"><option value="">Genel</option><option value="pusula">Pusula Browser</option><option value="kopru">Pusula Köprü</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="score">OA Score</option><option value="terazi">Terazi</option><option value="center">OA Labs Center</option></select>
           <input name="url" placeholder="Bağlantı (https://…, isteğe bağlı)" maxlength="300">
           <div><button class="btn small" type="submit">Duyuruyu yayımla</button></div>
         </form>
@@ -290,7 +290,7 @@
         $('#m-announce').textContent = fmt(r.counts.announce);
         const nt = r.notify || {};
         $('#m-note').textContent = (r.mailEnabled ? '' : 'E-posta gönderimi kapalı: Resend anahtarı eklenene kadar kimse üye olamaz. ')
-          + `“Çıkınca haber ver”: OA Radyo Android ${fmt(nt['radyo-android'] || 0)} kişi, OA Score ${fmt(nt.score || 0)} kişi, OA Barkod ${fmt(nt.barkod || 0)} kişi, Harrier Cleaner ${fmt(nt.harrier || 0)} kişi.`;
+          + `“Çıkınca haber ver”: OA Radyo Android ${fmt(nt['radyo-android'] || 0)} kişi, OA Score ${fmt(nt.score || 0)} kişi, Harrier Cleaner ${fmt(nt.harrier || 0)} kişi.`;
         const today = new Date().toISOString().slice(0, 10);
         const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
         const n = Object.fromEntries(r.daily.map((x) => [x.day, x.n]));
@@ -358,7 +358,7 @@
         $('#s-views').textContent = fmt(r.views.reduce((a, x) => a + x.views, 0));
         showLive(r.live);
         bars($('#ch-site'), $('#ax-site'), fill(r.from, today).map((d) => ({ d, v: v[d] || 0 })), (n) => fmt(n) + ' ziyaretçi');
-        const pageName = (p) => ({ '/': 'Ana sayfa', '/en/': 'Ana sayfa (EN)', '/tarayici/': 'Pusula Browser', '/en/tarayici/': 'Pusula Browser (EN)', '/radyo/': 'OA Radyo', '/en/radyo/': 'OA Radyo (EN)', '/harrier/': 'Harrier Cleaner', '/en/harrier/': 'Harrier Cleaner (EN)', '/yenilikler/': 'Yenilikler', '/yardim/': 'Yardım', '/gizlilik/': 'Gizlilik', '/dinle/': 'Dinle', '/uye/': 'Üyelik', '/hesabim/': 'Hesabım' })[p] || p;
+        const pageName = (p) => ({ '/': 'Ana sayfa', '/en/': 'Ana sayfa (EN)', '/tarayici/': 'Pusula Browser', '/en/tarayici/': 'Pusula Browser (EN)', '/radyo/': 'OA Radyo', '/en/radyo/': 'OA Radyo (EN)', '/harrier/': 'Harrier Cleaner', '/en/harrier/': 'Harrier Cleaner (EN)', '/kopru/': 'Pusula Köprü', '/en/kopru/': 'Pusula Köprü (EN)', '/terazi/': 'Terazi', '/en/terazi/': 'Terazi (EN)', '/center/': 'OA Labs Center', '/en/center/': 'OA Labs Center (EN)', '/yenilikler/': 'Yenilikler', '/yardim/': 'Yardım', '/gizlilik/': 'Gizlilik', '/dinle/': 'Dinle', '/uye/': 'Üyelik', '/hesabim/': 'Hesabım' })[p] || p;
         const tr = (list, label, val) => list.length ? list.map((x) => `<tr><td>${esc(label(x))}</td><td class="num">${fmt(val(x))}</td></tr>`).join('') : '<tr><td class="note">Henüz veri yok.</td></tr>';
         $('#s-pages').innerHTML = tr(r.pages.slice(0, 12), (x) => pageName(x.path), (x) => x.views);
         $('#s-sources').innerHTML = tr(r.sources, (x) => ({ 'doğrudan': 'Doğrudan / uygulama', google: 'Google', bing: 'Bing', sosyal: 'Sosyal medya' })[x.source] || x.source || '—', (x) => x.visitors);
@@ -373,7 +373,7 @@
         $('#d-today').textContent = fmt(d.byFile.reduce((a, x) => a + (x.today || 0), 0));
         const dv = Object.fromEntries(d.daily.map((x) => [x.day, x.n]));
         bars($('#ch-dl'), $('#ax-dl'), fill(r.from, today).map((day) => ({ d: day, v: dv[day] || 0 })), (n) => fmt(n) + ' indirme');
-        const appName = { pusula: 'Pusula Browser', kopru: 'Pusula Köprü' };
+        const appName = { pusula: 'Pusula Browser', kopru: 'Pusula Köprü', terazi: 'Terazi', center: 'OA Labs Center' };
         const kindName = { windows: 'Windows kurulum', android: 'Android (APK)', zip: 'Windows zip' };
         $('#d-files').innerHTML = tr(d.byFile, (x) => (appName[x.app] || x.app) + ' · ' + (kindName[x.kind] || x.kind), (x) => x.n);
         $('#d-countries').innerHTML = tr(d.countries, (x) => x.country ? flag(x.country) + ((dn && dn.of(x.country)) || x.country) : 'Bilinmiyor', (x) => x.n);
@@ -390,7 +390,7 @@
 
     // Geri bildirim ve fikir panosu
     const ST = { pending: 'Onay bekliyor', open: 'Oylamada', planned: 'Planlandı', progress: 'Yapılıyor', done: 'Yayında', rejected: 'Reddedildi' };
-    const APP = { pusula: 'Pusula', radyo: 'OA Radyo', harrier: 'Harrier', site: 'Site', diger: 'Diğer' };
+    const APP = { center: 'Center', pusula: 'Pusula', kopru: 'Köprü', radyo: 'OA Radyo', terazi: 'Terazi', harrier: 'Harrier', site: 'Site', diger: 'Diğer' };
     const KIND = { hata: 'Hata', oneri: 'Öneri', diger: 'Diğer' };
     const when2 = (d) => new Date(d).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
     async function loadFeedback() {

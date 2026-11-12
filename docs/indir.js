@@ -8,6 +8,8 @@
   var APPS = {
     'https://api.oalabs.dev/indir/pusula/android': { qr: '/img/qr-pusula-android.svg', name: 'Pusula Browser' },
     'https://api.oalabs.dev/indir/kopru/android': { qr: '/img/qr-kopru-android.svg', name: 'Pusula Köprü' },
+    'https://api.oalabs.dev/indir/terazi/android': { qr: '/img/qr-terazi-android.svg', name: 'Terazi' },
+    'https://api.oalabs.dev/indir/center/android': { qr: '/img/qr-center-android.svg', name: 'OA Labs Center' },
   };
   var ua = navigator.userAgent || '';
   if (/Android/i.test(ua)) return;

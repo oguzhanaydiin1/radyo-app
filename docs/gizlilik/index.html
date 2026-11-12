@@ -56,11 +56,11 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 12 Kasım 2026 (indirme sayacı eklendi; 10 Kasım: ziyaretçi sayacına ülke; 9 Kasım: Pusula Browser, site ziyaretçi sayacı, geri bildirim ve yorumlar) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), OA Radyo (Windows), Harrier Cleaner ve oalabs.dev</p>
+      <p class="date">Son güncelleme: 12 Kasım 2026 (Pusula Köprü, Terazi ve OA Labs Center eklendi; indirme sayacı; 10 Kasım: ziyaretçi sayacına ülke; 9 Kasım: Pusula Browser, site ziyaretçi sayacı, geri bildirim ve yorumlar) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center ve oalabs.dev</p>
 
       <p class="short">Kısaca: OA Labs uygulamaları reklam içermez, seni izlemez ve kullanmak için hesap istemez. Verilerinin çoğu kendi cihazında kalır. Sunucumuza yalnızca senin açtığın özelliklerin (hesapla eşitleme, sohbet, izin verirsen isimsiz kullanım sayıları) gerektirdiği bilgiler ve isimsiz hata raporları gider. Her uygulamada neyin nereye gittiği aşağıda ayrı ayrı yazılı.</p>
 
-      <p class="toc">Bu sayfada: <a href="#pusula">Pusula Browser</a> · <a href="#radyo">OA Radyo</a> · <a href="#harrier">Harrier Cleaner</a> · <a href="#site">oalabs.dev ve OA Labs hesabı</a></p>
+      <p class="toc">Bu sayfada: <a href="#pusula">Pusula Browser</a> · <a href="#radyo">OA Radyo</a> · <a href="#harrier">Harrier Cleaner</a> · <a href="#kopru">Pusula Köprü</a> · <a href="#terazi">Terazi</a> · <a href="#center">OA Labs Center</a> · <a href="#site">oalabs.dev ve OA Labs hesabı</a></p>
 
       <h2>Toplamadığımız şeyler</h2>
       <ul>
@@ -137,6 +137,37 @@
       </ul>
       <p>Her internet bağlantısında olduğu gibi bağlanılan sunucular IP adresini görebilir.</p>
 
+      <h2 id="kopru">Pusula Köprü</h2>
+      <p class="short">Kısaca: Pusula Köprü hesap istemez. Aynı Wi-Fi’deyken her şey iki cihazın arasında doğrudan gider; farklı ağdayken sunucumuzdan geçer ama uçtan uca şifreli olduğu için içeriği kimse, biz de göremeyiz.</p>
+      <ul>
+        <li><b>Eşleştirme:</b> İki cihaz QR koddaki tek kullanımlık sırla birbirini doğrular ve yalnız ikisinin bildiği bir anahtar oluşturur (X25519, HKDF, ChaCha20-Poly1305). Anahtarlar yalnızca bu iki cihazda saklanır.</li>
+        <li><b>Aynı ağda:</b> Dosyalar, metinler, bağlantılar ve pano internete çıkmadan, ev ya da ofis ağının içinde doğrudan gider.</li>
+        <li><b>Farklı ağdayken:</b> İçerik cihazında şifrelenir; sunucumuz (api.oalabs.dev) yalnızca şifreli baytları iki cihaz arasında taşır. Dosyalar (en fazla 100 MB) alındıktan hemen sonra, en geç 24 saatte silinir. Bunu Ayarlar’dan “Farklı ağdayken de bağlan”ı kapatarak tamamen kapatabilirsin.</li>
+        <li><b>Cihazında tutulanlar:</b> Eşleşmeler, ayarlar ve aktarım geçmişi. Gelen dosyalar İndirilenler klasöründeki “Pusula Köprü” klasörüne kaydedilir.</li>
+        <li><b>Güncelleme denetimi:</b> Yeni sürüm için GitHub’daki sürüm listesine bakar.</li>
+      </ul>
+      <p>Her internet bağlantısında olduğu gibi bağlanılan sunucular IP adresini görebilir.</p>
+
+      <h2 id="terazi">Terazi</h2>
+      <p class="short">Kısaca: Terazi hesap istemez ve kayıtlarını hiçbir yere göndermez. Gelirlerin, giderlerin, düzenli ödemelerin ve bütçelerin yalnızca cihazında durur.</p>
+      <ul>
+        <li><b>Cihazında tutulanlar:</b> Bütün kayıtlar, düzenli ödemeler, bütçeler ve ayarlar uygulamanın kendi klasöründeki tek bir dosyada (terazi.json). Uygulamayı kaldırınca silinir.</li>
+        <li><b>Bildirimler:</b> Ödeme hatırlatmaları telefonunda zamanlanır; bunun için hiçbir şey dışarı gönderilmez.</li>
+        <li><b>Dışa aktarma:</b> Windows’ta “Dışa aktar” hareketlerini yalnızca kendi bilgisayarındaki İndirilenler klasörüne yazar.</li>
+        <li><b>İnternet bağlantısı:</b> Yalnızca yazı tiplerini (Google Fonts) indirmek için. Güncellemeleri istersen <a href="#center">OA Labs Center</a> denetler.</li>
+      </ul>
+
+      <h2 id="center">OA Labs Center</h2>
+      <p class="short">Kısaca: OA Labs Center’ı hesapsız da kullanabilirsin; o zaman yalnızca uygulama listesine ve yeni sürümlere bakar. Giriş yaparsan, cihazlarını birbirine gösterebilmek için cihaz adını ve kurulu OA uygulamalarının listesini hesabına kaydeder.</p>
+      <ul>
+        <li><b>Her zaman:</b> Uygulama listesini oalabs.dev’den, sürüm bilgilerini ve kurulum dosyalarını GitHub’dan, duyuruları api.oalabs.dev’den alır. Bu isteklerde kim olduğun gönderilmez.</li>
+        <li><b>Giriş yaparsan:</b> Bu cihaz için rastgele bir kimlik, cihaz adı (Windows’ta bilgisayar adı, Android’de telefonun adı), platform (Windows ya da Android) ve bu cihazda kurulu OA Labs uygulamalarıyla sürümleri hesabına kaydedilir. Başka hiçbir uygulama, dosya ya da kişisel bilgi gönderilmez. Cihazı Cihazlarım’dan kaldırabilirsin; hesabını silersen hepsi silinir.</li>
+        <li><b>Uzaktan kurulum:</b> Bir cihazdan öbürüne “şu uygulamayı kur” dediğinde, hangi uygulamanın hangi cihaza istendiği ve isteğin durumu kaydedilir.</li>
+        <li><b>Tek giriş:</b> Windows’ta oturum, Pusula’nın da kullanabilmesi için Windows’un şifrelemesiyle (DPAPI) korunan bir dosyada yalnızca senin Windows hesabına açık olarak tutulur.</li>
+        <li><b>Destek formu:</b> Gönderdiğin mesaj, uygulama sürümü ve işletim sistemi bilgisiyle birlikte bize gelir; yalnızca sana yanıt vermek için kullanılır.</li>
+      </ul>
+      <p>Her internet bağlantısında olduğu gibi bağlanılan sunucular IP adresini görebilir.</p>
+
       <h2 id="site">oalabs.dev ve OA Labs hesabı</h2>
       <h3 id="site-sayaci">Ziyaretçi sayacı</h3>
       <p>Bu sitede kaç kişinin hangi sayfalara baktığını görmek için çerezsiz bir sayaç kullanıyoruz. Sayfa açıldığında sunucumuza (api.oalabs.dev) yalnızca sayfanın yolu, geldiğin sitenin adı (örneğin google.com) ve sayfanın dili gönderilir; sayfa açık kaldıkça 25 saniyede bir “buradayım” sinyali gider. Aynı kişiyi gün içinde bir kez saymak için IP adresin ve tarayıcı bilgin o güne özel, tek yönlü bir özete çevrilir; IP adresinin kendisi saklanmaz ve ertesi gün aynı kişi tanınamaz. Cihaz türü yalnızca telefon, tablet ya da bilgisayar olarak kaydedilir. Hangi ülkeden bağlandığın, sunucu sağlayıcımız Cloudflare’in bağlantıdan çıkardığı ülke kodu (örneğin TR) olarak kaydedilir; şehir ya da konum kaydedilmez. Sitedeki “İndir” düğmelerinden biriyle dosya indirdiğinde de aynı yöntemle günü, hangi dosyayı indirdiğin ve ülke kodu kaydedilir; aynı gün aynı dosyayı tekrar indirmen bir sayılır. Bu sayılar yalnızca toplu olarak görüntülenir; sitede aynı anda en az 3 kişi varsa köşede kaç kişinin sitede olduğu herkese gösterilir.</p>
@@ -166,9 +197,9 @@
 
       <h1 lang="en" id="en">Privacy policy</h1>
       <div lang="en">
-        <p class="date">Last updated: 12 November 2026 · Applies to: Pusula Browser (Windows and Android), OA Radyo (Windows), Harrier Cleaner and oalabs.dev</p>
+        <p class="date">Last updated: 12 November 2026 · Applies to: Pusula Browser (Windows and Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center and oalabs.dev</p>
         <p class="short">In short: OA Labs apps contain no ads, don’t track you and don’t need an account. Most of your data stays on your own device. Our server only receives what the features you turn on need (account sync, chat, anonymous usage counts if you allow them) and anonymous error reports. What goes where is described below, app by app.</p>
-        <p class="toc">On this page: <a href="#pusula-en">Pusula Browser</a> · <a href="#radyo-en">OA Radyo</a> · <a href="#harrier-en">Harrier Cleaner</a> · <a href="#site-en">oalabs.dev and your OA Labs account</a></p>
+        <p class="toc">On this page: <a href="#pusula-en">Pusula Browser</a> · <a href="#radyo-en">OA Radyo</a> · <a href="#harrier-en">Harrier Cleaner</a> · <a href="#kopru-en">Pusula Köprü</a> · <a href="#terazi-en">Terazi</a> · <a href="#center-en">OA Labs Center</a> · <a href="#site-en">oalabs.dev and your OA Labs account</a></p>
         <h2>What we don’t collect</h2>
         <p>No name, email, phone number or location in the apps (we only get a name and email if you create an OA Labs account yourself). No record of the sites you visit or the stations you listen to: Pusula Browser’s history and screen time and OA Radyo’s statistics are kept and calculated on your device (if you turn on sync in Pusula Browser, your history is saved to your account; see below). No advertising IDs, ad or tracking cookies, or similar tracking.</p>
 
@@ -210,6 +241,28 @@
         <p><b>Update checks:</b> When it starts, the app checks the version information on oalabs.dev; if you choose to install a new version, the setup file is downloaded. You can turn this off in Settings.</p>
         <p><b>Error reports:</b> If something unexpected goes wrong, a short report is sent to our server (api.oalabs.dev): a random install ID, the app and Windows versions, the interface language, the error message and a technical stack trace. Your user name and folder paths are removed before sending. The install ID is stored only as a one-way hash; no name, email or IP address is stored. Reports are deleted after 90 days. This is on by default; you can turn it off in Settings &gt; General.</p>
         <p><b>Reporting a problem:</b> The “Write an email” button opens your email app with a ready-made draft; you see and send the content yourself.</p>
+        <p>As with any internet connection, the servers the app connects to can see your IP address.</p>
+        <h2 id="kopru-en">Pusula Köprü</h2>
+        <p class="short">In short: Pusula Köprü needs no account. On the same Wi-Fi everything goes directly between your two devices; on different networks it passes through our server, but it’s end-to-end encrypted, so nobody, including us, can see the content.</p>
+        <p><b>Pairing:</b> the two devices verify each other with a one-time secret in the QR code and create a key only they know (X25519, HKDF, ChaCha20-Poly1305). The keys are kept only on those two devices.</p>
+        <p><b>On the same network:</b> files, text, links and clipboard travel directly inside your home or office network, without going online.</p>
+        <p><b>On different networks:</b> content is encrypted on your device; our server (api.oalabs.dev) only carries encrypted bytes between the two devices. Files (up to 100 MB) are deleted right after they’re received, within 24 hours at most. You can switch this off entirely by turning off “Connect on other networks too” in Settings.</p>
+        <p><b>Stored on your device:</b> pairings, settings and transfer history. Received files are saved to a “Pusula Köprü” folder in Downloads.</p>
+        <p><b>Update check:</b> looks at the release list on GitHub for a new version.</p>
+        <p>As with any internet connection, the servers the app connects to can see your IP address.</p>
+        <h2 id="terazi-en">Terazi</h2>
+        <p class="short">In short: Terazi needs no account and never sends your entries anywhere. Your income, spending, regular payments and budgets stay on your device.</p>
+        <p><b>Stored on your device:</b> all entries, regular payments, budgets and settings, in a single file (terazi.json) in the app’s own folder. Uninstalling the app deletes it.</p>
+        <p><b>Notifications:</b> payment reminders are scheduled on your phone; nothing is sent anywhere for them.</p>
+        <p><b>Export:</b> on Windows, “Export” writes your activity only to the Downloads folder on your own computer.</p>
+        <p><b>Internet:</b> only to download fonts (Google Fonts). If you like, <a href="#center-en">OA Labs Center</a> checks for updates.</p>
+        <h2 id="center-en">OA Labs Center</h2>
+        <p class="short">In short: you can use OA Labs Center without an account; it then only checks the app list and new versions. If you sign in, it saves your device name and the list of OA apps installed on it to your account, so your devices can see each other.</p>
+        <p><b>Always:</b> gets the app list from oalabs.dev, version info and installers from GitHub and announcements from api.oalabs.dev. These requests don’t say who you are.</p>
+        <p><b>If you sign in:</b> a random ID for this device, the device name (the computer name on Windows, the phone’s name on Android), the platform (Windows or Android) and the OA Labs apps installed on it with their versions are saved to your account. No other apps, files or personal details are sent. You can remove a device under My devices; deleting your account deletes all of it.</p>
+        <p><b>Remote install:</b> when you ask one device to install an app on another, which app was requested for which device and the request’s status are recorded.</p>
+        <p><b>Single sign-in:</b> on Windows your session is kept, so Pusula can use it too, in a file protected by Windows encryption (DPAPI) that only your Windows account can open.</p>
+        <p><b>Support form:</b> your message reaches us with the app version and operating system; we use it only to reply to you.</p>
         <p>As with any internet connection, the servers the app connects to can see your IP address.</p>
         <h2 id="site-en">oalabs.dev and your OA Labs account</h2>
         <h3>Visitor counter</h3>

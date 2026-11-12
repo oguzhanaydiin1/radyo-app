@@ -1,5 +1,37 @@
 [
  {
+  "date": "2026-11-12",
+  "app": "terazi",
+  "version": "0.1.1",
+  "url": "https://github.com/oguzhanaydiin1/oa-terazi/releases/tag/v0.1.1",
+  "tr": [
+   "İlk sürüm: gelir ve gider kaydı; bu ay kalan ve ay sonuna kadar günde harcanabilecek tutar.",
+   "Ödeme takvimi: kredi, kira, abonelik gibi düzenli ödemeleri bir kez ekle, kaç ay süreceğini seç; her ay kendiliğinden gelir.",
+   "Ödeme günü “Ödendi mi?”: tek dokunuşla gider olarak kaydet, yarın hatırlat ya da bu ay atla. Android’de bildirimle.",
+   "Kategori bütçeleri, aylık raporlar ve Windows’ta CSV dışa aktarma."
+  ],
+  "en": [
+   "First release: log income and spending; see what’s left this month and what you can spend per day until month end.",
+   "Payment calendar: add loans, rent and subscriptions once and choose how many months they run; they come back every month.",
+   "“Paid yet?” on the payment day: record it as spending in one tap, get reminded tomorrow or skip this month. With a notification on Android.",
+   "Category budgets, monthly reports and CSV export on Windows."
+  ]
+ },
+ {
+  "date": "2026-11-12",
+  "app": "center",
+  "version": "0.3.3",
+  "url": "https://github.com/oguzhanaydiin1/oa-labs-center/releases/tag/v0.3.3",
+  "tr": [
+   "Yeni uygulama Terazi (gelir gider takibi, beta) Keşfet’te.",
+   "0.3: uygulama sayfaları, kaldırma, bütün uygulamaların sürüm notları tek akışta, Cihazlarım ve uzaktan kurulum, destek ve duyurular, deneme sürümleri, İngilizce."
+  ],
+  "en": [
+   "New app Terazi (income and expense tracking, beta) in Discover.",
+   "0.3: app pages, uninstall, release notes of every app in one feed, My devices and remote install, support and announcements, beta versions, English."
+  ]
+ },
+ {
   "date": "2026-11-08",
   "app": "pusula",
   "version": "0.19.10",

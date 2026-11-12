@@ -137,8 +137,8 @@
    "repo": "oguzhanaydiin1/oa-terazi",
    "icon": "terazi",
    "color": "#F2A541",
-   "page": "https://oalabs.dev/",
-   "page_en": "https://oalabs.dev/en/",
+   "page": "https://oalabs.dev/terazi/",
+   "page_en": "https://oalabs.dev/en/terazi/",
    "tagline": "Gelir gider takibi: bu ay ne kaldı, günde ne kadar harcayabilirsin.",
    "tagline_en": "Income and expense tracking: what's left this month and what you can spend per day.",
    "features": [
@@ -220,17 +220,6 @@
    "page_en": "https://oalabs.dev/en/#uygulamalar",
    "tagline": "Canlı skorlar ve maç haberleri.",
    "tagline_en": "Live scores and match news."
-  },
-  {
-   "id": "barkod",
-   "name": "OA Barkod",
-   "state": "yakinda",
-   "color": "#6EA8FE",
-   "ink": "#0E1A30",
-   "page": "https://oalabs.dev/#uygulamalar",
-   "page_en": "https://oalabs.dev/en/#uygulamalar",
-   "tagline": "Hazırlanıyor.",
-   "tagline_en": "Coming soon."
   }
  ]
 }

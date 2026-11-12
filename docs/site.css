@@ -121,7 +121,26 @@ section { padding: 72px 0; }
 .btn.soon-btn:hover { border-color: #fff; }
 .btn.soon-btn[aria-pressed="true"] { border-color: transparent; background: rgba(255,255,255,.12); }
 .t-score { background: #1D3A2C; } .t-score p { color: #BFE3CD; } .t-score .app-letter { background: var(--green); color: #0F2A1C; }
-.t-barkod { background: #1B2A45; } .t-barkod p { color: #C3D6F5; } .t-barkod .app-letter { background: var(--blue); color: #0E1A30; }
+.b-pair { flex: 1 1 100%; min-width: 0; display: flex; flex-wrap: wrap; gap: 16px; }
+.b-pair > .tile { flex: 1 1 420px; }
+.t-terazi { padding: 30px 32px; gap: 10px; background: #EEEAE2; color: var(--amber-ink); }
+.t-terazi h3 { font-size: clamp(30px, 3.4vw, 40px); margin-top: 6px; }
+.t-terazi p { max-width: 30em; color: #4A4336; }
+.t-terazi .tile-plats { color: #6B6152; }
+.t-terazi .tile-state { height: 28px; padding: 0 12px; border-radius: 14px; background: rgba(20,17,10,.08); color: #8A5A12; display: inline-flex; align-items: center; }
+.t-terazi .tile-head img { width: 60px; height: 60px; border-radius: 16px; }
+.btn.on-cream { border-color: rgba(20,17,10,.35); color: var(--amber-ink); background: transparent; }
+.btn.on-cream:hover { border-color: var(--amber-ink); color: var(--amber-ink); }
+.t-terazi .btn:focus-visible { outline-color: var(--amber-ink); }
+.t-center { min-height: 0; padding: 30px 32px; background: linear-gradient(120deg, #1A1508, var(--surface) 60%); border: 1px solid rgba(242,165,65,.28); color: var(--text); }
+.t-center .k-text { max-width: 640px; display: flex; flex-direction: column; gap: 10px; }
+.t-center h3 { font-size: clamp(30px, 3.4vw, 40px); margin-top: 6px; }
+.t-center p { max-width: 34em; color: var(--text-2); }
+.t-center .tile-plats { color: var(--muted); }
+.t-center .tile-state { height: 28px; padding: 0 12px; border-radius: 14px; background: rgba(242,165,65,.16); color: var(--amber-hi); display: inline-flex; align-items: center; }
+.t-center .tile-head img { width: 60px; height: 60px; border-radius: 16px; box-shadow: 0 0 0 1px var(--border-2); }
+.t-center .tile-actions { margin-top: 4px; }
+.t-center .btn.ghost-amber { background: transparent; }
 .btn.ghost-amber { border-color: rgba(242,165,65,.45); background: #2A1E0A; }
 .btn.ghost-amber:hover { border-color: var(--amber); }
 .btn.dark { background: var(--amber-ink); border-color: var(--amber-ink); color: var(--amber); }
@@ -154,7 +173,7 @@ section { padding: 72px 0; }
   .tile { padding: 24px; }
   .t-tarayici { min-height: 0; }
   .t-tarayici .tile-art { opacity: .6; }
-  .t-kopru .tile-art { opacity: .5; }
+  .t-kopru .tile-art, .t-center .tile-art { opacity: .5; }
 }
 
 /* Yapboz: Uygulamalar başlığının yanındaki dört karo. Sayfada görününce bir kez oynar. */

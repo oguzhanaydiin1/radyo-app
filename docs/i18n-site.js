@@ -136,11 +136,11 @@
     'Değişiklikler kaydedildi.': 'Changes saved.', 'E-posta adresin değiştirildi.': 'Your email address has been changed.',
     'OA Labs uygulamaları. Henüz çıkmamış olanlar için “Çıkınca haber ver” diyebilirsin.': 'OA Labs apps. For the ones not out yet, you can ask us to let you know.',
     'Beta’yı indir': 'Download beta', 'Windows · Beta · Android yakında': 'Windows · Beta · Android coming soon',
-    'İndir': 'Download', 'Yakında': 'Coming soon', 'Yakında · Çıkınca sana haber vereceğiz': 'Coming soon · We’ll let you know when it’s out',
+    'İndir': 'Download', 'İncele': 'Details', 'Web’de dinle': 'Listen on the web', 'Yakında': 'Coming soon', 'Yakında · Çıkınca sana haber vereceğiz': 'Coming soon · We’ll let you know when it’s out',
     'Çıkınca haber ver': 'Notify me', '✓ Haber verilecek': '✓ You’ll be notified', 'Hazırlanıyor.': 'In the works.',
     'Sana yalnızca istediğin konularda e-posta göndeririz.': 'We only email you about the things you choose.',
     'Duyurular': 'Announcements', 'Yeni uygulamalar ve önemli güncellemeler. Ayda en fazla birkaç e-posta.': 'New apps and important updates. A few emails a month at most.',
-    'OA Score çıkınca haber ver': 'Tell me when OA Score is out', 'OA Barkod çıkınca haber ver': 'Tell me when OA Barkod is out', 'Harrier Cleaner çıkınca haber ver': 'Tell me when Harrier Cleaner is out',
+    'OA Score çıkınca haber ver': 'Tell me when OA Score is out', 'Harrier Cleaner çıkınca haber ver': 'Tell me when Harrier Cleaner is out',
     'Uygulama yayına girdiğinde tek bir e-posta.': 'A single email when the app launches.',
     'Güvenlik e-postaları': 'Security emails', 'Giriş kodları ve hesabınla ilgili önemli bildirimler. Kapatılamaz.': 'Sign-in codes and important account notices. Can’t be turned off.',
     'Güvenlik e-postaları her zaman açık': 'Security emails are always on',
@@ -183,7 +183,7 @@
     if (!h || a.hasAttribute('data-lang-switch')) return;
     var n = h;
     if (h === '/' || /^\/#/.test(h)) n = '/en' + h;
-    else if (/^\/radyo\//.test(h)) n = '/en' + h;
+    else if (/^\/(radyo|tarayici|kopru|harrier|terazi|center|yardim|yenilikler|rehber|hakkimizda|iletisim|geri-bildirim|destek-ol|yol-haritasi|kosullar)\//.test(h)) n = '/en' + h;
     else if (/^\/gizlilik\/(#.*)?$/.test(h)) n = '/gizlilik/#en';
     else if (/^\/dinle\/$/.test(h)) n = '/dinle/?lang=en';
     if (n !== h) a.setAttribute('href', n);

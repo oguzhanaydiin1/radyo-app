@@ -22,6 +22,9 @@ APPS = {
     'pusula': {'name': 'Pusula Browser', 'icon': '/tarayici/img/icon.png', 'href': {'tr': '/tarayici/', 'en': '/en/tarayici/'}},
     'radyo': {'name': 'OA Radyo', 'icon': '/radyo/img/icon.png', 'href': {'tr': '/radyo/', 'en': '/en/radyo/'}},
     'harrier': {'name': 'Harrier Cleaner', 'icon': '/harrier/img/icon.png', 'href': {'tr': '/harrier/', 'en': '/en/harrier/'}},
+    'kopru': {'name': 'Pusula Köprü', 'icon': '/kopru/img/icon.png', 'href': {'tr': '/kopru/', 'en': '/en/kopru/'}},
+    'terazi': {'name': 'Terazi', 'icon': '/terazi/img/icon.png', 'href': {'tr': '/terazi/', 'en': '/en/terazi/'}},
+    'center': {'name': 'OA Labs Center', 'icon': '/center/img/icon.png', 'href': {'tr': '/center/', 'en': '/en/center/'}},
 }
 MAX_ITEMS = 6
 
