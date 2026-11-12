@@ -67,6 +67,7 @@
         <a href="/yenilikler/">Yenilikler</a>
         <a href="/yardim/">Yardım</a>
         <a href="/iletisim/">İletişim</a>
+        <a class="nav-support" href="/destek-ol/">Destek ol</a>
       </div>
       <a class="lang-sw" data-lang-switch href="/en/yol-haritasi/">EN</a>
       <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Giriş yap</b><small>veya üye ol</small></span></a></div>
@@ -119,7 +120,7 @@
   <script src="/sayac.js" defer></script>
   <script>
   (function () {
-    var T = {"empty": {"progress": "Şu an burada bir şey yok.", "planned": "Henüz planlanan bir madde yok.", "done": "Yayınlananlar burada görünecek."}, "votes": "oy", "apps": {"center": "OA Labs Center", "pusula": "Pusula Browser", "kopru": "Pusula Köprü", "radyo": "OA Radyo", "terazi": "Terazi", "harrier": "Harrier Cleaner", "site": "Web sitesi", "diger": "Diğer"}};
+    var T = {"empty": {"progress": "Şu an burada bir şey yok.", "planned": "Henüz planlanan bir madde yok.", "done": "Yayınlananlar burada görünecek."}, "votes": "oy", "apps": {"pusula": "Pusula Browser", "radyo": "OA Radyo", "harrier": "Harrier Cleaner", "site": "Web sitesi", "diger": "Diğer"}};
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     fetch('https://api.oalabs.dev/v1/ideas', { credentials: 'include' }).then(function (r) { return r.json(); }).then(function (r) {
       if (!r || !r.ok) return;
