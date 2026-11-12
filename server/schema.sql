@@ -212,3 +212,14 @@ CREATE TABLE IF NOT EXISTS announcements (
   url TEXT,
   active INTEGER NOT NULL DEFAULT 1
 );
+
+-- Siteden indirmeler (/indir/...). Kişi, ziyaretçi sayacındaki gibi o güne özel tuzlanmış özetle
+-- ayırt edilir (ham IP saklanmaz); aynı kişinin aynı gün aynı dosyayı tekrar indirmesi bir sayılır.
+CREATE TABLE IF NOT EXISTS download_daily (
+  day TEXT NOT NULL,
+  app TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  visitor TEXT NOT NULL,
+  country TEXT,
+  PRIMARY KEY (day, app, kind, visitor)
+);
