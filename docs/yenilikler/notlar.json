@@ -2,19 +2,21 @@
  {
   "date": "2026-11-12",
   "app": "terazi",
-  "version": "0.1.1",
-  "url": "https://github.com/oguzhanaydiin1/oa-terazi/releases/tag/v0.1.1",
+  "version": "0.1.2",
+  "url": "https://github.com/oguzhanaydiin1/oa-terazi/releases/tag/v0.1.2",
   "tr": [
    "İlk sürüm: gelir ve gider kaydı; bu ay kalan ve ay sonuna kadar günde harcanabilecek tutar.",
    "Ödeme takvimi: kredi, kira, abonelik gibi düzenli ödemeleri bir kez ekle, kaç ay süreceğini seç; her ay kendiliğinden gelir.",
    "Ödeme günü “Ödendi mi?”: tek dokunuşla gider olarak kaydet, yarın hatırlat ya da bu ay atla. Android’de bildirimle.",
-   "Kategori bütçeleri, aylık raporlar ve Windows’ta CSV dışa aktarma."
+   "Kategori bütçeleri, aylık raporlar ve Windows’ta CSV dışa aktarma.",
+   "Türkçe ve İngilizce, açık ve koyu tema; para birimi seçimi (TL, dolar, euro, sterlin, ruble, manat, frank)."
   ],
   "en": [
    "First release: log income and spending; see what’s left this month and what you can spend per day until month end.",
    "Payment calendar: add loans, rent and subscriptions once and choose how many months they run; they come back every month.",
    "“Paid yet?” on the payment day: record it as spending in one tap, get reminded tomorrow or skip this month. With a notification on Android.",
-   "Category budgets, monthly reports and CSV export on Windows."
+   "Category budgets, monthly reports and CSV export on Windows.",
+   "Turkish and English, light and dark theme; choose your currency (lira, dollar, euro, pound, rouble, manat, franc)."
   ]
  },
  {
