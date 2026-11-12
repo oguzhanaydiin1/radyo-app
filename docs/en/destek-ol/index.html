@@ -58,7 +58,7 @@
     .share { display: flex; flex-wrap: wrap; gap: 8px; }
     .share a, .share button { height: 36px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--border-2); background: transparent; color: var(--text); font: 600 14px var(--body); text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
     .share a:hover, .share button:hover { border-color: var(--faint); }
-    .money { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; padding-bottom: 80px; }
+    .money { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; }
     @media (max-width: 860px) { .money { grid-template-columns: 1fr; } }
     .give { padding: 28px; border-radius: 28px; background: linear-gradient(160deg, rgba(242,165,65,.16), rgba(242,165,65,.03) 60%), var(--surface); border: 1px solid rgba(242,165,65,.35); }
     .give h3 { margin: 0 0 8px; font: 800 26px/1.15 var(--display); }
@@ -97,9 +97,29 @@
   <main>
     <section class="wrap page-head" aria-labelledby="h1">
       <h1 id="h1">Support us</h1>
-      <p>OA Labs apps are free and ad-free, and we want to keep them that way. There are a few ways to help, and most of them cost nothing.</p>
+      <p>OA Labs apps are free and ad-free, and we want to keep them that way. You can help by buying us a coffee, or in a few ways that cost nothing at all.</p>
     </section>
-    <section class="wrap dz" aria-labelledby="free-h">
+    <section class="wrap dz" aria-labelledby="money-h">
+      <h2 class="sec-t" id="money-h">Financial support</h2>
+      <div class="money">
+        <div class="give">
+          <h3>Buy us a coffee</h3>
+          <p>We build Pusula Browser, OA Radyo and Harrier Cleaner without ads and without selling your data. The apps are kept going by users like you; even a small coffee helps keep the servers running and new versions coming.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="https://buymeacoffee.com/oalabs" target="_blank" rel="noopener">☕ Buy us a coffee</a></div>
+          <p class="small"><b>Buy Me a Coffee</b>: one-time or monthly, by card. Payment happens on that site’s own page; your card details never reach us.</p>
+        </div>
+        <div class="where">
+          <h3>Where your support goes</h3>
+        <ul>
+          <li><span class="n">1</span><div><b>A Windows code-signing certificate</b>So the “Windows protected your PC” warning goes away and the apps install safely in one click.</div></li>
+          <li><span class="n">2</span><div><b>Servers and the domain</b>So sync, OA Flow, radio chat and downloads keep working for free, for everyone.</div></li>
+          <li><span class="n">3</span><div><b>More frequent updates</b>More time for new features and for fixing the bugs you report quickly.</div></li>
+        </ul>
+          <p class="fair">Support is always optional. There are no extra features for supporters; the apps stay the same, free and ad-free, for everyone.</p>
+        </div>
+      </div>
+    </section>
+    <section class="wrap dz" aria-labelledby="free-h" style="padding-bottom:80px !important">
       <h2 class="sec-t" id="free-h">Free ways</h2>
       <div class="free">
         <div class="c"><span class="ic" style="background:rgba(91,196,140,.14);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></span>
@@ -117,26 +137,6 @@
           <h3>Vote on ideas</h3><p>Help pick the next feature. We build the most-voted ones first.</p><a class="go" href="/en/geri-bildirim/#fikirler">Idea board →</a></div>
         <div class="c"><span class="ic" style="background:rgba(110,168,254,.14);color:#6EA8FE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></span>
           <h3>Star us on GitHub</h3><p>Pusula Browser’s code is on GitHub. A star helps the project reach more people.</p><a class="go" href="https://github.com/oguzhanaydiin1/oa-tarayici" target="_blank" rel="noopener">Open on GitHub →</a></div>
-      </div>
-    </section>
-    <section class="wrap dz" aria-labelledby="money-h" style="padding-bottom:80px !important">
-      <h2 class="sec-t" id="money-h">Financial support</h2>
-      <div class="money">
-        <div class="give">
-          <h3>Buy us a coffee</h3>
-          <p>If you like the apps, a small contribution gives us more time to work on them.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="https://buymeacoffee.com/oalabs" target="_blank" rel="noopener">☕ Buy us a coffee</a></div>
-          <p class="small"><b>Buy Me a Coffee</b>: one-time or monthly, by card. Payment happens on that site’s own page; your card details never reach us.</p>
-        </div>
-        <div class="where">
-          <h3>Where your support goes</h3>
-        <ul>
-          <li><span class="n">1</span><div><b>A Windows code-signing certificate</b>To remove the “Windows protected your PC” warning during setup.</div></li>
-          <li><span class="n">2</span><div><b>Servers and the domain</b>For sync, OA Flow, radio chat and downloads.</div></li>
-          <li><span class="n">3</span><div><b>New apps</b>Time to finish OA Score and OA Barkod.</div></li>
-        </ul>
-          <p class="fair">Support is always optional. There are no extra features for supporters; the apps stay the same, free and ad-free, for everyone.</p>
-        </div>
       </div>
     </section>
   </main>

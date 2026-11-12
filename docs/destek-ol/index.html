@@ -58,7 +58,7 @@
     .share { display: flex; flex-wrap: wrap; gap: 8px; }
     .share a, .share button { height: 36px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--border-2); background: transparent; color: var(--text); font: 600 14px var(--body); text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
     .share a:hover, .share button:hover { border-color: var(--faint); }
-    .money { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; padding-bottom: 80px; }
+    .money { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; }
     @media (max-width: 860px) { .money { grid-template-columns: 1fr; } }
     .give { padding: 28px; border-radius: 28px; background: linear-gradient(160deg, rgba(242,165,65,.16), rgba(242,165,65,.03) 60%), var(--surface); border: 1px solid rgba(242,165,65,.35); }
     .give h3 { margin: 0 0 8px; font: 800 26px/1.15 var(--display); }
@@ -97,9 +97,29 @@
   <main>
     <section class="wrap page-head" aria-labelledby="h1">
       <h1 id="h1">Bize destek ol</h1>
-      <p>OA Labs uygulamaları ücretsiz ve reklamsız; böyle kalmasını istiyoruz. Bize yardım etmenin birkaç yolu var ve çoğu tek kuruş tutmuyor.</p>
+      <p>OA Labs uygulamaları ücretsiz ve reklamsız; böyle kalmasını istiyoruz. Bir kahve ısmarlayarak ya da hiç para harcamadan, birkaç farklı yolla yardım edebilirsin.</p>
     </section>
-    <section class="wrap dz" aria-labelledby="free-h">
+    <section class="wrap dz" aria-labelledby="money-h">
+      <h2 class="sec-t" id="money-h">Maddi destek</h2>
+      <div class="money">
+        <div class="give">
+          <h3>Bir kahve ısmarla</h3>
+          <p>Pusula Browser, OA Radyo ve Harrier Cleaner’ı reklam koymadan ve verini satmadan geliştiriyoruz. Uygulamalar senin gibi kullanıcıların desteğiyle ayakta duruyor; küçük bir kahve bile sunucuları açık tutmamıza ve yeni sürümler çıkarmamıza yardım eder.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="https://buymeacoffee.com/oalabs" target="_blank" rel="noopener">☕ Bir kahve ısmarla</a></div>
+          <p class="small"><b>Buy Me a Coffee</b> ile tek seferlik ya da aylık, kartla. Ödeme o sitenin kendi sayfasında yapılır; kart bilgin bize gelmez.</p>
+        </div>
+        <div class="where">
+          <h3>Desteğin nereye gidiyor</h3>
+        <ul>
+          <li><span class="n">1</span><div><b>Windows kod imzalama sertifikası</b>Kurulumda çıkan “Windows bilgisayarınızı korudu” uyarısı kalksın, uygulamalar güvenle tek tıkla kurulsun.</div></li>
+          <li><span class="n">2</span><div><b>Sunucular ve alan adı</b>Eşitleme, OA Akış, radyo sohbeti ve indirmeler herkes için ücretsiz çalışmaya devam etsin.</div></li>
+          <li><span class="n">3</span><div><b>Daha sık güncelleme</b>Yeni özelliklere ve bildirdiğin hataları hızla düzeltmeye daha çok zaman.</div></li>
+        </ul>
+          <p class="fair">Destek tamamen isteğe bağlı. Destek olanlara özel bir özellik yok; uygulamalar herkes için aynı, ücretsiz ve reklamsız kalır.</p>
+        </div>
+      </div>
+    </section>
+    <section class="wrap dz" aria-labelledby="free-h" style="padding-bottom:80px !important">
       <h2 class="sec-t" id="free-h">Ücretsiz yollar</h2>
       <div class="free">
         <div class="c"><span class="ic" style="background:rgba(91,196,140,.14);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></span>
@@ -117,26 +137,6 @@
           <h3>Fikirlere oy ver</h3><p>Sıradaki özelliği sen seç. En çok oy alanları önce yapıyoruz.</p><a class="go" href="/geri-bildirim/#fikirler">Fikir panosu →</a></div>
         <div class="c"><span class="ic" style="background:rgba(110,168,254,.14);color:#6EA8FE"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></span>
           <h3>GitHub’da yıldız ver</h3><p>Pusula Browser’ın kodu GitHub’da. Bir yıldız, projenin daha çok kişiye ulaşmasını sağlar.</p><a class="go" href="https://github.com/oguzhanaydiin1/oa-tarayici" target="_blank" rel="noopener">GitHub’da aç →</a></div>
-      </div>
-    </section>
-    <section class="wrap dz" aria-labelledby="money-h" style="padding-bottom:80px !important">
-      <h2 class="sec-t" id="money-h">Maddi destek</h2>
-      <div class="money">
-        <div class="give">
-          <h3>Bir kahve ısmarla</h3>
-          <p>Uygulamaları beğendiysen küçük bir destek, geliştirmeye daha çok zaman ayırmamızı sağlar.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="https://buymeacoffee.com/oalabs" target="_blank" rel="noopener">☕ Bir kahve ısmarla</a></div>
-          <p class="small"><b>Buy Me a Coffee</b> ile tek seferlik ya da aylık, kartla. Ödeme o sitenin kendi sayfasında yapılır; kart bilgin bize gelmez.</p>
-        </div>
-        <div class="where">
-          <h3>Desteğin nereye gidiyor</h3>
-        <ul>
-          <li><span class="n">1</span><div><b>Windows kod imzalama sertifikası</b>Kurulumda çıkan “bilgisayarınız korundu” uyarısını kaldırmak için.</div></li>
-          <li><span class="n">2</span><div><b>Sunucular ve alan adı</b>Eşitleme, OA Akış, radyo sohbeti ve indirmeler için.</div></li>
-          <li><span class="n">3</span><div><b>Yeni uygulamalar</b>OA Score ve OA Barkod’u bitirmek için zaman.</div></li>
-        </ul>
-          <p class="fair">Destek tamamen isteğe bağlı. Destek olanlara özel bir özellik yok; uygulamalar herkes için aynı, ücretsiz ve reklamsız kalır.</p>
-        </div>
       </div>
     </section>
   </main>
