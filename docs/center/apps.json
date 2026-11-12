@@ -209,17 +209,6 @@
      "/CLOSEAPPLICATIONS"
     ]
    }
-  },
-  {
-   "id": "score",
-   "name": "OA Score",
-   "state": "yakinda",
-   "color": "#5BC48C",
-   "ink": "#0F2A1C",
-   "page": "https://oalabs.dev/#uygulamalar",
-   "page_en": "https://oalabs.dev/en/#uygulamalar",
-   "tagline": "Canlı skorlar ve maç haberleri.",
-   "tagline_en": "Live scores and match news."
   }
  ]
 }

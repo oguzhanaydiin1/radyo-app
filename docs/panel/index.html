@@ -181,11 +181,11 @@
         <h2 id="ca">OA Labs Center duyuruları</h2>
         <p class="note" style="margin:0 0 12px">Buraya eklenen duyuru OA Labs Center’ın ana sayfasında görünür; Windows’ta ve Android’de bildirim olarak da gelir. İngilizce metin boşsa İngilizce kullanan herkese Türkçesi gösterilir. <span id="an-devices"></span></p>
         <form id="an-new" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin:0 0 12px">
-          <input name="title" placeholder="Başlık (örn. OA Score çıktı)" maxlength="120" required>
+          <input name="title" placeholder="Başlık (örn. Terazi 0.2 çıktı)" maxlength="120" required>
           <input name="title_en" placeholder="İngilizce başlık (isteğe bağlı)" maxlength="120">
           <textarea name="body" placeholder="Kısa açıklama" maxlength="600" rows="2"></textarea>
           <textarea name="body_en" placeholder="İngilizce açıklama (isteğe bağlı)" maxlength="600" rows="2"></textarea>
-          <select name="app"><option value="">Genel</option><option value="pusula">Pusula Browser</option><option value="kopru">Pusula Köprü</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="score">OA Score</option><option value="terazi">Terazi</option><option value="center">OA Labs Center</option></select>
+          <select name="app"><option value="">Genel</option><option value="pusula">Pusula Browser</option><option value="kopru">Pusula Köprü</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="terazi">Terazi</option><option value="center">OA Labs Center</option></select>
           <input name="url" placeholder="Bağlantı (https://…, isteğe bağlı)" maxlength="300">
           <div><button class="btn small" type="submit">Duyuruyu yayımla</button></div>
         </form>
@@ -290,7 +290,7 @@
         $('#m-announce').textContent = fmt(r.counts.announce);
         const nt = r.notify || {};
         $('#m-note').textContent = (r.mailEnabled ? '' : 'E-posta gönderimi kapalı: Resend anahtarı eklenene kadar kimse üye olamaz. ')
-          + `“Çıkınca haber ver”: OA Radyo Android ${fmt(nt['radyo-android'] || 0)} kişi, OA Score ${fmt(nt.score || 0)} kişi, Harrier Cleaner ${fmt(nt.harrier || 0)} kişi.`;
+          + `“Çıkınca haber ver”: OA Radyo Android ${fmt(nt['radyo-android'] || 0)} kişi, Harrier Cleaner ${fmt(nt.harrier || 0)} kişi.`;
         const today = new Date().toISOString().slice(0, 10);
         const from = new Date(Date.now() - (days - 1) * 86400e3).toISOString().slice(0, 10);
         const n = Object.fromEntries(r.daily.map((x) => [x.day, x.n]));

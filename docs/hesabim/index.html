@@ -186,10 +186,6 @@
               <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="ra-l" data-notify="radyo-android"></button>
             </div>
             <div class="switch">
-              <div><b id="sc-l">OA Score çıkınca haber ver</b><span>Uygulama yayına girdiğinde tek bir e-posta.</span></div>
-              <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="sc-l" data-notify="score"></button>
-            </div>
-            <div class="switch">
               <div><b id="hc-l">Harrier Cleaner çıkınca haber ver</b><span>Uygulama yayına girdiğinde tek bir e-posta.</span></div>
               <button class="tog" type="button" role="switch" aria-checked="false" aria-labelledby="hc-l" data-notify="harrier"></button>
             </div>
@@ -249,7 +245,6 @@
         { id: 'radyo', name: 'OA Radyo', img: '/radyo/img/icon.png', radyo: true, acts: [['Web’de dinle', '/dinle/'], ['İndir', '/radyo/', true]] },
         { id: 'terazi', name: 'Terazi', img: '/terazi/img/icon.png', sub: 'Windows · Android · Beta', acts: [['İncele', '/terazi/'], ['İndir', '/terazi/#indir', true]] },
         { id: 'harrier', name: 'Harrier Cleaner', img: '/harrier/img/icon.png', sub: 'Windows · Beta · Android yakında', acts: [['İncele', '/harrier/'], ['Beta’yı indir', '/harrier/#indir', true]] },
-        { id: 'score', name: 'OA Score', letter: 'S', bg: '#5BC48C', ink: '#0F2A1C' },
       ];
       var month = function (d) { return new Date(d).toLocaleDateString(window.OA_LOCALE || 'tr-TR', { month: 'long', year: 'numeric' }); };
       var when = function (d) {
