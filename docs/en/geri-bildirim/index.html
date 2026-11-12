@@ -92,6 +92,7 @@
         <a href="/en/yenilikler/">What’s new</a>
         <a href="/en/yardim/">Help</a>
         <a href="/en/iletisim/">Contact</a>
+        <a class="nav-support" href="/en/destek-ol/">Support us</a>
       </div>
       <a class="lang-sw" data-lang-switch href="/geri-bildirim/">TR</a>
       <div class="acct" data-account-slot><a class="acct-btn" href="/uye/?giris"><span class="lbl"><b>Sign in</b><small>or sign up</small></span></a></div>
@@ -109,7 +110,7 @@
         <p>No account needed. Add your email if you’d like a reply.</p>
         <fieldset class="kinds"><legend class="sr-only" style="position:absolute;left:-9999px">Write to us</legend><label><input type="radio" name="kind" value="hata" checked><span>Bug</span></label><label><input type="radio" name="kind" value="oneri"><span>Suggestion</span></label><label><input type="radio" name="kind" value="yorum"><span>Review</span></label><label><input type="radio" name="kind" value="diger"><span>Other</span></label></fieldset>
         <div class="row">
-          <label class="f">Which app?<select class="in" name="app"><option value="center">OA Labs Center</option><option value="pusula">Pusula Browser</option><option value="kopru">Pusula Köprü</option><option value="radyo">OA Radyo</option><option value="terazi">Terazi</option><option value="harrier">Harrier Cleaner</option><option value="site">Website</option><option value="diger">Other</option></select></label>
+          <label class="f">Which app?<select class="in" name="app"><option value="pusula">Pusula Browser</option><option value="radyo">OA Radyo</option><option value="harrier">Harrier Cleaner</option><option value="site">Website</option><option value="diger">Other</option></select></label>
           <label class="f"><span>Email <small>(optional, only for a reply)</small></span><input class="in" type="email" name="email" autocomplete="email" maxlength="200"></label>
         </div>
         <div id="rv" hidden style="margin-top:14px">
@@ -121,7 +122,7 @@
       </form>
 
       <section class="card" id="fikirler" aria-labelledby="ih">
-        <div class="ideas-head"><h2 id="ih" style="margin:0">Idea board</h2><div class="itabs" role="group"><button type="button" data-app="" aria-pressed="true">All</button><button type="button" data-app="center" aria-pressed="false">OA Labs Center</button><button type="button" data-app="pusula" aria-pressed="false">Pusula Browser</button><button type="button" data-app="kopru" aria-pressed="false">Pusula Köprü</button><button type="button" data-app="radyo" aria-pressed="false">OA Radyo</button><button type="button" data-app="terazi" aria-pressed="false">Terazi</button><button type="button" data-app="harrier" aria-pressed="false">Harrier Cleaner</button></div></div>
+        <div class="ideas-head"><h2 id="ih" style="margin:0">Idea board</h2><div class="itabs" role="group"><button type="button" data-app="" aria-pressed="true">All</button><button type="button" data-app="pusula" aria-pressed="false">Pusula Browser</button><button type="button" data-app="radyo" aria-pressed="false">OA Radyo</button><button type="button" data-app="harrier" aria-pressed="false">Harrier Cleaner</button></div></div>
         <p>Vote on other people’s ideas; the most popular rise to the top. Sign in to vote and add ideas. See what’s planned and done on the <a href="/en/yol-haritasi/">roadmap</a>.</p>
         <div id="idea-add"></div>
         <div id="idea-mine"></div>
@@ -163,7 +164,7 @@
   <script src="/sayac.js" defer></script>
   <script>
   (function () {
-    var T = {"rv_long": "Reviews published on the site can be up to 600 characters.", "signin": "Sign in", "appq": "App", "sent": "Thanks, we got it! If you asked for a reply, we’ll email you.", "i_sent": "Got your idea. It will appear on the board after a quick check.", "login": "Sign in to vote and add ideas.", "empty": "No ideas yet. Be the first to suggest one!", "mine": "Your ideas awaiting review", "st": {"open": "Open for votes", "planned": "Planned", "progress": "In progress", "done": "Released"}, "err": {"kisa": "Please add a bit more detail.", "eposta": "That email address doesn’t look valid.", "cok": "Too many submissions, try again a little later.", "giris": "Please sign in first.", "ag": "Couldn’t reach the server. Check your internet connection."}, "other": "Something went wrong, try again a little later.", "add": "Add an idea", "i_title": "Title", "i_title_ph": "In short: what should it do?", "i_body": "Details", "i_body_s": "optional", "i_send": "Send idea", "apps": [["center", "OA Labs Center"], ["pusula", "Pusula Browser"], ["kopru", "Pusula Köprü"], ["radyo", "OA Radyo"], ["terazi", "Terazi"], ["harrier", "Harrier Cleaner"], ["site", "Website"], ["diger", "Other"]]};
+    var T = {"rv_long": "Reviews published on the site can be up to 600 characters.", "signin": "Sign in", "appq": "App", "sent": "Thanks, we got it! If you asked for a reply, we’ll email you.", "i_sent": "Got your idea. It will appear on the board after a quick check.", "login": "Sign in to vote and add ideas.", "empty": "No ideas yet. Be the first to suggest one!", "mine": "Your ideas awaiting review", "st": {"open": "Open for votes", "planned": "Planned", "progress": "In progress", "done": "Released"}, "err": {"kisa": "Please add a bit more detail.", "eposta": "That email address doesn’t look valid.", "cok": "Too many submissions, try again a little later.", "giris": "Please sign in first.", "ag": "Couldn’t reach the server. Check your internet connection."}, "other": "Something went wrong, try again a little later.", "add": "Add an idea", "i_title": "Title", "i_title_ph": "In short: what should it do?", "i_body": "Details", "i_body_s": "optional", "i_send": "Send idea", "apps": [["pusula", "Pusula Browser"], ["radyo", "OA Radyo"], ["harrier", "Harrier Cleaner"], ["site", "Website"], ["diger", "Other"]]};
     var API = 'https://api.oalabs.dev';
     var APPN = {}; T.apps.forEach(function (a) { APPN[a[0]] = a[1]; });
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
