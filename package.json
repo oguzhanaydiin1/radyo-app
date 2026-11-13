@@ -1,7 +1,7 @@
 {
   "name": "radyo",
   "productName": "OA Radyo",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "OA Radyo — canlı radyo dinleme uygulaması",
   "main": "boot.js",
   "private": true,
@@ -76,5 +76,8 @@
     "email": "destek@oalabs.dev",
     "url": "https://oalabs.dev"
   },
-  "homepage": "https://oalabs.dev/radyo/"
+  "homepage": "https://oalabs.dev/radyo/",
+  "dependencies": {
+    "music-metadata": "^7.14.0"
+  }
 }

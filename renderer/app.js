@@ -321,7 +321,8 @@ function filteredWorld() {
 // ---------- HTML parçaları ----------
 
 /** Sırayla denenecek logo adresleri: istasyonun logosu, sonra sitesinin (yüksek çözünürlüklü) simgesi. */
-const proxied = (u) => `radyo-logo://img/?u=${encodeURIComponent(u)}`;
+// Masaüstünde logolar ana süreçten (CORS izniyle) gelir; Android'de doğrudan yüklenir.
+const proxied = (u) => (window.__noLogoProxy ? u : `radyo-logo://img/?u=${encodeURIComponent(u)}`);
 function logoSources(s) {
   const full = registry.get(s.id) || s; // eski kayıtlarda en güncel bilgiyi kullan
   const list = [];
@@ -354,6 +355,7 @@ function tileFor(s) {
   if (t) return t;
   for (const src of logoSources(s)) {
     const v = tiles.get(src);
+    if (v === 'raw') return src;
     if (v) return v;
     if (v !== false) break;
   }
@@ -460,7 +462,7 @@ function logoHTML(s, size = 48, radius = 10) {
   } else {
     const list = logoSources(s).filter((u) => tiles.get(u) !== false);
     const [first, ...rest] = list;
-    if (first) img = `<img src="${esc(first)}" data-sid="${esc(s.id)}" data-next="${esc(rest.join(' '))}" alt="" loading="lazy" crossorigin="anonymous" draggable="false">`;
+    if (first) img = `<img src="${esc(first)}" data-sid="${esc(s.id)}" data-next="${esc(rest.join(' '))}" alt="" loading="lazy"${window.__noLogoProxy ? '' : ' crossorigin="anonymous"'} draggable="false">`;
   }
   return `<span class="logo" style="width:${size}px;height:${size}px;border-radius:${radius}px">${fallback}${img}</span>`;
 }
@@ -499,11 +501,13 @@ function onLogoLoad(img) {
     try {
       tile = buildTile(img);
     } catch {
-      tile = null;
+      // Android: CORS'suz logo tuvale çizilemez; resmi olduğu gibi göster.
+      tile = window.__noLogoProxy ? 'raw' : null;
     }
     if (!tile) { tiles.set(src, false); nextLogo(img); return; }
     tiles.set(src, tile);
   }
+  if (tile === 'raw') { tiles.set(src, 'raw'); img.classList.add('tiled'); return; }
   if (img.dataset.sid) stationTile.set(img.dataset.sid, tile);
   img.classList.add('tiled');
   img.src = tile;
@@ -870,6 +874,12 @@ function renderSidebar() {
 }
 
 function renderPlayer() {
+  // Podcast ya da yerel müzik çalıyorsa üst kısmı media.js çizer.
+  if (hook('playerNow') !== true) renderStationNow();
+  renderPlayerRest();
+}
+
+function renderStationNow() {
   const s = state.current;
   $('#p-logo').innerHTML = s ? logoHTML(s, 48) : `<span class="empty-logo">${ICON.radio}</span>`;
   $('#p-name').textContent = s ? s.name : 'Bir istasyon seç';
@@ -886,7 +896,9 @@ function renderPlayer() {
   play.innerHTML = loading ? '<span class="spinner"></span>' : state.playing ? ICON.pause : ICON.play;
   play.setAttribute('aria-label', state.playing ? 'Duraklat' : 'Çal');
   play.title = state.playing ? 'Duraklat (Boşluk)' : 'Çal (Boşluk)';
+}
 
+function renderPlayerRest() {
   const mute = $('#btn-mute');
   mute.innerHTML = state.volume === 0 ? ICON.volOff : state.volume < 50 ? ICON.volLow : ICON.volHigh;
   mute.setAttribute('aria-label', state.volume === 0 ? 'Sesi aç' : 'Sesi kapat');
@@ -958,7 +970,7 @@ async function load(force = false) {
 }
 
 function selectSection(section) {
-  if (!['discover', 'world', 'favorites', 'recent', 'stats', 'recordings', 'alarms', 'support', 'updates'].includes(section)) return;
+  if (!['discover', 'world', 'favorites', 'recent', 'stats', 'recordings', 'alarms', 'support', 'updates', 'podcast', 'music', 'nowplaying'].includes(section)) return;
   hook('enterSection', section);
   if (section === 'recordings') loadRecordings();
   const wasWorld = state.section === 'world';
@@ -1281,6 +1293,7 @@ function failPlay() {
 }
 
 async function play(s, opts = {}) {
+  hook('stationPlay', s);
   clearTimeout(retryTimer);
   const same = state.current && state.current.id === s.id;
   if (!opts.retry) {
@@ -1326,6 +1339,7 @@ async function play(s, opts = {}) {
 }
 
 function togglePlay() {
+  if (hook('mediaToggle') === true) return;
   if (!state.current || state.playError) {
     const s = state.current || featured();
     if (s) play(s);
@@ -1349,6 +1363,7 @@ function togglePlay() {
 }
 
 function step(delta) {
+  if (hook('mediaStep', delta) === true) return;
   let list = view;
   if (state.section === 'favorites') list = state.favorites;
   if (state.section === 'recent') list = state.recent.map((e) => e.station);

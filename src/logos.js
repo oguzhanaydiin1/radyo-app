@@ -23,11 +23,12 @@ const keyOf = (url) => crypto.createHash('sha1').update(url).digest('hex');
 const inflight = new Map();
 
 /** app.whenReady'den önce çağrılmalı. */
-function registerScheme() {
+function registerScheme(extra = []) {
+  // Electron bu çağrıya yalnızca bir kez izin verir; diğer adresler de buradan kaydedilir.
   protocol.registerSchemesAsPrivileged([{
     scheme: SCHEME,
     privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true },
-  }]);
+  }, ...extra]);
 }
 
 const TYPES = /^image\/(png|jpe?g|gif|webp|svg\+xml|x-icon|vnd\.microsoft\.icon|avif|bmp)$/i;

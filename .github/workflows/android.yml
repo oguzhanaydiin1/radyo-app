@@ -1,6 +1,6 @@
 name: Android test APK
 
-# Web oynatıcısını (docs/dinle) Capacitor ile Android uygulamasına sarar, hata ayıklama
+# Windows arayüzünü (renderer/) Android köprüsüyle Capacitor uygulamasına sarar, hata ayıklama
 # imzalı bir APK derler ve "android-test" sürüm sayfasına koyar. Elle başlatılır.
 on:
   workflow_dispatch:
@@ -24,15 +24,12 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Web dosyalarını hazırla
-        run: |
-          mkdir -p www/radyo/img
-          cp -r ../docs/dinle/. www/
-          cp ../docs/radyo/img/favicon.png ../docs/radyo/img/icon.png www/radyo/img/
-          # Uygulamada web sitesine özel giriş metnini gösterme.
-          sed -i 's#Windows uygulaması için <a href="/radyo/">OA Radyo</a> sayfasına göz at.##' www/index.html
+      - name: Web dosyalarını hazırla (Windows arayüzü + Android köprüsü)
+        working-directory: .
+        run: node mobile/scripts/build-www.js
 
       - name: Android projesini oluştur
+        id: ver
         run: |
           npm install --no-audit --no-fund
           npx cap add android
@@ -42,6 +39,7 @@ jobs:
           rm -rf android/app/src/main/res/mipmap-anydpi-v26
           # Sürüm bilgisi
           V=$(node -p "require('../package.json').version")
+          echo "v=$V" >> "$GITHUB_OUTPUT"
           sed -i "s/versionName \"[^\"]*\"/versionName \"$V-test\"/" android/app/build.gradle
           sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/" android/app/build.gradle
           # Arka planda çalarken ekranın kapanmasına izin ver, ağ izni zaten var.
@@ -62,6 +60,9 @@ jobs:
           name: OA Radyo Android (test)
           prerelease: true
           body: |
+            Sürüm: ${{ steps.ver.outputs.v }}
+            build: ${{ github.run_number }}
+
             OA Radyo'nun Android test sürümü. Telefonda bu sayfayı açıp OA-Radyo-test.apk dosyasını indir ve kur.
             Kurulum sırasında Android "bilinmeyen kaynaklardan yükleme" izni isteyebilir.
           files: mobile/OA-Radyo-test.apk

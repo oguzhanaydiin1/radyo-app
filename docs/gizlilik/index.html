@@ -56,7 +56,7 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 13 Kasım 2026 (Terazi belgeleri ve yedeği; Pusula Köprü, Terazi ve OA Labs Center eklendi; indirme sayacı; 10 Kasım: ziyaretçi sayacına ülke; 9 Kasım: Pusula Browser, site ziyaretçi sayacı, geri bildirim ve yorumlar) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center ve oalabs.dev</p>
+      <p class="date">Son güncelleme: 14 Kasım 2026 (OA Radyo: podcast, yerel müzik ve şarkı sözleri; 13 Kasım: Terazi belgeleri ve yedeği; Pusula Köprü, Terazi ve OA Labs Center eklendi; indirme sayacı; 10 Kasım: ziyaretçi sayacına ülke; 9 Kasım: Pusula Browser, site ziyaretçi sayacı, geri bildirim ve yorumlar) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), Pusula Köprü, OA Radyo (Windows ve Android), Terazi, Harrier Cleaner, OA Labs Center ve oalabs.dev</p>
 
       <p class="short">Kısaca: OA Labs uygulamaları reklam içermez, seni izlemez ve kullanmak için hesap istemez. Verilerinin çoğu kendi cihazında kalır. Sunucumuza yalnızca senin açtığın özelliklerin (hesapla eşitleme, sohbet, izin verirsen isimsiz kullanım sayıları) gerektirdiği bilgiler ve isimsiz hata raporları gider. Her uygulamada neyin nereye gittiği aşağıda ayrı ayrı yazılı.</p>
 
@@ -110,6 +110,13 @@
         <li><strong>Logo kaynakları:</strong> istasyon logoları radyonun kendi sitesinden ya da Google’ın site simgesi hizmetinden indirilir.</li>
         <li><strong>GitHub:</strong> yeni sürüm denetimi, güncelleme dosyaları ve ek istasyon listesi buradan indirilir.</li>
         <li><strong>Google Fonts:</strong> uygulamanın yazı tipleri, yalnızca 0.9.1 ve önceki sürümlerde. Sonraki sürümlerde yazı tipleri uygulamanın içinde gelir; Google’a bağlanılmaz.</li>
+      </ul>
+
+      <h3 id="radyo-medya">Podcast, kendi müziğin ve şarkı sözleri (0.10 ve sonrası)</h3>
+      <ul>
+        <li><strong>Kendi müziğin:</strong> eklediğin klasördeki ya da seçtiğin müzik dosyaları <strong>hiçbir yere yüklenmez</strong>; yalnızca cihazında çalınır. Windows’ta klasörlerin listesi ve parçaların adları, sanatçıları, albümleri ve süreleri uygulama klasöründe (<span class="muted">kutuphane.json</span>) tutulur. Çalma listelerin de cihazında durur. Android’de seçtiğin dosyalar yalnızca uygulama açıkken listede kalır.</li>
+        <li><strong>Şarkı sözleri:</strong> önce parçanın kendi dosyasına ve yanındaki .lrc dosyasına bakılır. Söz bulunamazsa ve Ayarlar’daki “Sözleri internetten bul” açıksa (varsayılan olarak açık) LRCLIB’e (lrclib.net) yalnızca sanatçı adı, şarkı adı, albüm adı ve süre gönderilir; dosyanın kendisi gönderilmez. Android’de bu istek sunucumuz (api.oalabs.dev) üzerinden gider ve kaydedilmez.</li>
+        <li><strong>Podcast:</strong> aradığın kelimeler ve ülke kodu Apple Podcasts dizinine (itunes.apple.com) gönderilir; açtığın podcast’in RSS beslemesi o podcast’in sunucusundan alınır, bölümler de yayıncının sunucusundan çalar. Android’de arama ve besleme istekleri sunucumuz (api.oalabs.dev) üzerinden geçer; içerikleri saklanmaz, yanıtlar kısa süre önbellekte tutulur. Takip ettiğin podcast’ler, dinleme konumların ve “dinlendi” işaretlerin yalnızca cihazında tutulur.</li>
       </ul>
 
       <h3>İsimsiz kullanım sayımı (yalnızca izin verirsen)</h3>
@@ -200,7 +207,7 @@
 
       <h1 lang="en" id="en">Privacy policy</h1>
       <div lang="en">
-        <p class="date">Last updated: 13 November 2026 · Applies to: Pusula Browser (Windows and Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center and oalabs.dev</p>
+        <p class="date">Last updated: 14 November 2026 · Applies to: Pusula Browser (Windows and Android), Pusula Köprü, OA Radyo (Windows and Android), Terazi, Harrier Cleaner, OA Labs Center and oalabs.dev</p>
         <p class="short">In short: OA Labs apps contain no ads, don’t track you and don’t need an account. Most of your data stays on your own device. Our server only receives what the features you turn on need (account sync, chat, anonymous usage counts if you allow them) and anonymous error reports. What goes where is described below, app by app.</p>
         <p class="toc">On this page: <a href="#pusula-en">Pusula Browser</a> · <a href="#radyo-en">OA Radyo</a> · <a href="#harrier-en">Harrier Cleaner</a> · <a href="#kopru-en">Pusula Köprü</a> · <a href="#terazi-en">Terazi</a> · <a href="#center-en">OA Labs Center</a> · <a href="#site-en">oalabs.dev and your OA Labs account</a></p>
         <h2>What we don’t collect</h2>
@@ -230,6 +237,8 @@
         <p>Favourites, history, added stations, alarms, schedules, settings, equalizer choices, listening statistics, recent songs and cached station logos are kept in <span class="muted">%APPDATA%\Radyo</span>. Recordings are saved to “Radyo Kayıtları” in your Music folder.</p>
         <h3>Services the app connects to</h3>
         <p>Radio Browser (station lists; when you play or like a station, only the station’s ID is sent), the radio stations’ own streaming servers, station logo sources (the station’s site or Google’s favicon service), GitHub (update checks and the extra station list) and, in version 0.9.1 and earlier only, Google Fonts (later versions ship the fonts inside the app). As with any internet connection, these services can see your IP address. Nothing else is sent.</p>
+        <h3 id="radyo-media-en">Podcasts, your own music and lyrics (0.10 and later)</h3>
+        <p><strong>Your music</strong> is never uploaded; it only plays on your device. On Windows the list of folders and each track’s title, artist, album and length are kept in <span class="muted">kutuphane.json</span> in the app folder; playlists also stay on your device. On Android, files you pick stay in the list only while the app is open. <strong>Lyrics</strong> come first from the track’s own file and a .lrc file next to it; if none are found and “Find lyrics online” is on in Settings (on by default), only the artist, title, album and length are sent to LRCLIB (lrclib.net), never the file. <strong>Podcasts:</strong> your search words and a country code are sent to the Apple Podcasts directory (itunes.apple.com); a show’s RSS feed comes from its own server and episodes play from the publisher’s server. On Android, search, feed and lyrics requests pass through our server (api.oalabs.dev) without being stored; responses are cached briefly. Shows you follow, playback positions and “played” marks stay on your device.</p>
         <h3>Anonymous usage counts (only with your permission)</h3>
         <p>If you allow it (you can turn it off in Settings), every 15 minutes the app sends our server (api.oalabs.dev) a random install ID, the app version, the interface language and how many minutes each station was played. Names of stations you added yourself are not sent. The install ID is stored only as a one-way hash; no name, email or IP address is stored. The numbers are only viewed in aggregate.</p>
         <h3>Live chat</h3>

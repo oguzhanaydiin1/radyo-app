@@ -17,9 +17,11 @@ const settings = require('./src/settings');
 const updater = require('./src/updater');
 const logos = require('./src/logos');
 const discord = require('./src/discord');
+const library = require('./src/library');
+const podcast = require('./src/podcast');
 const { t: T } = require('./src/i18n-main');
 
-logos.registerScheme();
+logos.registerScheme([library.PRIVILEGED]);
 
 // Logosu ya da yayını bozuk sertifikalı sitelerden gelen istasyonlar için
 // Chromium'un terminale yazdığı "handshake failed" satırlarını gizle.
@@ -205,6 +207,7 @@ function toggleMini() {
 
 function registerIpc() {
   radio.register();
+  registerMediaIpc();
 
   // Çalar durumu (ana pencereden) ve komutlar (tepsi / mini oynatıcıdan).
   ipcMain.on('player:state', (_e, st) => {
@@ -279,7 +282,7 @@ function registerIpc() {
   ipcMain.handle('settings:get', () => ({ ...settings.get(), version: APP_VERSION, packaged: app.isPackaged }));
   ipcMain.handle('settings:set', async (_e, patch) => {
     const allowed = {};
-    for (const k of ['closeToTray', 'openAtLogin', 'globalKeys', 'lang']) if (patch && k in patch) allowed[k] = patch[k];
+    for (const k of ['closeToTray', 'openAtLogin', 'globalKeys', 'lang', 'lyricsOnline']) if (patch && k in patch) allowed[k] = patch[k];
     await settings.set(allowed);
     if ('globalKeys' in allowed) registerGlobalKeys();
     if ('lang' in allowed) {
@@ -435,6 +438,21 @@ function registerGlobalKeys() {
   }
 }
 
+// Podcast ve yerel müzik kütüphanesi.
+function registerMediaIpc() {
+  ipcMain.handle('pod:search', (_e, opts) => podcast.search(opts));
+  ipcMain.handle('pod:feed', (_e, url, opts) => podcast.feed(url, opts));
+  ipcMain.handle('pod:curated', () => podcast.curated());
+  ipcMain.handle('lib:get', () => library.get());
+  ipcMain.handle('lib:addFolder', () => library.addFolder(mainWindow));
+  ipcMain.handle('lib:removeFolder', (_e, dir) => library.removeFolder(dir));
+  ipcMain.handle('lib:rescan', () => library.rescan());
+  ipcMain.handle('lib:cover', (_e, id) => library.cover(id));
+  ipcMain.handle('lib:lyrics', (_e, id) => library.lyrics(id));
+  ipcMain.handle('lib:online', (_e, q) => library.online(q));
+  ipcMain.handle('lib:reveal', (_e, id) => library.reveal(id));
+}
+
 function registerExtrasIpc() {
   ipcMain.handle('keys:status', () => ({ on: !!settings.get().globalKeys, failed: keysFailed }));
   ipcMain.on('win:theme', (_e, mode) => applyTheme(mode === 'light' ? 'light' : 'dark'));
@@ -490,6 +508,7 @@ if (!app.requestSingleInstanceLock()) {
     app.setAppUserModelId('com.radyo.app');
     settings.loadSync();
     logos.handle();
+    library.init({ notify: (ev) => sendMain('lib:event', ev), settings: () => settings.get() });
     // Ekolayzır için: yayın yanıtlarına CORS izni ekle (Web Audio sessiz kalmasın).
     session.defaultSession.webRequest.onHeadersReceived((details, cb) => {
       const h = details.responseHeaders || {};

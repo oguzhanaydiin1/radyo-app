@@ -23,9 +23,10 @@ let publishTimer = null;
 function publishState() {
   clearTimeout(publishTimer);
   publishTimer = setTimeout(() => {
-    const s = state.current;
+    const s = state.current || (window.OAMedia && window.OAMedia.station()) || null;
+    const media = !state.current && !!s;
     P.sendState({
-      station: s ? { id: s.id, name: s.name, favicon: tileFor(s) || logoSources(s)[0] || '', initials: initials(s.name), tint: tintFor(s.id) } : null,
+      station: s ? (media ? s : { id: s.id, name: s.name, favicon: tileFor(s) || logoSources(s)[0] || '', initials: initials(s.name), tint: tintFor(s.id) }) : null,
       playing: state.playing,
       buffering: state.buffering,
       title: state.playing ? state.nowTitle || '' : '',
@@ -729,8 +730,8 @@ function supportHTML() {
       </div>
     </div>
     <div class="info-row"><span>Sürüm</span><span>${esc(a ? a.version : '')}</span></div>
-    <div class="info-row"><span>Sistem</span><span>${esc(a ? `${a.os} (${a.arch})` : '')}</span></div>
-    <div class="info-row"><span>Altyapı</span><span>${esc(a ? `Electron ${a.electron}` : '')}</span></div>
+    <div class="info-row"><span>Sistem</span><span>${esc(a ? (a.arch ? `${a.os} (${a.arch})` : a.os) : '')}</span></div>
+    <div class="info-row"><span>Altyapı</span><span>${esc(a ? (a.electron ? `Electron ${a.electron}` : 'Android WebView') : '')}</span></div>
     <p class="dialog-note" style="margin-top:12px">İstasyon bilgileri, gönüllülerin oluşturduğu ücretsiz
       <a href="#" data-action="open-link" data-url="https://www.radio-browser.info">Radio Browser</a> veritabanından gelir.
       Yayınların hakları ilgili radyo kuruluşlarına aittir.</p>

@@ -2,3 +2,6 @@ node_modules/
 dist/
 out/
 *.log
+mobile/www/
+mobile/android/
+mobile/node_modules/

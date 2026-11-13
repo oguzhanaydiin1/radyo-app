@@ -6,6 +6,11 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      test:
+        description: 'Test sürümü: kurulum dosyası "windows-test" sayfasına konur, en son sürüm olarak işaretlenmez, otomatik güncelleme gitmez'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -25,7 +30,19 @@ jobs:
         id: v
         shell: bash
         run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Test sürümü sayfasına koy
+        if: ${{ inputs.test }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: windows-test
+          name: OA Radyo ${{ steps.v.outputs.version }} (Windows test)
+          body_path: release-notes.md
+          prerelease: true
+          make_latest: false
+          files: |
+            dist/Radyo-Setup.exe
       - name: Releases sayfasına koy
+        if: ${{ !inputs.test }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.v.outputs.version }}

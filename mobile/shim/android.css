@@ -1,0 +1,95 @@
+/* OA Radyo — Android düzeni. Windows arayüzünün üstüne yüklenir (html.is-android). */
+
+/* Android'de olmayan özellikler */
+.is-android #btn-mini,
+.is-android #btn-rec,
+.is-android #btn-eq,
+.is-android #btn-output,
+.is-android .nav-item[data-section="recordings"],
+.is-android [data-action="sched-new"][data-type="record"],
+.is-android .set-group:has(#set-tray),
+.is-android .set-group:has(#sync-path),
+.is-android #discord-row,
+.is-android .switch-row:has(#set-keys),
+.is-android .titlebar-rest,
+.is-android kbd { display: none !important; }
+
+.is-android .titlebar { -webkit-app-region: no-drag; padding: env(safe-area-inset-top) 12px 0; height: calc(52px + env(safe-area-inset-top)); gap: 10px; }
+.is-android .brand { flex: 0 0 auto; }
+.is-android .search { flex: 1 1 auto; height: 38px; }
+.is-android .search input { font-size: 15px; }
+.is-android .nav-toggle { display: none; }
+.is-android .nav-scrim { display: none; }
+.is-android .player { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Dokunmatik: düğmeler en az 44 px */
+.is-android .icon-btn { width: 44px; height: 44px; border-radius: 22px; }
+.is-android .icon-btn.tiny { width: 36px; height: 36px; }
+.is-android .trk-acts, .is-android .ep-row > .icon-btn.tiny, .is-android .pod-follow { opacity: 1; }
+.is-android .seek input::-webkit-slider-thumb { opacity: 1; }
+
+@media (max-width: 860px) {
+  .is-android .nav-toggle { display: flex; margin-left: -6px; }
+  .is-android .brand > span:last-child { display: none; }
+  .is-android .sidebar {
+    position: fixed; z-index: 70; left: 0; top: 0; bottom: 0;
+    width: min(84vw, 300px); overflow-y: auto;
+    padding-top: calc(16px + env(safe-area-inset-top)); padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    transform: translateX(-104%); transition: transform .22s ease;
+    box-shadow: none;
+  }
+  .is-android.nav-open .sidebar { transform: none; box-shadow: 0 0 40px rgba(0, 0, 0, .5); }
+  .is-android .nav-scrim { position: fixed; inset: 0; z-index: 65; background: rgba(0, 0, 0, .5); }
+  .is-android.nav-open .nav-scrim { display: block; }
+  .is-android .nav-item { height: 46px; font-size: 15px; }
+  .is-android .content { padding: 16px 14px 24px; }
+  .is-android .page-title { font-size: 26px; margin-bottom: 16px; }
+
+  /* Alt oynatıcı: üstte çalan + düğmeler, altta ilerleme, en altta küçük düğmeler */
+  .is-android .player,
+  .is-android .player.has-seek {
+    display: grid; height: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "now ctl" "seek seek" "extra extra";
+    gap: 4px 8px; padding: 8px 10px calc(6px + env(safe-area-inset-bottom));
+  }
+  .is-android .player-now { grid-area: now; gap: 10px; }
+  .is-android .player-controls { display: contents; }
+  .is-android .pc-row { grid-area: ctl; gap: 0; }
+  .is-android .pc-row .m-ctl#btn-shuffle, .is-android .pc-row .m-ctl#btn-repeat { display: none; }
+  .is-android .play-btn { width: 46px; height: 46px; }
+  .is-android .seek { grid-area: seek; width: 100%; }
+  .is-android .player-extra { grid-area: extra; justify-content: space-around; gap: 0; }
+  .is-android .player-extra:not(:has(> :not([hidden]):not(.volume))) { display: none; }
+  .is-android .volume { display: none; }
+  .is-android .m-art, .is-android .m-tile, .is-android #p-logo .logo, .is-android .empty-logo { width: 44px; height: 44px; }
+
+  /* Şimdi çalıyor: karıştır/tekrar burada görünür */
+  .is-android .np { gap: 18px; }
+  .is-android .np-stage { gap: 14px; }
+  .is-android .np-title { font-size: 22px; }
+  .is-android .np-lyrics .ly { font-size: 19px; }
+  .is-android .np-lyrics.synced { padding: 12vh 0; }
+  .is-android .np-panel { max-height: 60vh; }
+
+  /* Listeler */
+  .is-android .trk-main { grid-template-columns: 26px auto minmax(0, 1fr) 44px; gap: 10px; padding: 8px 6px; }
+  .is-android .trk-main:not(:has(.cv)) { grid-template-columns: 26px minmax(0, 1fr) 44px; }
+  .is-android .trk-acts .icon-btn.tiny { width: 34px; height: 34px; }
+  .is-android .mus-bar-top { gap: 8px; }
+  .is-android .mus-filter { width: 100%; order: 5; }
+  .is-android .alb-grid, .is-android .pod-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px 12px; }
+  .is-android .pod-search .pill { padding: 0 16px; }
+  .is-android .pod-show-head { gap: 16px; }
+  .is-android .pod-show-name { font-size: 26px; }
+  .is-android .mus-open-head { flex-direction: column; align-items: flex-start; }
+  .is-android .ep-row { padding: 10px 6px; gap: 10px; }
+  .is-android .pod-cont { grid-template-columns: minmax(0, 1fr); }
+  .is-android .dialog { width: calc(100vw - 24px); max-width: 520px; }
+}
+
+/* Şimdi çalıyor ekranında karıştır/tekrar düğmeleri (telefonda alt çubukta yer yok) */
+.is-android .np-mobile-ctl { display: none; }
+@media (max-width: 860px) {
+  .is-android .np-mobile-ctl { display: flex; justify-content: center; gap: 24px; }
+}

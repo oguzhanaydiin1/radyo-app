@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "note": "Podcast sekmesinde önerilen programlar. Her kayıt iTunes'ta 'term' ile aranır, adı eşleşen ilk sonuç kullanılır. Uygulama bu dosyayı GitHub'dan günceller.",
+  "tr": [
+    { "term": "Medyascope", "cat": "Haber" },
+    { "term": "Açık Bilim", "cat": "Bilim" },
+    { "term": "64 Bits", "cat": "Teknoloji" },
+    { "term": "Codefiction", "cat": "Teknoloji" },
+    { "term": "Gerisi Hikaye", "cat": "Kültür" },
+    { "term": "Girişimci Muhabbeti", "cat": "İş" },
+    { "term": "Merdiven Altı Terapi", "cat": "Sohbet" },
+    { "term": "Nereden Başlasam", "cat": "Kültür" },
+    { "term": "Dünya Nereye Gidiyor", "cat": "Haber" },
+    { "term": "Lafın Gelişi", "cat": "Kültür" },
+    { "term": "Hayatlar Hikayeler", "cat": "Sohbet" },
+    { "term": "Fularsız Entellik", "cat": "Kültür" },
+    { "term": "Filmloverss", "cat": "Sinema" },
+    { "term": "Gayrisafi Fikirler", "cat": "Bilim" }
+  ],
+  "en": [
+    { "term": "The Daily", "cat": "News" },
+    { "term": "This American Life", "cat": "Stories" },
+    { "term": "Serial", "cat": "Stories" },
+    { "term": "Planet Money", "cat": "Business" },
+    { "term": "Acquired", "cat": "Business" },
+    { "term": "The Diary of a CEO", "cat": "Business" },
+    { "term": "Armchair Expert", "cat": "Talk" },
+    { "term": "Crime Junkie", "cat": "True crime" },
+    { "term": "Dateline NBC", "cat": "True crime" },
+    { "term": "Radiolab", "cat": "Science" }
+  ]
+}

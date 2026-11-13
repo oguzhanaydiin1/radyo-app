@@ -82,3 +82,24 @@ contextBridge.exposeInMainWorld('extras', {
   byUuid: (id) => ipcRenderer.invoke('radio:byuuid', id),
   keysStatus: () => ipcRenderer.invoke('keys:status'),
 });
+
+// Podcast: arama, besleme, önerilenler.
+contextBridge.exposeInMainWorld('podcasts', {
+  search: (opts) => ipcRenderer.invoke('pod:search', opts),
+  feed: (url, opts) => ipcRenderer.invoke('pod:feed', url, opts),
+  curated: () => ipcRenderer.invoke('pod:curated'),
+});
+
+// Yerel müzik kütüphanesi.
+contextBridge.exposeInMainWorld('library', {
+  get: () => ipcRenderer.invoke('lib:get'),
+  addFolder: () => ipcRenderer.invoke('lib:addFolder'),
+  removeFolder: (dir) => ipcRenderer.invoke('lib:removeFolder', dir),
+  rescan: () => ipcRenderer.invoke('lib:rescan'),
+  cover: (id) => ipcRenderer.invoke('lib:cover', id),
+  lyrics: (id) => ipcRenderer.invoke('lib:lyrics', id),
+  online: (q) => ipcRenderer.invoke('lib:online', q),
+  reveal: (id) => ipcRenderer.invoke('lib:reveal', id),
+  onEvent: on('lib:event'),
+  desktop: true,
+});

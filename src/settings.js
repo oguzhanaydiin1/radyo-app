@@ -15,6 +15,7 @@ const DEFAULTS = {
   miniBounds: null,
   globalKeys: true,
   lang: 'tr',
+  lyricsOnline: true,
 };
 const SYNC_NAME = 'radyo-esitleme.json';
 
@@ -55,6 +56,7 @@ async function set(patch = {}) {
   if ('miniBounds' in patch) next.miniBounds = patch.miniBounds;
   if ('globalKeys' in patch) next.globalKeys = !!patch.globalKeys;
   if ('lang' in patch) next.lang = patch.lang === 'en' ? 'en' : 'tr';
+  if ('lyricsOnline' in patch) next.lyricsOnline = !!patch.lyricsOnline;
   data = next;
   await persist();
   if ('syncDir' in patch) watchSync();

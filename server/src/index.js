@@ -13,6 +13,7 @@
  *   GET  /indir/{terazi|center}/{windows|android|zip}, /v1/{terazi|center}/latest  Aynısı, Terazi ve OA Labs Center için
  *   GET  /v1/kopru/ws/:kutu    Pusula Köprü aktarımı (WebSocket): eşleşmiş iki cihaz farklı ağdayken
  *   PUT/GET/DELETE /v1/kopru/file/:kutu/:id   Aktarılan dosya (geçici, en fazla 100 MB, 24 saat)
+ *   GET  /v1/podcast/search, /v1/podcast/feed, /v1/lyrics   OA Radyo web/Android için podcast ve söz vekili (media.js)
  *   POST /v1/site/visit        Site sayfa görüntüleme (oalabs.dev, çerezsiz)
  *   POST /v1/site/live         "Şu an sitede" sinyali (25 sn'de bir); { live } döner
  *   GET  /v1/admin/site        Site ziyaret istatistikleri ve anlık ziyaretçiler (yönetici)
@@ -27,6 +28,7 @@
 
 import { sendFeedback, listIdeas, addIdea, voteIdea, adminFeedback, adminIdeas, listReviews, adminReviews } from './ideas.js';
 import { syncDevice, listDevices, removeDevice, addCommand, finishCommand, listAnnouncements, adminAnnouncements } from './center.js';
+import { podcastSearch, podcastFeed, lyrics } from './media.js';
 import { start, verify, logout, handoff, redeem, me, deleteMe, adminUsers, mySessions, emailStart, emailVerify, mySync, myAvatar, setAvatar, deleteAvatar } from './auth.js';
 
 const APPS = new Set(['radyo']);
@@ -438,6 +440,10 @@ export default {
           files: Object.fromEntries(Object.entries(i.files).map(([k, v]) => [k, { name: v.name, size: v.size }])) }),
           { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', ...h } });
       }
+      // OA Radyo web/Android: podcast ve şarkı sözü vekili (media.js)
+      if (url.pathname === '/v1/podcast/search' && req.method === 'GET') return await withCors(podcastSearch(req, url, ctx), h);
+      if (url.pathname === '/v1/podcast/feed' && req.method === 'GET') return await withCors(podcastFeed(req, url, ctx), h);
+      if (url.pathname === '/v1/lyrics' && req.method === 'GET') return await withCors(lyrics(req, url, ctx), h);
       if (url.pathname === '/v1/site/visit' && req.method === 'POST') return await withCors(siteVisit(req, env), h);
       if (url.pathname === '/v1/site/live' && req.method === 'POST') return await withCors(siteLive(req, env, url.searchParams.has('leave')), h);
       if (url.pathname === '/v1/admin/site' && req.method === 'GET') {
