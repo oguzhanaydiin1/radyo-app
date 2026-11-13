@@ -224,6 +224,7 @@
     .dev-card .dev b { font-size: 12.5px; }
     .dev-card .dev span { font-size: 10px; }
     .note { font-size: 10px; color: var(--muted); line-height: 1.4; }
+    @media (min-width: 961px) { .groups:has(> .grp:nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .upd { border-radius: 14px; background: rgba(242,165,65,.10); border: 1px solid rgba(242,165,65,.35); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; font-weight: 600; }
     @media (max-width: 760px) {
       .ui-side { display: none; }
@@ -342,6 +343,11 @@
           <ul><li><b>Regular payments:</b> add once and they land in the calendar every month</li><li><b>How many months?</b> 12, 24, 36 or ongoing; a loan shows as “instalment 8 of 24”</li><li><b>“Paid yet?”</b> prompt and Android notification; optionally a reminder 1 or 3 days before</li><li><b>Amounts that vary:</b> like bills; on the day it asks for the real amount</li></ul>
         </article>
         <article class="grp">
+          <div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></div>
+          <h3>Document vault</h3>
+          <ul><li><b>Bills, insurance, warranties, contracts:</b> scan with your phone’s camera or add a PDF/photo</li><li><b>Expiry reminders:</b> reminds you 30, 15 or 7 days before a policy or warranty ends</li><li><b>Linked to payments:</b> attach the bill when you tap “Paid”</li><li><b>On your device only, encrypted:</b> documents never go to a server; you keep them with a password-protected backup file</li></ul>
+        </article>
+        <article class="grp">
           <div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
           <h3>Budgets and reports</h3>
           <ul><li><b>Category budgets:</b> groceries, fun… set a monthly limit; it turns red when you go over</li><li><b>Reports:</b> spending over the last six months and a breakdown by category</li><li><b>Compared with last month</b>, and the category that grew the most</li><li><b>Export on Windows:</b> all activity as CSV, opens in Excel</li><li><b>Turkish and English</b>, light and dark theme; lira, dollar, euro, pound, rouble, manat and franc</li></ul>
@@ -381,7 +387,9 @@
 
     <section class="wrap faq" id="sss" aria-labelledby="sss-h">
       <h2 class="h2" id="sss-h">Questions</h2>
-      <details open><summary>Where is my data kept?</summary><p>Only on your device, in the app’s own folder. Terazi needs no account; your entries, amounts and payments are never sent to a server. Uninstalling the app deletes them all. Details in the <a href="/gizlilik/#terazi-en">privacy policy</a>.</p></details>
+      <details open><summary>Where is my data kept?</summary><p>Only on your device, in the app’s own folder. Terazi needs no account; your entries, amounts, payments and documents are never sent to a server. Documents are stored encrypted. Uninstalling the app deletes everything, so make a password-protected backup now and then under Settings → Backup and transfer. Details in the <a href="/gizlilik/#terazi-en">privacy policy</a>.</p></details>
+      <details><summary>Can I store my ID card or bank card?</summary><p>No, Terazi isn’t meant for them. There’s no ID type, and you’ll see a warning when adding documents: a photo of an ID or card on a lost phone could be misused.</p></details>
+      <details><summary>How do I back up, and what if I change phones?</summary><p>Settings → Backup and transfer → “Create encrypted backup”. Your entries and documents go into one file encrypted with a password you choose; save it to Google Drive or your computer. On the new device, “Restore from backup” brings everything back. If you forget the password, the backup can’t be opened, not even by us.</p></details>
       <details><summary>Do my phone and PC sync?</summary><p>Not yet: each device keeps its own entries. We’re working on end-to-end encrypted sync with your OA Labs account; this page will say when it’s out.</p></details>
       <details><summary>My loan is already under way. What do I do?</summary><p>When adding the regular payment, choose the total number of instalments (e.g. 24) and which instalment the next payment is (e.g. 8). Terazi works out the end date; months before you added it count as paid.</p></details>
       <details><summary>What about bills whose amount changes?</summary><p>Turn on “Amount may vary” when adding the payment. You enter a rough amount; on the day Terazi asks for the real one and records that.</p></details>

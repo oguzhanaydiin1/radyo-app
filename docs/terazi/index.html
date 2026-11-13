@@ -224,6 +224,7 @@
     .dev-card .dev b { font-size: 12.5px; }
     .dev-card .dev span { font-size: 10px; }
     .note { font-size: 10px; color: var(--muted); line-height: 1.4; }
+    @media (min-width: 961px) { .groups:has(> .grp:nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .upd { border-radius: 14px; background: rgba(242,165,65,.10); border: 1px solid rgba(242,165,65,.35); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; font-weight: 600; }
     @media (max-width: 760px) {
       .ui-side { display: none; }
@@ -342,6 +343,11 @@
           <ul><li><b>Düzenli ödeme:</b> bir kez ekle, her ay kendiliğinden takvime düşsün</li><li><b>Kaç ay sürecek?</b> 12, 24, 36 ay ya da süresiz; kredide “8. taksit / 24” gibi görünür</li><li><b>“Ödendi mi?”</b> sorusu ve Android bildirimi; isteğe göre 1 ya da 3 gün önce de hatırlatır</li><li><b>Tutarı değişen ödemeler:</b> fatura gibi; ödeme günü gerçek tutarı sorar</li></ul>
         </article>
         <article class="grp">
+          <div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></div>
+          <h3>Belge kasası</h3>
+          <ul><li><b>Fatura, sigorta, garanti, sözleşme:</b> telefonda kamerayla tara ya da PDF/fotoğraf ekle</li><li><b>Bitiş hatırlatması:</b> poliçe ya da garanti bitmeden 30, 15 ya da 7 gün önce haber verir</li><li><b>Ödeme ile bağlantı:</b> “Ödendi” derken faturasını da ekle</li><li><b>Yalnızca cihazında, şifreli:</b> belgeler hiçbir sunucuya gitmez; parolalı yedek dosyasıyla sen saklarsın</li></ul>
+        </article>
+        <article class="grp">
           <div class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
           <h3>Bütçe ve rapor</h3>
           <ul><li><b>Kategori bütçeleri:</b> market, eğlence… aylık sınır koy; aşınca kırmızıya döner</li><li><b>Raporlar:</b> son altı ayın gideri ve kategorilere göre dağılım</li><li><b>Önceki ayla karşılaştırma</b> ve en çok artan kalem</li><li><b>Windows’ta dışa aktarma:</b> bütün hareketler CSV olarak, Excel’de açılır</li><li><b>Türkçe ve İngilizce</b>, açık ve koyu tema; TL, dolar, euro, sterlin, ruble, manat ve frank</li></ul>
@@ -381,7 +387,9 @@
 
     <section class="wrap faq" id="sss" aria-labelledby="sss-h">
       <h2 class="h2" id="sss-h">Sorular</h2>
-      <details open><summary>Verilerim nerede tutuluyor?</summary><p>Yalnızca cihazında, uygulamanın kendi klasöründe. Terazi hesap istemez; kayıtların, tutarların ve ödemelerin hiçbir sunucuya gönderilmez. Uygulamayı kaldırınca hepsi silinir. Ayrıntılar <a href="/gizlilik/#terazi">gizlilik politikasında</a>.</p></details>
+      <details open><summary>Verilerim nerede tutuluyor?</summary><p>Yalnızca cihazında, uygulamanın kendi klasöründe. Terazi hesap istemez; kayıtların, tutarların, ödemelerin ve belgelerin hiçbir sunucuya gönderilmez. Belgeler cihazda şifreli durur. Uygulamayı kaldırınca hepsi silinir; bu yüzden Ayarlar → Yedek ve aktarım’dan ara ara parolalı yedek al. Ayrıntılar <a href="/gizlilik/#terazi">gizlilik politikasında</a>.</p></details>
+      <details><summary>Kimlik kartımı ya da banka kartımı saklayabilir miyim?</summary><p>Hayır, Terazi bunlar için değil. Belge türleri arasında kimlik yok ve eklerken uyarı gösterilir: kaybolan bir telefondaki kimlik ya da kart fotoğrafı kötüye kullanılabilir.</p></details>
+      <details><summary>Yedeği nasıl alırım, telefon değiştirirsem ne olur?</summary><p>Ayarlar → Yedek ve aktarım → “Şifreli yedek oluştur”. Kayıtların ve belgelerin, belirlediğin parolayla şifrelenmiş tek bir dosyaya konur; Google Drive’a ya da bilgisayarına kaydet. Yeni cihazda “Yedekten geri yükle” ile her şey geri gelir. Parolayı unutursan yedek açılamaz; biz de açamayız.</p></details>
       <details><summary>Telefonumla bilgisayarım eşitleniyor mu?</summary><p>Şimdilik hayır: her cihaz kendi kayıtlarını tutar. OA Labs hesabıyla, uçtan uca şifreli eşitleme üzerinde çalışıyoruz; çıkınca bu sayfada yazacak.</p></details>
       <details><summary>Kredim zaten devam ediyor, ne yapmalıyım?</summary><p>Düzenli ödeme eklerken toplam taksit sayısını (ör. 24) ve sıradaki ödemenin kaçıncı taksit olduğunu (ör. 8) seç. Terazi bitişi kendisi hesaplar; eklemeden önceki aylar “ödenmiş” sayılır.</p></details>
       <details><summary>Fatura gibi her ay tutarı değişen ödemeler?</summary><p>Düzenli ödemeyi eklerken “Tutar her ay değişebilir”i aç. Yaklaşık bir tutar yazarsın; ödeme günü Terazi gerçek tutarı sorar ve onu kaydeder.</p></details>

@@ -224,6 +224,7 @@
     .dev-card .dev b { font-size: 12.5px; }
     .dev-card .dev span { font-size: 10px; }
     .note { font-size: 10px; color: var(--muted); line-height: 1.4; }
+    @media (min-width: 961px) { .groups:has(> .grp:nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .upd { border-radius: 14px; background: rgba(242,165,65,.10); border: 1px solid rgba(242,165,65,.35); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; font-weight: 600; }
     @media (max-width: 760px) {
       .ui-side { display: none; }

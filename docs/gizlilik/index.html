@@ -56,7 +56,7 @@
 
     <main>
       <h1>Gizlilik politikası</h1>
-      <p class="date">Son güncelleme: 12 Kasım 2026 (Pusula Köprü, Terazi ve OA Labs Center eklendi; indirme sayacı; 10 Kasım: ziyaretçi sayacına ülke; 9 Kasım: Pusula Browser, site ziyaretçi sayacı, geri bildirim ve yorumlar) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center ve oalabs.dev</p>
+      <p class="date">Son güncelleme: 13 Kasım 2026 (Terazi belgeleri ve yedeği; Pusula Köprü, Terazi ve OA Labs Center eklendi; indirme sayacı; 10 Kasım: ziyaretçi sayacına ülke; 9 Kasım: Pusula Browser, site ziyaretçi sayacı, geri bildirim ve yorumlar) · Geçerli olduğu yerler: Pusula Browser (Windows ve Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center ve oalabs.dev</p>
 
       <p class="short">Kısaca: OA Labs uygulamaları reklam içermez, seni izlemez ve kullanmak için hesap istemez. Verilerinin çoğu kendi cihazında kalır. Sunucumuza yalnızca senin açtığın özelliklerin (hesapla eşitleme, sohbet, izin verirsen isimsiz kullanım sayıları) gerektirdiği bilgiler ve isimsiz hata raporları gider. Her uygulamada neyin nereye gittiği aşağıda ayrı ayrı yazılı.</p>
 
@@ -149,10 +149,13 @@
       <p>Her internet bağlantısında olduğu gibi bağlanılan sunucular IP adresini görebilir.</p>
 
       <h2 id="terazi">Terazi</h2>
-      <p class="short">Kısaca: Terazi hesap istemez ve kayıtlarını hiçbir yere göndermez. Gelirlerin, giderlerin, düzenli ödemelerin ve bütçelerin yalnızca cihazında durur.</p>
+      <p class="short">Kısaca: Terazi hesap istemez ve kayıtlarını da belgelerini de hiçbir yere göndermez. Gelirlerin, giderlerin, düzenli ödemelerin, bütçelerin ve belgelerin yalnızca cihazında durur.</p>
       <ul>
         <li><b>Cihazında tutulanlar:</b> Bütün kayıtlar, düzenli ödemeler, bütçeler ve ayarlar uygulamanın kendi klasöründeki tek bir dosyada (terazi.json). Uygulamayı kaldırınca silinir.</li>
-        <li><b>Bildirimler:</b> Ödeme hatırlatmaları telefonunda zamanlanır; bunun için hiçbir şey dışarı gönderilmez.</li>
+        <li><b>Belgeler:</b> Eklediğin faturalar, poliçeler, garanti belgeleri ve sözleşmeler uygulamanın klasöründe AES-256 ile şifreli saklanır. Şifreleme anahtarı cihazın güvenli deposunda (Android Keystore, Windows DPAPI) durur. Belgeler hiçbir sunucuya gönderilmez. Kimlik, pasaport ve banka kartı için kullanılmamasını isteriz.</li>
+        <li><b>Kamera ve dosyalar:</b> Kamera yalnızca sen “Kamerayla tara”ya dokunduğunda açılır; yalnızca seçtiğin dosyalar okunur. Bir belgeyi açtığında ya da paylaştığında, geçici şifresiz bir kopya uygulamanın geçici klasörüne yazılır ve bir sonraki açılışta silinir.</li>
+        <li><b>Yedek:</b> “Şifreli yedek oluştur” kayıtlarını ve belgelerini, belirlediğin parolayla şifrelenmiş (PBKDF2 + AES-256) tek bir dosyaya koyar ve senin seçtiğin yere kaydeder. Parolayı biz bilmeyiz; unutursan yedek açılamaz.</li>
+        <li><b>Bildirimler:</b> Ödeme ve belge bitiş hatırlatmaları telefonunda zamanlanır; bunun için hiçbir şey dışarı gönderilmez.</li>
         <li><b>Dışa aktarma:</b> Windows’ta “Dışa aktar” hareketlerini yalnızca kendi bilgisayarındaki İndirilenler klasörüne yazar.</li>
         <li><b>İnternet bağlantısı:</b> Yalnızca yazı tiplerini (Google Fonts) indirmek için. Güncellemeleri istersen <a href="#center">OA Labs Center</a> denetler.</li>
       </ul>
@@ -197,7 +200,7 @@
 
       <h1 lang="en" id="en">Privacy policy</h1>
       <div lang="en">
-        <p class="date">Last updated: 12 November 2026 · Applies to: Pusula Browser (Windows and Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center and oalabs.dev</p>
+        <p class="date">Last updated: 13 November 2026 · Applies to: Pusula Browser (Windows and Android), Pusula Köprü, OA Radyo (Windows), Terazi, Harrier Cleaner, OA Labs Center and oalabs.dev</p>
         <p class="short">In short: OA Labs apps contain no ads, don’t track you and don’t need an account. Most of your data stays on your own device. Our server only receives what the features you turn on need (account sync, chat, anonymous usage counts if you allow them) and anonymous error reports. What goes where is described below, app by app.</p>
         <p class="toc">On this page: <a href="#pusula-en">Pusula Browser</a> · <a href="#radyo-en">OA Radyo</a> · <a href="#harrier-en">Harrier Cleaner</a> · <a href="#kopru-en">Pusula Köprü</a> · <a href="#terazi-en">Terazi</a> · <a href="#center-en">OA Labs Center</a> · <a href="#site-en">oalabs.dev and your OA Labs account</a></p>
         <h2>What we don’t collect</h2>
@@ -251,9 +254,12 @@
         <p><b>Update check:</b> looks at the release list on GitHub for a new version.</p>
         <p>As with any internet connection, the servers the app connects to can see your IP address.</p>
         <h2 id="terazi-en">Terazi</h2>
-        <p class="short">In short: Terazi needs no account and never sends your entries anywhere. Your income, spending, regular payments and budgets stay on your device.</p>
+        <p class="short">In short: Terazi needs no account and never sends your entries or documents anywhere. Your income, spending, regular payments, budgets and documents stay on your device.</p>
         <p><b>Stored on your device:</b> all entries, regular payments, budgets and settings, in a single file (terazi.json) in the app’s own folder. Uninstalling the app deletes it.</p>
-        <p><b>Notifications:</b> payment reminders are scheduled on your phone; nothing is sent anywhere for them.</p>
+        <p><b>Documents:</b> bills, policies, warranties and contracts you add are stored encrypted with AES-256 in the app’s folder. The key is kept in the device’s secure storage (Android Keystore, Windows DPAPI). Documents are never sent to a server. Please don’t use it for ID cards, passports or bank cards.</p>
+        <p><b>Camera and files:</b> the camera opens only when you tap “Scan with camera”; only the files you pick are read. When you open or share a document, a temporary unencrypted copy is written to the app’s temporary folder and deleted the next time the app starts.</p>
+        <p><b>Backup:</b> “Create encrypted backup” puts your entries and documents into one file encrypted with a password you choose (PBKDF2 + AES-256) and saves it where you pick. We don’t know the password; if you forget it, the backup can’t be opened.</p>
+        <p><b>Notifications:</b> payment and document expiry reminders are scheduled on your phone; nothing is sent anywhere for them.</p>
         <p><b>Export:</b> on Windows, “Export” writes your activity only to the Downloads folder on your own computer.</p>
         <p><b>Internet:</b> only to download fonts (Google Fonts). If you like, <a href="#center-en">OA Labs Center</a> checks for updates.</p>
         <h2 id="center-en">OA Labs Center</h2>
