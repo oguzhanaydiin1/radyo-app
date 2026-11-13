@@ -45,6 +45,17 @@ jobs:
           # Arka planda çalarken ekranın kapanmasına izin ver, ağ izni zaten var.
           grep -n "versionName\|versionCode" android/app/build.gradle
 
+      - name: Sabit test imzası (varsa)
+        env:
+          KS: ${{ secrets.ANDROID_TEST_KEYSTORE }}
+        run: |
+          # Her derleme aynı anahtarla imzalansın; yoksa yeni APK eskisinin üzerine kurulamaz.
+          if [ -n "$KS" ]; then
+            mkdir -p ~/.android && echo "$KS" | base64 -d > ~/.android/debug.keystore && echo "Sabit test anahtarı kullanılıyor."
+          else
+            echo "::warning title=imza::ANDROID_TEST_KEYSTORE gizli değeri yok; APK rastgele bir anahtarla imzalandı, telefondaki eski sürümün üzerine kurulamaz."
+          fi
+
       - name: APK derle
         working-directory: mobile/android
         run: |
