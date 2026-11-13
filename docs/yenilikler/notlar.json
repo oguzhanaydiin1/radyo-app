@@ -1,5 +1,25 @@
 [
  {
+  "date": "2026-11-13",
+  "app": "terazi",
+  "version": "0.2.1",
+  "url": "https://github.com/oguzhanaydiin1/oa-terazi/releases/tag/v0.2.1",
+  "tr": [
+   "Belgeler: fatura, sigorta poliçesi, garanti belgesi ve sözleşmeleri fotoğrafla ya da dosyadan ekle. Belgeler yalnızca cihazında, şifreli olarak durur.",
+   "Bitiş tarihi olan belgeler için 30, 15 ya da 7 gün önceden hatırlatma; Özet’te “Yaklaşan bitişler” kartı.",
+   "Ödendi derken faturayı da ekleyebilirsin; belge, ödemeye bağlı olarak saklanır.",
+   "Parolalı yedek dosyası: tüm kayıtları ve belgeleri tek dosyada al, yeni cihazda geri yükle. Aylık yedek hatırlatması.",
+   "Telefonda alt menü yenilendi: Özet, Hareketler, Takvim, Belgeler, Raporlar. Ayarlar Özet’in sağ üstünde."
+  ],
+  "en": [
+   "Documents: add bills, insurance policies, warranties and contracts from the camera or a file. They stay only on your device, encrypted.",
+   "Reminders 30, 15 or 7 days before a document expires, plus an “Expiring soon” card on the Summary.",
+   "Attach the bill when you mark a payment as paid; it’s kept linked to that payment.",
+   "Password-protected backup file: take all entries and documents in one file and restore them on a new device. Monthly backup reminder.",
+   "New bottom menu on phones: Summary, Activity, Calendar, Docs, Reports. Settings is at the top right of the Summary."
+  ]
+ },
+ {
   "date": "2026-11-12",
   "app": "terazi",
   "version": "0.1.2",

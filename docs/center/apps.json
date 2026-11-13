@@ -147,6 +147,8 @@
     "Ödeme günü \"Ödendi mi?\" sorusu ve bildirim",
     "Kategori bütçeleri ve aylık raporlar",
     "Türkçe ve İngilizce, açık ve koyu tema, farklı para birimleri",
+    "Belgeler: fatura, sigorta, garanti; cihazında şifreli",
+    "Parolalı yedek dosyası",
     "Veriler yalnızca cihazında"
    ],
    "features_en": [
@@ -155,6 +157,8 @@
     "\"Paid yet?\" prompt and notification on the payment day",
     "Category budgets and monthly reports",
     "Turkish and English, light and dark theme, several currencies",
+    "Documents: bills, insurance, warranties; encrypted on your device",
+    "Password-protected backup file",
     "Your data stays on your device"
    ],
    "windows": {
