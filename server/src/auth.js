@@ -52,7 +52,7 @@ const NOTIFY_APPS = new Set(['radyo-android', 'harrier']);
 // Tarayıcı bilgisinden kısa bir cihaz adı: "Chrome · Windows"
 function deviceName(req) {
   const ua = req.headers.get('User-Agent') || '';
-  const b = /OALabsCenter\//.test(ua) ? 'OA Labs Center' : /OATarayici\//.test(ua) ? 'Pusula Browser' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
+  const b = /OALabsCenter\//.test(ua) ? 'OA Labs Center' : /Terazi\//.test(ua) ? 'Terazi' : /OATarayici\//.test(ua) ? 'Pusula Browser' : /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Tarayıcı';
   const o = /Windows/.test(ua) ? 'Windows' : /iPhone|iPad/.test(ua) ? 'iPhone/iPad' : /Android/.test(ua) ? 'Android' : /Mac OS X/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux' : 'Bilinmeyen cihaz';
   return `${b} · ${o}`;
 }
@@ -456,7 +456,8 @@ export async function adminUsers(req, url, env) {
 //   tabs:<cihaz>       o cihazda açık sekmeler
 //   inbox:<cihaz>      o cihaza gönderilen sekmeler
 //   screentime:<cihaz> o cihazın ekran süresi özeti (isteğe bağlı, son 30 gün)
-const SYNC_ITEMS = new Set(['bookmarks', 'quick', 'history', 'vault']);
+// terazi: Terazi'nin kayıtları; cihazda şifrelenmiş tek kutu (sunucu içini göremez).
+const SYNC_ITEMS = new Set(['bookmarks', 'quick', 'history', 'vault', 'terazi']);
 const SYNC_DEVICE = /^(tabs|inbox|screentime):[a-z0-9-]{8,48}$/;
 const SYNC_DEVICE_MAX = 20; // kullanıcı başına cihaz kaydı (her tür için)
 const SYNC_MAX = 1024 * 1024; // bir istekte gönderilen toplam eşitleme verisi
@@ -465,7 +466,11 @@ const syncName = (n) => SYNC_ITEMS.has(n) || SYNC_DEVICE.test(n);
 export async function mySync(req, env) {
   const u = await sessionUser(req, env);
   if (!u) return fail('giris', 401);
-  const rows = await env.DB.prepare('SELECT item, updated, data FROM user_sync WHERE user_id = ?1').bind(u.id).all();
+  // ?only=terazi: yalnız istenen öğe döner (öbür uygulamaların verisi boşuna inmesin).
+  const only = new URL(req.url).searchParams.get('only');
+  const rows = only
+    ? await env.DB.prepare('SELECT item, updated, data FROM user_sync WHERE user_id = ?1 AND item = ?2').bind(u.id, only).all()
+    : await env.DB.prepare('SELECT item, updated, data FROM user_sync WHERE user_id = ?1').bind(u.id).all();
   const items = {};
   for (const r of rows.results) {
     try { items[r.item] = { updated: r.updated, data: JSON.parse(r.data) }; } catch { /* bozuk kayıt: yok say */ }
