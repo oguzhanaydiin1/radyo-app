@@ -1,5 +1,23 @@
 [
  {
+  "date": "2026-11-15",
+  "app": "terazi",
+  "version": "0.3.0",
+  "url": "https://github.com/oguzhanaydiin1/oa-terazi/releases/tag/v0.3.0",
+  "tr": [
+   "İsteğe bağlı giriş: OA Labs hesabınla gir ya da uygulamadan üye ol. Şifre yok, e-postana kod gelir.",
+   "Uçtan uca şifreli eşitleme: kayıtlar, düzenli ödemeler, bütçeler ve belge bilgileri telefonun ile bilgisayarın arasında eşitlenir. Veriler senin eşitleme parolanla şifrelenir; sunucuda kimse içini göremez.",
+   "Belge dosyaları hiç gönderilmez; başka cihazda eklenen belgenin bilgisi görünür, dosyası eklendiği cihazda kalır.",
+   "Ayarlar’da “Uygulama hakkında” bölümü: sürüm, sistem ve altyapı bilgisi."
+  ],
+  "en": [
+   "Optional sign-in: use your OA Labs account or create one in the app. No password; we email you a code.",
+   "End-to-end encrypted sync: entries, recurring payments, budgets and document details sync between your phone and computer. Data is encrypted with your sync password; no one on the server can read it.",
+   "Document files are never sent; documents added on another device show up with their details, and the file stays where it was added.",
+   "An “About” section in Settings with version, system and build details."
+  ]
+ },
+ {
   "date": "2026-11-13",
   "app": "terazi",
   "version": "0.2.1",

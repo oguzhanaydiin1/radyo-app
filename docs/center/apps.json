@@ -149,7 +149,7 @@
     "Türkçe ve İngilizce, açık ve koyu tema, farklı para birimleri",
     "Belgeler: fatura, sigorta, garanti; cihazında şifreli",
     "Parolalı yedek dosyası",
-    "Veriler yalnızca cihazında"
+    "İsteğe bağlı giriş; uçtan uca şifreli eşitleme"
    ],
    "features_en": [
     "Log income and expenses; see what you can spend per day until month end",
@@ -159,7 +159,7 @@
     "Turkish and English, light and dark theme, several currencies",
     "Documents: bills, insurance, warranties; encrypted on your device",
     "Password-protected backup file",
-    "Your data stays on your device"
+    "Optional sign-in; end-to-end encrypted sync"
    ],
    "windows": {
     "asset": "^Terazi-Kurulum\\.exe$",
