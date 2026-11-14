@@ -27,6 +27,10 @@
   const REPO = 'oguzhanaydiin1/radyo-app';
   const RAW = `https://raw.githubusercontent.com/${REPO}/main/stations`;
   const APK_URL = `https://github.com/${REPO}/releases/download/android-test/OA-Radyo-test.apk`;
+  const PLAY_URL = 'https://play.google.com/store/apps/details?id=dev.oalabs.radyo';
+  // Yayın sürümü Google Play'den güncellenir; test sürümü GitHub'daki APK'dan.
+  const relTag = (b) => (b && b.channel === 'release' ? 'android-latest' : 'android-test');
+  const updateUrl = (b) => (b && b.channel === 'release' ? PLAY_URL : APK_URL);
   const noop = () => {};
   const Plugins = (window.Capacitor && window.Capacitor.Plugins) || {};
   const ls = {
@@ -418,7 +422,8 @@
     checkUpdate: async () => {
       const b = await buildInfo;
       try {
-        const r = await getJSON(`https://api.github.com/repos/${REPO}/releases/tags/android-test`, 12000);
+        const r = await getJSON(`https://api.github.com/repos/${REPO}/releases/tags/${relTag(b)}`, 12000);
+        if (r.status === 404) return { status: 'latest', current: b.version };
         if (!r.ok || !r.j) throw new Error(String(r.status));
         const body = String(r.j.body || '');
         const remote = Number((body.match(/build:\s*(\d+)/i) || [])[1]) || 0;
@@ -431,8 +436,8 @@
         return { status: 'error', message: 'Güncelleme bilgisi alınamadı. İnternet bağlantını kontrol et.' };
       }
     },
-    downloadUpdate: async () => { await openExternal(APK_URL); return { status: 'full' }; },
-    installUpdate: async () => { await openExternal(APK_URL); },
+    downloadUpdate: async () => { await openExternal(updateUrl(await buildInfo)); return { status: 'full' }; },
+    installUpdate: async () => { await openExternal(updateUrl(await buildInfo)); },
     onUpdate: (cb) => updListeners.push(cb),
     openExternal,
     about: async () => {
@@ -587,13 +592,41 @@
     const fmt = /^image\/(png|jpe?g|webp|gif)$/i.test(pic.format || '') ? pic.format : 'image/jpeg';
     return URL.createObjectURL(new Blob([new Uint8Array(pic.data)], { type: fmt }));
   }
+  // Telefondaki müzikler (yerel eklenti: OANative, MediaStore). Her açılışta yeniden okunur;
+  // çalma ve kapak adresleri yalnızca bu oturumda geçerli bir anahtar içerir.
+  const Native = Plugins.OANative || null;
+  const nat = { tracks: [], loaded: false, granted: false, scanning: null };
+  const natTrack = (t) => ({
+    id: String(t.id), nid: t.nid, url: t.url, coverUrl: t.cover,
+    title: clean(t.title, 200) || fromName(String(t.file || '')).title,
+    artist: clean(t.artist, 200), album: clean(t.album, 200), albumArtist: '',
+    year: Number(t.year) || 0, no: Number(t.no) || 0, disc: Number(t.disc) || 0, genre: '',
+    duration: Number(t.duration) || 0, hasCover: true, folder: 'device', dir: clean(t.dir, 120),
+    file: String(t.file || ''), format: (String(t.file || '').split('.').pop() || '').toUpperCase(),
+  });
+  async function nativeScan(announce) {
+    if (!Native) return;
+    if (nat.scanning) return nat.scanning;
+    nat.scanning = (async () => {
+      const before = nat.tracks.length;
+      const r = await Native.scan();
+      nat.tracks = (Array.isArray(r && r.tracks) ? r.tracks : []).map(natTrack);
+      nat.loaded = true;
+      if (announce) libEmit({ type: 'scanned', total: nat.tracks.length + lib.tracks.length });
+      else if (before !== nat.tracks.length) libEmit({ type: 'changed' });
+    })();
+    try { await nat.scanning; } finally { nat.scanning = null; }
+  }
+  async function nativeStatus() {
+    if (!Native) return false;
+    try { nat.granted = !!(await Native.audioStatus()).granted; } catch { nat.granted = false; }
+    return nat.granted;
+  }
   function libState() {
-    return {
-      folders: lib.tracks.length ? [{ dir: 'session', name: 'Bu oturumda seçilen dosyalar', count: lib.tracks.length }] : [],
-      tracks: lib.tracks,
-      scannedAt: Date.now(),
-      scanning: false,
-    };
+    const folders = [];
+    if (Native && nat.granted) folders.push({ dir: 'device', name: 'Telefondaki müzikler', count: nat.tracks.length });
+    if (lib.tracks.length) folders.push({ dir: 'session', name: 'Bu oturumda seçilen dosyalar', count: lib.tracks.length });
+    return { folders, tracks: [...nat.tracks, ...lib.tracks], scannedAt: Date.now(), scanning: !!nat.scanning, needsPermission: !!Native && !nat.granted };
   }
   async function addFiles(files) {
     const audio = files.filter((f) => AUDIO_EXT.test(f.name) || /^audio\//.test(f.type));
@@ -641,16 +674,48 @@
   }
   const isLrc = (text) => /^\s*\[\d{1,2}:\d{2}(?:[.:]\d{1,3})?\]/m.test(text);
 
+  function tagsFromUrl(url, ms = 6000) {
+    return new Promise((resolve) => {
+      if (!window.jsmediatags) { resolve(null); return; }
+      const t = setTimeout(() => resolve(null), ms);
+      try {
+        window.jsmediatags.read(url, {
+          onSuccess: (x) => { clearTimeout(t); resolve((x && x.tags) || null); },
+          onError: () => { clearTimeout(t); resolve(null); },
+        });
+      } catch { clearTimeout(t); resolve(null); }
+    });
+  }
+  const coverOk = new Map();
+
   window.library = {
     desktop: false,
+    auto: !!Native,
     canFolder: false,
-    get: async () => libState(),
+    get: async () => {
+      if (Native && !nat.loaded) {
+        if (await nativeStatus()) await nativeScan(false).catch(noop);
+      }
+      return libState();
+    },
+    // Boş ekrandaki ana düğme: izin yoksa izin ister ve tarar; izin varsa ek dosya seçtirir.
     addFolder: async () => {
+      if (Native && !(await nativeStatus())) {
+        const r = await Native.requestAudio().catch(() => ({ granted: false }));
+        nat.granted = !!(r && r.granted);
+        if (!nat.granted) {
+          throw new Error('Müzik izni verilmedi. Telefonun Ayarlar > Uygulamalar > OA Radyo > İzinler bölümünden “Müzik ve sesler”i açabilirsin.');
+        }
+        await nativeScan(true);
+        return libState();
+      }
       const files = await pickFile('audio/*,.mp3,.m4a,.aac,.flac,.ogg,.opus,.wav,.lrc', true);
       if (!files.length) return null;
-      return addFiles(files);
+      await addFiles(files);
+      return libState();
     },
-    removeFolder: async () => {
+    removeFolder: async (dir) => {
+      if (dir === 'device') return libState();
       for (const t of lib.tracks) URL.revokeObjectURL(t.url);
       for (const u of lib.covers.values()) URL.revokeObjectURL(u);
       lib.tracks = [];
@@ -660,9 +725,27 @@
       lib.lrc.clear();
       return libState();
     },
-    rescan: async () => libState(),
-    cover: async (id) => lib.covers.get(id) || null,
+    rescan: async () => {
+      if (Native && (await nativeStatus())) await nativeScan(true);
+      return libState();
+    },
+    cover: async (id) => {
+      if (lib.covers.has(id)) return lib.covers.get(id);
+      const t = nat.tracks.find((x) => x.id === id);
+      if (!t || !t.coverUrl) return null;
+      if (coverOk.has(id)) return coverOk.get(id);
+      let url = null;
+      try { url = (await fetch(t.coverUrl, { method: 'HEAD' })).ok ? t.coverUrl : null; } catch { url = null; }
+      coverOk.set(id, url);
+      return url;
+    },
     lyrics: async (id) => {
+      const nt = nat.tracks.find((x) => x.id === id);
+      if (nt) {
+        const tags = await tagsFromUrl(nt.url);
+        const lyr = tags && tags.lyrics ? (typeof tags.lyrics === 'string' ? tags.lyrics : tags.lyrics.lyrics || '') : '';
+        return lyr && lyr.trim() ? { text: lyr, synced: isLrc(lyr), source: 'tag' } : null;
+      }
       const t = lib.tracks.find((x) => x.id === id);
       if (!t) return null;
       const lrcFile = lib.lrc.get(t.base);
@@ -697,41 +780,177 @@
     onEvent: (cb) => libListeners.push(cb),
   };
 
-  // ---------- Telefon düzeni: menü çekmecesi ve geri tuşu ----------
+  // ---------- Telefon düzeni: alt sekmeler, "Daha fazla" paneli, geri tuşu ----------
+
+  const SVG = (p, fill) => `<svg viewBox="0 0 24 24" ${fill ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'} aria-hidden="true">${p}</svg>`;
+  const TABS = [
+    { s: 'discover', label: 'Radyo', icon: SVG('<path d="M4.9 19.1a10 10 0 0 1 0-14.2M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4M19.1 4.9a10 10 0 0 1 0 14.2"/><circle cx="12" cy="12" r="2"/>') },
+    { s: 'podcast', label: 'Podcast', icon: SVG('<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/>') },
+    { s: 'music', label: 'Müzik', icon: SVG('<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>') },
+    { s: 'favorites', label: 'Favoriler', icon: SVG('<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>') },
+  ];
+  const MORE = [
+    { s: 'world', label: 'Dünya', icon: SVG('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>') },
+    { s: 'recent', label: 'Son dinlenenler', icon: SVG('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>') },
+    { s: 'stats', label: 'İstatistikler', icon: SVG('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>') },
+    { s: 'alarms', label: 'Alarmlar', icon: SVG('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M5 3L2 6M19 3l3 3"/>') },
+    { s: 'updates', label: 'Güncellemeler', icon: SVG('<path d="M21 12a9 9 0 0 1-15.5 6.3M3 12A9 9 0 0 1 18.5 5.7"/><path d="M3 20v-4h4M21 4v4h-4"/>') },
+    { a: 'sleep', label: 'Uyku zamanlayıcı', icon: SVG('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>') },
+    { a: 'chat', label: 'Sohbet', icon: SVG('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>') },
+    { s: 'support', label: 'Destek ve Hakkında', icon: SVG('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/>') },
+    { a: 'settings', label: 'Ayarlar', icon: SVG('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>') },
+  ];
+  const MORE_SECTIONS = new Set(MORE.filter((m) => m.s).map((m) => m.s));
+
+  function setupTabs() {
+    if (document.getElementById('tabbar')) return;
+    const bar = document.createElement('nav');
+    bar.id = 'tabbar';
+    bar.className = 'tabbar';
+    bar.setAttribute('aria-label', 'Ana sekmeler');
+    bar.innerHTML = TABS.map((t) => `<button type="button" class="tab" data-tab="${t.s}" data-action="section" data-section="${t.s}"><span class="tab-ic">${t.icon}</span><span class="tab-l">${t.label}</span></button>`).join('')
+      + `<button type="button" class="tab" data-tab="more" id="tab-more" aria-expanded="false" aria-controls="more-sheet"><span class="tab-ic">${SVG('<circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/>', true)}</span><span class="tab-l">Daha fazla</span></button>`;
+    document.body.appendChild(bar);
+
+    const sheet = document.createElement('div');
+    sheet.id = 'more-sheet';
+    sheet.className = 'more-sheet';
+    sheet.hidden = true;
+    sheet.innerHTML = `<button type="button" class="more-scrim" aria-label="Kapat"></button>
+      <div class="more-panel" role="dialog" aria-modal="true" aria-labelledby="more-title">
+        <span class="more-grip" aria-hidden="true"></span>
+        <h2 id="more-title">Daha fazla</h2>
+        <div class="more-grid">${MORE.map((m) => `<button type="button" class="more-item" ${m.s ? `data-action="section" data-section="${m.s}"` : `data-more="${m.a}"`}>${m.icon}<span>${m.label}</span></button>`).join('')}</div>
+      </div>`;
+    document.body.appendChild(sheet);
+    const moreBtn = document.getElementById('tab-more');
+    const setSheet = (on) => {
+      sheet.hidden = !on;
+      moreBtn.setAttribute('aria-expanded', String(on));
+      root.classList.toggle('more-open', on);
+      syncTabs();
+      if (on) { const first = sheet.querySelector('.more-item'); if (first) first.focus(); }
+    };
+    window.__closeSheet = () => { const was = !sheet.hidden; if (was) setSheet(false); return was; };
+    moreBtn.addEventListener('click', () => setSheet(sheet.hidden));
+    sheet.addEventListener('click', (e) => {
+      if (e.target.closest('.more-scrim')) { setSheet(false); return; }
+      const item = e.target.closest('.more-item');
+      if (!item) return;
+      setSheet(false);
+      const a = item.dataset.more;
+      if (a === 'chat') { const b = document.getElementById('btn-chat'); if (b) b.click(); }
+      if (a === 'sleep' && typeof toggleSleepMenu === 'function') setTimeout(() => toggleSleepMenu(true), 0);
+      if (a === 'settings') { const b = document.querySelector('.sidebar [data-action="settings-open"]'); if (b) b.click(); }
+    });
+
+    // Seçili sekmeyi ve bölüm sınıfını güncel tut (selectSection'ı sar).
+    if (typeof window.selectSection === 'function' && !window.selectSection.__tabs) {
+      const orig = window.selectSection;
+      const wrapped = function (section, ...rest) {
+        const r = orig.call(this, section, ...rest);
+        syncTabs();
+        return r;
+      };
+      wrapped.__tabs = true;
+      window.selectSection = wrapped;
+    }
+    syncTabs();
+  }
+  function syncTabs() {
+    const sec = (typeof state === 'object' && state.section) || 'discover';
+    for (const c of [...root.classList]) if (c.startsWith('sec-')) root.classList.remove(c);
+    root.classList.add(`sec-${sec}`);
+    const sheetOpen = root.classList.contains('more-open');
+    const active = sec === 'nowplaying' ? ((window.OAMedia && OAMedia.item() && OAMedia.item().kind === 'episode') ? 'podcast' : 'music') : MORE_SECTIONS.has(sec) ? 'more' : sec;
+    for (const b of document.querySelectorAll('#tabbar .tab')) {
+      const on = sheetOpen ? b.dataset.tab === 'more' : b.dataset.tab === active;
+      b.classList.toggle('active', on);
+      if (b.dataset.tab !== 'more') { if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); }
+    }
+    const pick = document.getElementById('nav-toggle');
+    if (pick) pick.setAttribute('aria-label', sec === 'world' ? 'Dil ya da ülke seç' : 'Menü');
+  }
+
+  // Dünya bölümünde dil/ülke seçimi kenar çubuğunda: telefonda üstteki düğme çekmece olarak açar.
+  function setupWorldPicker() {
+    const bar = document.querySelector('.titlebar');
+    if (!bar || document.getElementById('nav-toggle')) return;
+    const btn = document.createElement('button');
+    btn.id = 'nav-toggle';
+    btn.type = 'button';
+    btn.className = 'icon-btn nav-toggle';
+    btn.setAttribute('aria-label', 'Dil ya da ülke seç');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = SVG('<path d="M4 6h16M7 12h10M10 18h4"/>');
+    bar.prepend(btn);
+    const scrim = document.createElement('div');
+    scrim.className = 'nav-scrim';
+    document.body.appendChild(scrim);
+    const setOpen = (on) => { root.classList.toggle('nav-open', on); btn.setAttribute('aria-expanded', String(on)); };
+    btn.addEventListener('click', () => setOpen(!root.classList.contains('nav-open')));
+    scrim.addEventListener('click', () => setOpen(false));
+    document.querySelector('.sidebar').addEventListener('click', (e) => {
+      if (e.target.closest('.nav-item, .side-fav, [data-action="pick-lang"], [data-action="pick-country"]')) setOpen(false);
+    });
+    window.__closeNav = () => { const was = root.classList.contains('nav-open'); setOpen(false); return was; };
+  }
+
+  // ---------- Arka planda çalma ve bildirim/kilit ekranı kontrolleri ----------
+
+  function setupMediaService() {
+    if (!Native || typeof audio === 'undefined') return;
+    let last = '';
+    let askedNotif = false;
+    const info = () => {
+      const m = window.OAMedia && OAMedia.item();
+      if (m) return { title: m.title || '', artist: m.artist || (m.kind === 'episode' ? 'Podcast' : ''), canSkip: true };
+      const s = typeof state === 'object' ? state.current : null;
+      if (!s) return null;
+      return { title: s.name || 'OA Radyo', artist: (state.playing && state.nowTitle) || 'Canlı yayın', canSkip: true };
+    };
+    const push = () => {
+      const i = info();
+      if (!i) return;
+      const playing = !audio.paused;
+      const key = JSON.stringify([i.title, i.artist, playing]);
+      if (key === last) return;
+      last = key;
+      Native.mediaUpdate({ ...i, playing }).catch(noop);
+    };
+    audio.addEventListener('playing', () => {
+      if (!askedNotif) { askedNotif = true; Native.requestNotifications().catch(noop); }
+      push();
+    });
+    audio.addEventListener('pause', push);
+    setInterval(push, 4000);
+    Native.addListener('media', (ev) => {
+      const a = ev && ev.action;
+      if (a === 'play') { if (audio.paused) togglePlay(); }
+      else if (a === 'pause') { if (!audio.paused) togglePlay(); }
+      else if (a === 'toggle') togglePlay();
+      else if (a === 'next') step(1);
+      else if (a === 'prev') step(-1);
+      else if (a === 'stop') { if (!audio.paused) togglePlay(); last = ''; }
+    });
+  }
 
   function setupShell() {
     const search = document.getElementById('search');
     if (search) search.placeholder = 'İstasyon ara';
-    const bar = document.querySelector('.titlebar');
-    if (bar && !document.getElementById('nav-toggle')) {
-      const btn = document.createElement('button');
-      btn.id = 'nav-toggle';
-      btn.type = 'button';
-      btn.className = 'icon-btn nav-toggle';
-      btn.setAttribute('aria-label', 'Menü');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
-      bar.prepend(btn);
-      const scrim = document.createElement('div');
-      scrim.className = 'nav-scrim';
-      document.body.appendChild(scrim);
-      const setOpen = (on) => {
-        root.classList.toggle('nav-open', on);
-        btn.setAttribute('aria-expanded', String(on));
-      };
-      btn.addEventListener('click', () => setOpen(!root.classList.contains('nav-open')));
-      scrim.addEventListener('click', () => setOpen(false));
-      document.querySelector('.sidebar').addEventListener('click', (e) => {
-        if (e.target.closest('.nav-item, .side-fav, [data-action="pick-lang"], [data-action="pick-country"]')) setOpen(false);
-      });
-      window.__closeNav = () => { const was = root.classList.contains('nav-open'); setOpen(false); return was; };
-    }
+    setupWorldPicker();
+    setupTabs();
+    setupMediaService();
+    // İzin önceden verildiyse müzikleri arka planda hazırla.
+    if (Native) nativeStatus().then((ok) => { if (ok) nativeScan(false).catch(noop); });
     if (Plugins.App && Plugins.App.addListener) {
       Plugins.App.addListener('backButton', () => {
         const dlg = document.querySelector('dialog[open]');
         if (dlg) { dlg.close(); return; }
+        if (window.__closeSheet && window.__closeSheet()) return;
         if (window.__closeNav && window.__closeNav()) return;
         const menu = document.querySelector('.menu:not([hidden])');
+        if (menu && menu.id === 'sleep-menu' && typeof toggleSleepMenu === 'function') { toggleSleepMenu(false); return; }
         if (menu) { menu.hidden = true; return; }
         if (typeof state === 'object' && state.section && state.section !== 'discover' && typeof selectSection === 'function') {
           selectSection(state.section === 'nowplaying' ? 'music' : 'discover');

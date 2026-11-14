@@ -1,19 +1,30 @@
-name: Android test APK
+name: Android
 
-# Windows arayüzünü (renderer/) Android köprüsüyle Capacitor uygulamasına sarar, hata ayıklama
-# imzalı bir APK derler ve "android-test" sürüm sayfasına koyar. Elle başlatılır.
+# Windows arayüzünü (renderer/) Android köprüsü ve yerel eklentiyle (mobile/native) Capacitor
+# uygulamasına çevirir. Elle başlatılır:
+#   test  → hata ayıklama APK'sı, "android-test" sürüm sayfası
+#   yayin → Google Play için imzalı AAB + APK, "android-latest" sürüm sayfası
+#           (ANDROID_RELEASE_* gizli değerleri gerekir)
 on:
   workflow_dispatch:
+    inputs:
+      kanal:
+        description: 'test: deneme APK’sı · yayin: Google Play için imzalı AAB + APK'
+        type: choice
+        options: [test, yayin]
+        default: test
 
 permissions:
   contents: write
 
 jobs:
-  apk:
+  android:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: mobile
+    env:
+      OA_CHANNEL: ${{ inputs.kanal == 'yayin' && 'release' || 'test' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,35 +39,34 @@ jobs:
         working-directory: .
         run: node mobile/scripts/build-www.js
 
-      - name: Android projesini oluştur
+      - name: Android projesini oluştur ve yamala
         id: ver
         run: |
           npm install --no-audit --no-fund
           npx cap add android
           npx cap sync android
-          # Simgeler
           cp -r res/. android/app/src/main/res/
           rm -rf android/app/src/main/res/mipmap-anydpi-v26
-          # Sürüm bilgisi
           V=$(node -p "require('../package.json').version")
           echo "v=$V" >> "$GITHUB_OUTPUT"
-          sed -i "s/versionName \"[^\"]*\"/versionName \"$V-test\"/" android/app/build.gradle
-          sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/" android/app/build.gradle
-          # Arka planda çalarken ekranın kapanmasına izin ver, ağ izni zaten var.
-          grep -n "versionName\|versionCode" android/app/build.gradle
+          if [ "$OA_CHANNEL" = release ]; then export OA_RELEASE=1; fi
+          node scripts/patch-android.js "$V" "${{ github.run_number }}"
+          grep -n "targetSdkVersion\|compileSdkVersion" android/variables.gradle
 
       - name: Sabit test imzası (varsa)
+        if: env.OA_CHANNEL == 'test'
         env:
           KS: ${{ secrets.ANDROID_TEST_KEYSTORE }}
         run: |
-          # Her derleme aynı anahtarla imzalansın; yoksa yeni APK eskisinin üzerine kurulamaz.
+          # Her test derlemesi aynı anahtarla imzalansın; yoksa yeni APK eskisinin üzerine kurulamaz.
           if [ -n "$KS" ]; then
             mkdir -p ~/.android && echo "$KS" | base64 -d > ~/.android/debug.keystore && echo "Sabit test anahtarı kullanılıyor."
           else
             echo "::warning title=imza::ANDROID_TEST_KEYSTORE gizli değeri yok; APK rastgele bir anahtarla imzalandı, telefondaki eski sürümün üzerine kurulamaz."
           fi
 
-      - name: APK derle
+      - name: Test APK'sını derle
+        if: env.OA_CHANNEL == 'test'
         working-directory: mobile/android
         run: |
           chmod +x gradlew
@@ -64,12 +74,37 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk ../OA-Radyo-test.apk
           ls -la ../OA-Radyo-test.apk
 
-      - name: Sürüm sayfasına koy
+      - name: Yayın sürümünü derle (imzalı AAB + APK)
+        if: env.OA_CHANNEL == 'release'
+        working-directory: mobile/android
+        env:
+          KS: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
+          OA_KS_PASSWORD: ${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}
+          OA_KS_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+          OA_KS_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KS" ] || [ -z "$OA_KS_PASSWORD" ] || [ -z "$OA_KS_ALIAS" ] || [ -z "$OA_KS_KEY_PASSWORD" ]; then
+            echo "::error title=imza::Yayın için ANDROID_RELEASE_KEYSTORE, ANDROID_RELEASE_STORE_PASSWORD, ANDROID_RELEASE_KEY_ALIAS ve ANDROID_RELEASE_KEY_PASSWORD gizli değerleri gerekli."
+            exit 1
+          fi
+          echo "$KS" | base64 -d > "$RUNNER_TEMP/oa-release.keystore"
+          export OA_KS_FILE="$RUNNER_TEMP/oa-release.keystore"
+          chmod +x gradlew
+          ./gradlew bundleRelease assembleRelease --no-daemon -q
+          V="${{ steps.ver.outputs.v }}"
+          cp app/build/outputs/bundle/release/app-release.aab "../OA-Radyo-$V.aab"
+          cp app/build/outputs/apk/release/app-release.apk "../OA-Radyo-$V.apk"
+          rm -f "$RUNNER_TEMP/oa-release.keystore"
+          ls -la ../OA-Radyo-*.aab ../OA-Radyo-*.apk
+
+      - name: Test sürüm sayfasına koy
+        if: env.OA_CHANNEL == 'test'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-test
           name: OA Radyo Android (test)
           prerelease: true
+          make_latest: false
           body: |
             Sürüm: ${{ steps.ver.outputs.v }}
             build: ${{ github.run_number }}
@@ -77,4 +112,23 @@ jobs:
             OA Radyo'nun Android test sürümü. Telefonda bu sayfayı açıp OA-Radyo-test.apk dosyasını indir ve kur.
             Kurulum sırasında Android "bilinmeyen kaynaklardan yükleme" izni isteyebilir.
           files: mobile/OA-Radyo-test.apk
+          fail_on_unmatched_files: true
+
+      - name: Yayın sayfasına koy
+        if: env.OA_CHANNEL == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: OA Radyo Android ${{ steps.ver.outputs.v }}
+          prerelease: false
+          make_latest: false
+          body: |
+            Sürüm: ${{ steps.ver.outputs.v }}
+            build: ${{ github.run_number }}
+
+            Google Play'e yüklenecek dosya: OA-Radyo-${{ steps.ver.outputs.v }}.aab
+            Doğrudan kurulum için: OA-Radyo-${{ steps.ver.outputs.v }}.apk
+          files: |
+            mobile/OA-Radyo-${{ steps.ver.outputs.v }}.aab
+            mobile/OA-Radyo-${{ steps.ver.outputs.v }}.apk
           fail_on_unmatched_files: true

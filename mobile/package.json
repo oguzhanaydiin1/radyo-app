@@ -2,13 +2,13 @@
   "name": "oa-radyo-android",
   "private": true,
   "version": "0.10.0",
-  "description": "OA Radyo — Android sürümü (Windows arayüzü + Android köprüsü, Capacitor ile paketlenir)",
+  "description": "OA Radyo — Android sürümü (Windows arayüzü + Android köprüsü ve yerel eklenti, Capacitor ile paketlenir)",
   "dependencies": {
-    "@capacitor/android": "^7.4.0",
-    "@capacitor/app": "^7.1.2",
-    "@capacitor/browser": "^7.0.5",
-    "@capacitor/cli": "^7.4.0",
-    "@capacitor/core": "^7.4.0",
-    "@capacitor/share": "^7.0.4"
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/browser": "^8.0.5",
+    "@capacitor/cli": "^8.6.2",
+    "@capacitor/core": "^8.6.2",
+    "@capacitor/share": "^8.0.3"
   }
 }

@@ -29,6 +29,7 @@ fs.copyFileSync(path.join(root, 'src', 'podcastler.json'), path.join(out, 'podca
 fs.writeFileSync(path.join(out, 'android-build.json'), JSON.stringify({
   version: pkg.version,
   build: Number(process.env.GITHUB_RUN_NUMBER) || 0,
+  channel: process.env.OA_CHANNEL === 'release' ? 'release' : 'test',
   builtAt: new Date().toISOString(),
 }));
 

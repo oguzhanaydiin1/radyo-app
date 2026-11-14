@@ -854,6 +854,14 @@ function scanHTML() {
 
 function libEmptyHTML() {
   const desktop = !!(LIB && LIB.desktop);
+  if (LIB && LIB.auto) {
+    return `<div class="mus-empty">
+    <div class="mus-empty-disc" aria-hidden="true"><span></span></div>
+    <h2>Telefonundaki müzikleri dinle</h2>
+    <p>OA Radyo telefonundaki şarkıları bulup albüm, sanatçı ve kapaklarıyla listeler. Bunun için bir kez “Müzik ve sesler” izni ister. Dosyaların hiçbir yere yüklenmez; yalnızca telefonunda çalınır.</p>
+    <div class="mus-empty-acts"><button class="pill" type="button" data-action="mus-add">${MI.note}<span>Müziklerimi göster</span></button></div>
+  </div>`;
+  }
   return `<div class="mus-empty">
     <div class="mus-empty-disc" aria-hidden="true"><span></span></div>
     <h2>Kendi müziğini dinle</h2>
@@ -939,9 +947,9 @@ function musicBodyHTML() {
       <span class="fold-ic">${MI.folder}</span>
       <span class="fold-text" data-noi18n><span class="fold-n">${esc(f.name)}</span><span class="fold-p">${esc(LIB && LIB.desktop ? f.dir : '')}</span></span>
       <span class="fold-c">${fmtCount(f.count)} parça</span>
-      <button class="btn-ghost danger" type="button" data-action="mus-remove-folder" data-dir="${esc(f.dir)}">Kaldır</button></div>`).join('')}</div>
+      ${f.dir === 'device' ? '' : `<button class="btn-ghost danger" type="button" data-action="mus-remove-folder" data-dir="${esc(f.dir)}">Kaldır</button>`}</div>`).join('')}</div>
       <div class="mus-folder-acts"><button class="btn-ghost accent" type="button" data-action="mus-add">${ICON.plus}<span>${LIB && LIB.desktop ? 'Klasör ekle' : 'Dosya ekle'}</span></button>
-      ${LIB && LIB.desktop ? `<button class="btn-ghost" type="button" data-action="mus-rescan">${ICON.refresh}<span>Yeniden tara</span></button>` : ''}</div>`;
+      ${LIB && (LIB.desktop || LIB.auto) ? `<button class="btn-ghost" type="button" data-action="mus-rescan">${ICON.refresh}<span>Yeniden tara</span></button>` : ''}</div>`;
   }
   if (LS.tab === 'playlists') {
     const rows = LS.playlists.map((p) => `<button type="button" class="art-row" data-action="mus-open" data-type="playlist" data-key="${esc(p.id)}">

@@ -20,7 +20,7 @@
 .is-android .search input { font-size: 15px; }
 .is-android .nav-toggle { display: none; }
 .is-android .nav-scrim { display: none; }
-.is-android .player { padding-bottom: env(safe-area-inset-bottom); }
+.is-android .tabbar, .is-android .more-sheet { display: none; }
 
 /* Dokunmatik: düğmeler en az 44 px */
 .is-android .icon-btn { width: 44px; height: 44px; border-radius: 22px; }
@@ -29,7 +29,40 @@
 .is-android .seek input::-webkit-slider-thumb { opacity: 1; }
 
 @media (max-width: 860px) {
-  .is-android .nav-toggle { display: flex; margin-left: -6px; }
+  /* Alt sekmeler: kenar çubuğu menü olarak kullanılmaz; yalnızca Dünya'da dil/ülke seçimi için çekmece */
+  .is-android .nav-toggle { display: none; margin-left: -6px; }
+  .is-android.sec-world .nav-toggle { display: flex; }
+  .is-android .sidebar .nav-item, .is-android .sidebar #side-default { display: none !important; }
+  .is-android .tabbar {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex: none;
+    height: calc(64px + env(safe-area-inset-bottom)); padding: 0 0 env(safe-area-inset-bottom);
+    background: var(--bg); border-top: 1px solid var(--border); position: relative; z-index: 60;
+  }
+  .is-android .tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    border: 0; background: transparent; color: var(--text-faint); font: 600 11px var(--font-body); padding: 0; min-height: 56px;
+  }
+  .is-android .tab-ic { width: 56px; height: 30px; border-radius: 15px; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+  .is-android .tab-ic svg { width: 22px; height: 22px; }
+  .is-android .tab.active { color: var(--accent); }
+  .is-android .tab.active .tab-ic { background: var(--accent-deep); }
+  .is-android .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: 12px; }
+  .is-android .more-sheet:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 58; }
+  .is-android .more-scrim { position: absolute; inset: 0; border: 0; padding: 0; background: rgba(0, 0, 0, .55); }
+  .is-android .more-panel {
+    position: absolute; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom));
+    padding: 10px 16px 20px; border-radius: 22px 22px 0 0; background: var(--surface);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, .35); animation: more-up .18s ease-out;
+  }
+  .is-android .more-grip { display: block; width: 40px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 12px; }
+  .is-android .more-panel h2 { margin: 0 4px 12px; font: 700 18px var(--font-display); }
+  .is-android .more-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .is-android .more-item {
+    display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px; min-height: 76px;
+    border: 0; border-radius: 14px; background: var(--surface-high); color: var(--text); font: 600 11px/1.25 var(--font-body); text-align: center;
+  }
+  .is-android .more-item svg { width: 22px; height: 22px; }
+  @keyframes more-up { from { transform: translateY(24px); opacity: .4; } to { transform: none; opacity: 1; } }
   .is-android .brand > span:last-child { display: none; }
   .is-android .sidebar {
     position: fixed; z-index: 70; left: 0; top: 0; bottom: 0;
@@ -49,9 +82,9 @@
   .is-android .player,
   .is-android .player.has-seek {
     display: grid; height: auto;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "now ctl" "seek seek" "extra extra";
-    gap: 4px 8px; padding: 8px 10px calc(6px + env(safe-area-inset-bottom));
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: "now spd ctl" "seek seek seek";
+    gap: 4px 8px; padding: 8px 10px 6px;
   }
   .is-android .player-now { grid-area: now; gap: 10px; }
   .is-android .player-controls { display: contents; }
@@ -59,8 +92,14 @@
   .is-android .pc-row .m-ctl#btn-shuffle, .is-android .pc-row .m-ctl#btn-repeat { display: none; }
   .is-android .play-btn { width: 46px; height: 46px; }
   .is-android .seek { grid-area: seek; width: 100%; }
-  .is-android .player-extra { grid-area: extra; justify-content: space-around; gap: 0; }
-  .is-android .player-extra:not(:has(> :not([hidden]):not(.volume))) { display: none; }
+  .is-android .player-extra, .is-android .player-extra .menu-anchor { display: contents; }
+  .is-android .player-extra > *:not(.menu-anchor):not(#btn-speed), .is-android #btn-sleep { display: none !important; }
+  .is-android #btn-speed { grid-area: spd; align-self: center; }
+  .is-android #sleep-menu {
+    position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 59;
+    min-width: 0; padding: 8px; border-radius: 18px; box-shadow: 0 -10px 40px rgba(0, 0, 0, .4);
+  }
+  .is-android #sleep-menu button { min-height: 46px; font-size: 15px; }
   .is-android .volume { display: none; }
   .is-android .m-art, .is-android .m-tile, .is-android #p-logo .logo, .is-android .empty-logo { width: 44px; height: 44px; }
 
@@ -71,6 +110,13 @@
   .is-android .np-lyrics .ly { font-size: 19px; }
   .is-android .np-lyrics.synced { padding: 12vh 0; }
   .is-android .np-panel { max-height: 60vh; }
+
+  /* "Şu an çalıyor" kartı: ad tam satırda, düğmeler altta */
+  .is-android .hero { padding: 18px; gap: 16px; }
+  .is-android .hero-bottom { flex-wrap: wrap; align-items: center; gap: 12px 14px; }
+  .is-android .hero-text { flex: 1 1 calc(100% - 82px); }
+  .is-android .hero-name { font-size: 25px; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .is-android .hero-bottom > :last-child { flex: 1 1 auto; justify-content: center; }
 
   /* Listeler */
   .is-android .trk-main { grid-template-columns: 26px auto minmax(0, 1fr) 44px; gap: 10px; padding: 8px 6px; }
@@ -92,4 +138,8 @@
 .is-android .np-mobile-ctl { display: none; }
 @media (max-width: 860px) {
   .is-android .np-mobile-ctl { display: flex; justify-content: center; gap: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-android .more-panel { animation: none; }
 }
