@@ -1,32 +1,192 @@
 {
-  "version": 1,
-  "note": "Podcast sekmesinde önerilen programlar. Her kayıt iTunes'ta 'term' ile aranır, adı eşleşen ilk sonuç kullanılır. Uygulama bu dosyayı GitHub'dan günceller.",
+  "version": 2,
+  "note": "Podcast sekmesinde önerilen programlar. id: Apple Podcasts kimliği (kapak resmi için tek bir sorguyla alınır), feed: RSS adresi. Uygulama bu dosyayı GitHub'dan günceller.",
   "tr": [
-    { "term": "Medyascope", "cat": "Haber" },
-    { "term": "Açık Bilim", "cat": "Bilim" },
-    { "term": "64 Bits", "cat": "Teknoloji" },
-    { "term": "Codefiction", "cat": "Teknoloji" },
-    { "term": "Gerisi Hikaye", "cat": "Kültür" },
-    { "term": "Girişimci Muhabbeti", "cat": "İş" },
-    { "term": "Merdiven Altı Terapi", "cat": "Sohbet" },
-    { "term": "Nereden Başlasam", "cat": "Kültür" },
-    { "term": "Dünya Nereye Gidiyor", "cat": "Haber" },
-    { "term": "Lafın Gelişi", "cat": "Kültür" },
-    { "term": "Hayatlar Hikayeler", "cat": "Sohbet" },
-    { "term": "Fularsız Entellik", "cat": "Kültür" },
-    { "term": "Filmloverss", "cat": "Sinema" },
-    { "term": "Gayrisafi Fikirler", "cat": "Bilim" }
+    {
+      "term": "Medyascope",
+      "cat": "Haber",
+      "id": 1048450387,
+      "name": "Medyascope Podcast",
+      "author": "Poddict: Medyascope",
+      "feed": "https://feeds.megaphone.fm/medyascope"
+    },
+    {
+      "term": "Açık Bilim",
+      "cat": "Bilim",
+      "id": 481139825,
+      "name": "Açık Bilim Podcast",
+      "author": "Poddict: Tevfik Uyar - Açık Bilim",
+      "feed": "https://feeds.megaphone.fm/acik-bilim-podcast"
+    },
+    {
+      "term": "Codefiction",
+      "cat": "Teknoloji",
+      "id": 1172391831,
+      "name": "Codefiction Podcast",
+      "author": "Codefiction Community",
+      "feed": "https://feeds.simplecast.com/3Ro7Vrg6"
+    },
+    {
+      "term": "Gerisi Hikaye",
+      "cat": "Kültür",
+      "id": 946065430,
+      "name": "Gerisi Hikaye Korku Konuşmaları",
+      "author": "Işın Beril Tetik, Demokan Atasoy, Galip Dursun",
+      "feed": "https://feeds.feedburner.com/GerisiHikayeKorkuKonusmalari"
+    },
+    {
+      "term": "Girişimci Muhabbeti",
+      "cat": "İş",
+      "id": 977990785,
+      "name": "girişimci muhabbeti",
+      "author": "Gümlet Media",
+      "feed": "https://www.spreaker.com/show/1398145/episodes/feed"
+    },
+    {
+      "term": "Merdiven Altı Terapi",
+      "cat": "Sohbet",
+      "id": 1497612287,
+      "name": "Merdiven Altı Terapi",
+      "author": "Deniz Dülgeroğlu",
+      "feed": "https://anchor.fm/s/136c3d5c/podcast/rss"
+    },
+    {
+      "term": "Nereden Başlasam",
+      "cat": "Kültür",
+      "id": 1492610430,
+      "name": "Nereden Başlasam?",
+      "author": "Storytel",
+      "feed": "https://feeds.simplecast.com/xC_TUvmu"
+    },
+    {
+      "term": "Dünya Nereye Gidiyor",
+      "cat": "Haber",
+      "id": 1216876204,
+      "name": "Dünya Nereye Gidiyor?",
+      "author": "Aleks, Hakan",
+      "feed": "https://feeds.soundcloud.com/users/soundcloud:users:293630896/sounds.rss"
+    },
+    {
+      "term": "Lafın Gelişi",
+      "cat": "Kültür",
+      "id": 1371231951,
+      "name": "Lafın Gelişi",
+      "author": "Bad Medya / Medyapod",
+      "feed": "https://feeds.megaphone.fm/MPD9253213862"
+    },
+    {
+      "term": "Hayatlar Hikayeler",
+      "cat": "Sohbet",
+      "id": 1326736089,
+      "name": "Hayatlar Hikayeler",
+      "author": "Sila Yucesoy",
+      "feed": "https://anchor.fm/s/138be79c/podcast/rss"
+    },
+    {
+      "term": "Fularsız Entellik",
+      "cat": "Kültür",
+      "id": 1471554610,
+      "name": "Fularsız Entellik",
+      "author": "Podbee Media",
+      "feed": "https://feeds.megaphone.fm/PM5261345791"
+    },
+    {
+      "term": "Filmloverss",
+      "cat": "Sinema",
+      "id": 1469926038,
+      "name": "FilmLoverss Radyo",
+      "author": "FilmLoverss",
+      "feed": "https://feeds.transistor.fm/filmloverss"
+    },
+    {
+      "term": "Gayrisafi Fikirler",
+      "cat": "Bilim",
+      "id": 1291715325,
+      "name": "Gayrisafi Fikirler",
+      "author": "Medyapod",
+      "feed": "https://feeds.megaphone.fm/MPD4258808523"
+    }
   ],
   "en": [
-    { "term": "The Daily", "cat": "News" },
-    { "term": "This American Life", "cat": "Stories" },
-    { "term": "Serial", "cat": "Stories" },
-    { "term": "Planet Money", "cat": "Business" },
-    { "term": "Acquired", "cat": "Business" },
-    { "term": "The Diary of a CEO", "cat": "Business" },
-    { "term": "Armchair Expert", "cat": "Talk" },
-    { "term": "Crime Junkie", "cat": "True crime" },
-    { "term": "Dateline NBC", "cat": "True crime" },
-    { "term": "Radiolab", "cat": "Science" }
+    {
+      "term": "The Daily",
+      "cat": "News",
+      "id": 1200361736,
+      "name": "The Daily",
+      "author": "The New York Times",
+      "feed": "https://feeds.simplecast.com/Sl5CSM3S"
+    },
+    {
+      "term": "This American Life",
+      "cat": "Stories",
+      "id": 201671138,
+      "name": "This American Life",
+      "author": "This American Life",
+      "feed": "https://www.thisamericanlife.org/podcast/rss.xml"
+    },
+    {
+      "term": "Serial",
+      "cat": "Stories",
+      "id": 917918570,
+      "name": "Serial",
+      "author": "Serial Productions & The New York Times",
+      "feed": "https://feeds.simplecast.com/PpzWFGhg"
+    },
+    {
+      "term": "Planet Money",
+      "cat": "Business",
+      "id": 290783428,
+      "name": "Planet Money",
+      "author": "NPR",
+      "feed": "https://feeds.npr.org/510289/podcast.xml"
+    },
+    {
+      "term": "Acquired",
+      "cat": "Business",
+      "id": 1050462261,
+      "name": "Acquired",
+      "author": "Ben Gilbert and David Rosenthal",
+      "feed": "https://feeds.transistor.fm/acquired"
+    },
+    {
+      "term": "The Diary of a CEO",
+      "cat": "Business",
+      "id": 1291423644,
+      "name": "The Diary Of A CEO with Steven Bartlett",
+      "author": "DOAC",
+      "feed": "https://rss2.flightcast.com/xmsftuzjjykcmqwolaqn6mdn"
+    },
+    {
+      "term": "Armchair Expert",
+      "cat": "Talk",
+      "id": 1345682353,
+      "name": "Armchair Expert with Dax Shepard",
+      "author": "Armchair Umbrella",
+      "feed": "https://rss.art19.com/armchair-expert"
+    },
+    {
+      "term": "Crime Junkie",
+      "cat": "True crime",
+      "id": 1322200189,
+      "name": "Crime Junkie",
+      "author": "Audiochuck",
+      "feed": "https://feeds.simplecast.com/qm_9xx0g"
+    },
+    {
+      "term": "Dateline NBC",
+      "cat": "True crime",
+      "id": 1464919521,
+      "name": "Dateline NBC",
+      "author": "NBC News",
+      "feed": "https://podcastfeeds.nbcnews.com/HL4TzgYC"
+    },
+    {
+      "term": "Radiolab",
+      "cat": "Science",
+      "id": 152249110,
+      "name": "Radiolab",
+      "author": "WNYC Studios",
+      "feed": "https://feeds.simplecast.com/EmVW7VGp"
+    }
   ]
 }

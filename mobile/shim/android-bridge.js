@@ -454,30 +454,101 @@
     keysStatus: async () => ({ on: false, failed: [] }),
   };
 
-  // ---------- Podcast (api.oalabs.dev üzerinden) ----------
+  // ---------- Podcast ----------
+  // Apple'ın arama servisi Cloudflare sunucularından (api.oalabs.dev) gelen istekleri
+  // "çok fazla istek" diye reddediyor. Bu yüzden arama ve RSS önce telefonun kendi
+  // bağlantısıyla, Capacitor'ın yerel HTTP aracıyla yapılır (CORS kısıtı yok);
+  // olmazsa sunucu vekili denenir.
+
+  const NativeHttp = Plugins.CapacitorHttp;
+  const UA = 'OA Radyo Android (https://oalabs.dev/radyo/)';
+  async function nativeText(url, timeoutMs = 15000, accept = '*/*') {
+    if (!NativeHttp || typeof NativeHttp.request !== 'function') throw new Error('yerel HTTP yok');
+    const r = await NativeHttp.request({
+      url, method: 'GET', responseType: 'text',
+      headers: { 'User-Agent': UA, Accept: accept },
+      connectTimeout: timeoutMs, readTimeout: timeoutMs,
+    });
+    const body = typeof r.data === 'string' ? r.data : JSON.stringify(r.data);
+    return { status: Number(r.status) || 0, text: body, url: r.url || url };
+  }
+  const itunesMap = (r, country) => ({
+    id: String(r.collectionId || ''),
+    name: clean(r.collectionName || r.trackName, 160),
+    author: clean(r.artistName, 160),
+    feed: String(r.feedUrl || '').trim(),
+    art: String(r.artworkUrl600 || r.artworkUrl100 || '').trim(),
+    genre: clean(r.primaryGenreName, 60),
+    count: Number(r.trackCount) || 0,
+    country,
+  });
+  const cc = (c) => (/^[a-z]{2}$/i.test(String(c || '')) ? String(c).toUpperCase() : 'TR');
+
+  async function viaProxy(path, params, timeoutMs) {
+    const u = new URL(`${API}${path}`);
+    for (const [k, v] of Object.entries(params)) u.searchParams.set(k, String(v));
+    const r = await getJSON(u.toString(), timeoutMs);
+    if (!r.j || !r.j.ok) {
+      const e = new Error((r.j && r.j.error && !/^itunes \d+$/.test(r.j.error) && r.j.error) || 'Podcast servisine ulaşılamadı.');
+      e.status = r.status;
+      throw e;
+    }
+    return r.j;
+  }
 
   window.podcasts = {
     async search(opts = {}) {
-      const u = new URL(`${API}/v1/podcast/search`);
-      u.searchParams.set('term', clean(opts.term, 100));
-      u.searchParams.set('country', /^[a-z]{2}$/i.test(String(opts.country || '')) ? opts.country : 'TR');
-      u.searchParams.set('limit', String(Math.min(50, Number(opts.limit) || 25)));
-      let r;
-      try { r = await getJSON(u.toString(), 15000); } catch { throw new Error('Podcast aramasına ulaşılamadı. İnternet bağlantını kontrol et.'); }
-      if (!r.ok || !r.j || !r.j.ok) throw new Error('Podcast araması yapılamadı.');
-      return Array.isArray(r.j.results) ? r.j.results : [];
+      const term = clean(opts.term, 100);
+      const country = cc(opts.country);
+      const limit = Math.min(50, Number(opts.limit) || 25);
+      const u = `https://itunes.apple.com/search?media=podcast&entity=podcast&country=${country}&limit=${limit}&term=${encodeURIComponent(term)}`;
+      let nativeErr = null;
+      try {
+        const r = await nativeText(u, 15000, 'application/json');
+        if (r.status === 200) {
+          const j = JSON.parse(r.text);
+          return (Array.isArray(j.results) ? j.results : []).filter((x) => /^https?:\/\//i.test(String(x.feedUrl || ''))).map((x) => itunesMap(x, country));
+        }
+        nativeErr = new Error(r.status === 429 ? 'Podcast araması şu an yoğun. Biraz sonra tekrar dene.' : `Podcast araması yapılamadı (HTTP ${r.status}).`);
+      } catch (err) {
+        nativeErr = err;
+      }
+      try {
+        const j = await viaProxy('/v1/podcast/search', { term, country, limit }, 15000);
+        return Array.isArray(j.results) ? j.results : [];
+      } catch {
+        throw (nativeErr && /yoğun|HTTP/.test(nativeErr.message)) ? nativeErr : new Error('Podcast aramasına ulaşılamadı. İnternet bağlantını kontrol et.');
+      }
+    },
+    async lookup(ids, country) {
+      const list = (Array.isArray(ids) ? ids : []).map(String).filter((x) => /^\d{1,15}$/.test(x)).slice(0, 100);
+      if (!list.length) return [];
+      const u = `https://itunes.apple.com/lookup?entity=podcast&country=${cc(country)}&id=${list.join(',')}`;
+      const r = await nativeText(u, 15000, 'application/json');
+      if (r.status !== 200) throw new Error(`HTTP ${r.status}`);
+      const j = JSON.parse(r.text);
+      return (Array.isArray(j.results) ? j.results : []).filter((x) => x && x.collectionId).map((x) => itunesMap(x, cc(country)));
     },
     async feed(url) {
-      const u = new URL(`${API}/v1/podcast/feed`);
-      u.searchParams.set('url', String(url || ''));
-      let r;
-      try { r = await getJSON(u.toString(), 25000); } catch { throw new Error('Besleme açılamadı. Adresi ve internet bağlantını kontrol et.'); }
-      if (!r.j || !r.j.ok) throw new Error((r.j && r.j.error) || 'Besleme açılamadı.');
-      return { text: r.j.text, url: r.j.url };
+      const target = String(url || '').trim();
+      if (!/^https?:\/\/\S+$/i.test(target) || target.length > 2000) throw new Error('Geçerli bir RSS adresi gir (https://… ile başlamalı).');
+      try {
+        const r = await nativeText(target, 20000, 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.5');
+        if (r.status === 200 && r.text.length < 12 * 1024 * 1024 && /<(rss|feed|channel)[\s>]/i.test(r.text.slice(0, 5000))) return { text: r.text, url: r.url };
+        if (r.status === 200) throw Object.assign(new Error('Bu adres bir podcast beslemesi değil.'), { final: true });
+      } catch (err) {
+        if (err && err.final) throw err;
+      }
+      try {
+        const j = await viaProxy('/v1/podcast/feed', { url: target }, 25000);
+        return { text: j.text, url: j.url };
+      } catch (err) {
+        throw new Error(err && err.message && err.message !== 'Podcast servisine ulaşılamadı.' ? err.message : 'Besleme açılamadı. Adresi ve internet bağlantını kontrol et.');
+      }
     },
     async curated() {
       const remote = await getJSON(`${RAW}/podcastler.json?t=${Date.now()}`, 5000).catch(() => null);
-      if (remote && remote.ok && remote.j) return remote.j;
+      if (remote && remote.ok && remote.j && (Array.isArray(remote.j.tr) || Array.isArray(remote.j.en))) return remote.j;
       return fetch('podcastler.json').then((r) => r.json()).catch(() => ({ tr: [], en: [] }));
     },
   };

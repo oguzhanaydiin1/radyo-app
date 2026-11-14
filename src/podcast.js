@@ -69,6 +69,27 @@ async function search(opts = {}) {
   return list;
 }
 
+/** Apple kimlikleriyle tek sorguda program bilgisi (önerilenlerin kapak resmi için). */
+async function lookup(ids, country = 'TR') {
+  const list = (Array.isArray(ids) ? ids : []).map(String).filter((x) => /^\d{1,15}$/.test(x)).slice(0, 100);
+  if (!list.length) return [];
+  const url = new URL('https://itunes.apple.com/lookup');
+  url.searchParams.set('id', list.join(','));
+  url.searchParams.set('entity', 'podcast');
+  url.searchParams.set('country', /^[a-z]{2}$/i.test(String(country || '')) ? String(country).toUpperCase() : 'TR');
+  const res = await fetchWithTimeout(url.toString(), 12000);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const j = await res.json().catch(() => ({}));
+  return (Array.isArray(j.results) ? j.results : []).filter((r) => r && r.collectionId).map((r) => ({
+    id: String(r.collectionId),
+    name: clean(r.collectionName, 160),
+    author: clean(r.artistName, 160),
+    feed: String(r.feedUrl || '').trim(),
+    art: String(r.artworkUrl600 || r.artworkUrl100 || '').trim(),
+    genre: clean(r.primaryGenreName, 60),
+  }));
+}
+
 const feedCache = new Map();
 async function feed(url, opts = {}) {
   const u = String(url || '').trim();
@@ -112,7 +133,14 @@ function parseCurated(j) {
   const pick = (arr) => (Array.isArray(arr) ? arr : [])
     .filter((x) => x && typeof x.term === 'string' && x.term.trim())
     .slice(0, 40)
-    .map((x) => ({ term: clean(x.term, 80), cat: clean(x.cat, 30) }));
+    .map((x) => ({
+      term: clean(x.term, 80),
+      cat: clean(x.cat, 30),
+      id: /^\d{1,15}$/.test(String(x.id || '')) ? String(x.id) : '',
+      name: clean(x.name, 160),
+      author: clean(x.author, 160),
+      feed: /^https?:\/\/\S+$/i.test(String(x.feed || '')) ? String(x.feed).trim() : '',
+    }));
   return { tr: pick(j && j.tr), en: pick(j && j.en) };
 }
 
@@ -143,4 +171,4 @@ async function getCurated() {
   return curated;
 }
 
-module.exports = { search, feed, curated: getCurated };
+module.exports = { search, lookup, feed, curated: getCurated };

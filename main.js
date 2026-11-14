@@ -443,6 +443,7 @@ function registerMediaIpc() {
   ipcMain.handle('pod:search', (_e, opts) => podcast.search(opts));
   ipcMain.handle('pod:feed', (_e, url, opts) => podcast.feed(url, opts));
   ipcMain.handle('pod:curated', () => podcast.curated());
+  ipcMain.handle('pod:lookup', (_e, ids, country) => podcast.lookup(ids, country));
   ipcMain.handle('lib:get', () => library.get());
   ipcMain.handle('lib:addFolder', () => library.addFolder(mainWindow));
   ipcMain.handle('lib:removeFolder', (_e, dir) => library.removeFolder(dir));

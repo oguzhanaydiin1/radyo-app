@@ -208,6 +208,8 @@ const LANG = (() => {
     'Kaç kişinin kullandığı ve toplam dinleme süresi sayılır; seni tanımlayan bilgi gönderilmez.': 'Counts how many people use the app and total listening time; nothing that identifies you is sent.',
     'Sohbet takma adı:': 'Chat nickname:', 'Değiştir': 'Change', 'Sohbette bir sonraki mesajında yeni takma adını yazabilirsin.': 'You can enter a new nickname with your next chat message.',
     // Podcast ve müzik
+    'Podcast araması şu an yoğun. Biraz sonra tekrar dene.': 'Podcast search is busy right now. Try again in a moment.',
+    'Podcast servisine ulaşılamadı.': 'Couldn’t reach the podcast service.',
     'Müzik': 'Music',
     'Podcast': 'Podcasts',
     'Şimdi çalıyor': 'Now playing',

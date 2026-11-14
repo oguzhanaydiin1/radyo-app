@@ -88,6 +88,7 @@ contextBridge.exposeInMainWorld('podcasts', {
   search: (opts) => ipcRenderer.invoke('pod:search', opts),
   feed: (url, opts) => ipcRenderer.invoke('pod:feed', url, opts),
   curated: () => ipcRenderer.invoke('pod:curated'),
+  lookup: (ids, country) => ipcRenderer.invoke('pod:lookup', ids, country),
 });
 
 // Yerel müzik kütüphanesi.

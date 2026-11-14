@@ -165,7 +165,7 @@ const foldName = (s) => norm(s).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 async function loadCurated(force = false) {
   if (!PODAPI || PD.curatedLoading) return;
   const cache = store.get('podCuratedCache', null);
-  if (!force && cache && Date.now() - cache.at < 3 * 24 * 3600e3 && (cache.tr || cache.en)) {
+  if (!force && cache && cache.v === 2 && Date.now() - cache.at < 3 * 24 * 3600e3 && (cache.tr || cache.en)) {
     PD.curated = { tr: remember(asArray(cache.tr)), en: remember(asArray(cache.en)) };
     return;
   }
@@ -174,27 +174,39 @@ async function loadCurated(force = false) {
   try {
     const list = await PODAPI.curated();
     const resolve = async (entries, country) => {
-      const out = [];
-      let next = 0;
-      const worker = async () => {
-        while (next < entries.length) {
-          const i = next++;
-          const e = entries[i];
-          try {
-            const res = await PODAPI.search({ term: e.term, country, limit: 5 });
-            const want = foldName(e.term);
-            const hit = res.find((r) => foldName(r.name).includes(want) || want.includes(foldName(r.name))) || null;
-            if (hit) out[i] = { ...hit, cat: e.cat };
-          } catch { /* bu kayıt atlanır */ }
-        }
-      };
-      await Promise.all([worker(), worker(), worker()]);
-      return out.filter(Boolean);
+      // Listede RSS adresi olanlar doğrudan kullanılır; aramaya gerek kalmaz.
+      const known = entries.filter((e) => e && e.feed && e.name)
+        .map((e) => ({ id: String(e.id || ''), name: e.name, author: e.author || '', feed: e.feed, art: e.art || '', genre: '', cat: e.cat }));
+      // Kapak resimleri: tek bir Apple sorgusu (başarısız olursa baş harfler görünür).
+      const ids = known.filter((p) => p.id && !p.art).map((p) => p.id);
+      if (ids.length && typeof PODAPI.lookup === 'function') {
+        try {
+          const info = await PODAPI.lookup(ids, country);
+          const byId = new Map(asArray(info).map((r) => [String(r.id), r]));
+          for (const p of known) {
+            const r = byId.get(p.id);
+            if (r) { p.art = r.art || p.art; p.genre = r.genre || ''; }
+          }
+        } catch { /* kapaksız devam */ }
+      }
+      // Eski biçimdeki (yalnızca ad içeren) kayıtlar: sırayla, yavaşça ara.
+      const out = [...known];
+      for (const e of entries.filter((x) => x && !x.feed && x.term).slice(0, 10)) {
+        try {
+          const res = await PODAPI.search({ term: e.term, country, limit: 5 });
+          const want = foldName(e.term);
+          const hit = res.find((r) => foldName(r.name).includes(want) || want.includes(foldName(r.name))) || null;
+          if (hit) out.push({ ...hit, cat: e.cat });
+        } catch { /* bu kayıt atlanır */ }
+      }
+      return out;
     };
-    const [tr, en] = await Promise.all([resolve(asArray(list && list.tr), 'TR'), resolve(asArray(list && list.en), 'US')]);
+    const tr = await resolve(asArray(list && list.tr), 'TR');
+    const en = await resolve(asArray(list && list.en), 'US');
     PD.curated = { tr: remember(tr), en: remember(en) };
-    if (tr.length || en.length) store.set('podCuratedCache', { at: Date.now(), tr, en });
-    else PD.curatedError = 'Önerilen podcastler yüklenemedi.';
+    const withArt = [...tr, ...en].some((p) => p.art);
+    if ((tr.length || en.length) && withArt) store.set('podCuratedCache', { v: 2, at: Date.now(), tr, en });
+    if (!tr.length && !en.length) PD.curatedError = 'Önerilen podcastler yüklenemedi.';
   } catch (err) {
     PD.curatedError = cleanError(err);
   }
