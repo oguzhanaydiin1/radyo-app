@@ -1,22 +1,35 @@
-# Geçici teşhis: canlı podcast/söz uç noktalarını dener. İş bitince silinir.
+# Geçici: önerilen podcast'lerin Apple kimliklerini çözer. İş bitince silinir.
 name: Teşhis (podcast)
 on:
   workflow_dispatch:
 jobs:
-  dene:
+  coz:
     runs-on: ubuntu-latest
     steps:
-      - name: api.oalabs.dev podcast arama
+      - uses: actions/checkout@v4
+      - name: Önerilenleri çöz
         run: |
-          for u in "https://api.oalabs.dev/v1/podcast/search?term=medyascope&country=TR&limit=3" \
-                   "https://api.oalabs.dev/v1/podcast/search?term=tarih&country=TR&limit=3" \
-                   "https://api.oalabs.dev/v1/podcast/feed?url=https%3A%2F%2Fanchor.fm%2Fs%2F1c5fe1d4%2Fpodcast%2Frss" \
-                   "https://api.oalabs.dev/v1/lyrics?artist=Sezen%20Aksu&title=Firuze"; do
-            echo "=== $u"
-            curl -sS -m 30 -H "Origin: http://localhost" -D - "$u" -o body.txt | grep -iE "^HTTP|access-control|cf-cache|content-type"
-            head -c 600 body.txt; echo
-          done
-      - name: Apple doğrudan (karşılaştırma)
-        run: |
-          curl -sS -m 30 -D - "https://itunes.apple.com/search?media=podcast&entity=podcast&term=medyascope&country=TR&limit=2" -o it.txt | grep -iE "^HTTP|location|content-type"
-          head -c 500 it.txt; echo
+          node - <<'JS'
+          const list = require('./stations/podcastler.json');
+          const fold = (s) => s.toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+          const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+          (async () => {
+            for (const [lang, country] of [['tr', 'TR'], ['en', 'US']]) {
+              for (const e of list[lang]) {
+                const u = `https://itunes.apple.com/search?media=podcast&entity=podcast&country=${country}&limit=5&term=${encodeURIComponent(e.term)}`;
+                let j = null;
+                for (let a = 0; a < 3 && !j; a++) {
+                  const r = await fetch(u);
+                  if (r.ok) j = await r.json(); else { console.log('# bekle', r.status); await sleep(8000); }
+                }
+                const want = fold(e.term);
+                const res = (j && j.results) || [];
+                const hit = res.find((x) => fold(x.collectionName).includes(want) || want.includes(fold(x.collectionName)));
+                console.log('RES ' + JSON.stringify({ lang, term: e.term, id: hit ? hit.collectionId : null, name: hit ? hit.collectionName : null, author: hit ? hit.artistName : null, feed: hit ? hit.feedUrl : null, cands: res.map((x) => x.collectionName).slice(0, 3) }));
+                await sleep(3500);
+              }
+            }
+            const r = await fetch('https://itunes.apple.com/lookup?entity=podcast&id=1200361736,1001990447');
+            console.log('LOOKUP', r.status, (await r.text()).slice(0, 300).replace(/\s+/g, ' '));
+          })();
+          JS
