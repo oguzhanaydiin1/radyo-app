@@ -1,0 +1,22 @@
+# Geçici teşhis: canlı podcast/söz uç noktalarını dener. İş bitince silinir.
+name: Teşhis (podcast)
+on:
+  workflow_dispatch:
+jobs:
+  dene:
+    runs-on: ubuntu-latest
+    steps:
+      - name: api.oalabs.dev podcast arama
+        run: |
+          for u in "https://api.oalabs.dev/v1/podcast/search?term=medyascope&country=TR&limit=3" \
+                   "https://api.oalabs.dev/v1/podcast/search?term=tarih&country=TR&limit=3" \
+                   "https://api.oalabs.dev/v1/podcast/feed?url=https%3A%2F%2Fanchor.fm%2Fs%2F1c5fe1d4%2Fpodcast%2Frss" \
+                   "https://api.oalabs.dev/v1/lyrics?artist=Sezen%20Aksu&title=Firuze"; do
+            echo "=== $u"
+            curl -sS -m 30 -H "Origin: http://localhost" -D - "$u" -o body.txt | grep -iE "^HTTP|access-control|cf-cache|content-type"
+            head -c 600 body.txt; echo
+          done
+      - name: Apple doğrudan (karşılaştırma)
+        run: |
+          curl -sS -m 30 -D - "https://itunes.apple.com/search?media=podcast&entity=podcast&term=medyascope&country=TR&limit=2" -o it.txt | grep -iE "^HTTP|location|content-type"
+          head -c 500 it.txt; echo
