@@ -94,6 +94,7 @@ jobs:
           V="${{ steps.ver.outputs.v }}"
           cp app/build/outputs/bundle/release/app-release.aab "../OA-Radyo-$V.aab"
           cp app/build/outputs/apk/release/app-release.apk "../OA-Radyo-$V.apk"
+          cp app/build/outputs/apk/release/app-release.apk "../OA-Radyo-Android.apk"
           rm -f "$RUNNER_TEMP/oa-release.keystore"
           ls -la ../OA-Radyo-*.aab ../OA-Radyo-*.apk
 
@@ -131,4 +132,14 @@ jobs:
           files: |
             mobile/OA-Radyo-${{ steps.ver.outputs.v }}.aab
             mobile/OA-Radyo-${{ steps.ver.outputs.v }}.apk
+          fail_on_unmatched_files: true
+
+      # Sabit adlı APK'yı son (Windows ile aynı numaralı) sürüme de koy: sitedeki ve OA Labs Center'daki
+      # "Android için indir" releases/latest/download/OA-Radyo-Android.apk adresinden her zaman en yenisini alır.
+      - name: Son sürüme Android APK'sını ekle
+        if: env.OA_CHANNEL == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.v }}
+          files: mobile/OA-Radyo-Android.apk
           fail_on_unmatched_files: true
