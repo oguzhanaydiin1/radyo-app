@@ -176,6 +176,7 @@ const LANG = (() => {
     'Sorun bildir ya da öneri gönder': 'Report a problem or send a suggestion', 'Mesajın': 'Your message', 'E-postayı hazırla': 'Prepare email',
     'Ne oldu, ya da ne eklenmesini istersin? (Örneğin: “X radyosu açılmıyor”)': 'What happened, or what would you like added? (E.g. “Station X won’t play”)',
     'E-posta programın açılır; mesaja sürüm ve sistem bilgisi eklenir, göndermeden önce görebilirsin.': 'Your email app opens; version and system info are added to the message and you can review it before sending.',
+    'OA Labs uygulamaları ücretsiz ve reklamsız. Beğendiysen bir kahve ısmarlayarak devam etmemize yardım edebilirsin.': 'OA Labs apps are free and ad-free. If you like them, you can help us keep going by buying us a coffee.', 'Bir kahve ısmarla': 'Buy us a coffee',
     'Uygulama hakkında': 'About the app', 'OA Labs atölyesinde özenle yapıldı.': 'Carefully made at the OA Labs workshop.', 'Altyapı': 'Built with', 'Web sitesi': 'Website', 'E-posta': 'Email', 'Telefon': 'Phone',
     'İletişim bilgisi eklenmemiş.': 'No contact details added.',
     'İstasyon bilgileri, gönüllülerin oluşturduğu ücretsiz': 'Station data comes from the free, volunteer-built',

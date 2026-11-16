@@ -662,6 +662,7 @@ publishState();
 // ---------- Destek ve iletişim ----------
 
 const SUP = {
+  coffee: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3v3M12 3v3"/></svg>',
   mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
   phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
   chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6z"/></svg>',
@@ -735,6 +736,10 @@ function supportHTML() {
     <p class="dialog-note" style="margin-top:12px">İstasyon bilgileri, gönüllülerin oluşturduğu ücretsiz
       <a href="#" data-action="open-link" data-url="https://www.radio-browser.info">Radio Browser</a> veritabanından gelir.
       Yayınların hakları ilgili radyo kuruluşlarına aittir.</p>
+    <div class="support-coffee">
+      <p class="dialog-note">OA Labs uygulamaları ücretsiz ve reklamsız. Beğendiysen bir kahve ısmarlayarak devam etmemize yardım edebilirsin.</p>
+      <button class="pill" type="button" data-action="open-link" data-url="https://buymeacoffee.com/oalabs">${SUP.coffee}<span>Bir kahve ısmarla</span></button>
+    </div>
     <p class="dialog-note">© ${I.copyrightYear} ${esc(I.developer)}</p>
   </div>`;
 }

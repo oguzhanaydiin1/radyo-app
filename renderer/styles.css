@@ -825,6 +825,8 @@ svg { display: block; flex: none; }
 .report-actions .dialog-note { margin: 0; flex: 1; min-width: 200px; }
 .about-card { padding: 20px 24px; }
 .about-card a { color: var(--accent); }
+.support-coffee { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 14px 0 8px; padding-top: 14px; border-top: 1px solid var(--divider); }
+.support-coffee .dialog-note { flex: 1 1 260px; margin: 0; }
 .report-card label { display: block; }
 .report-card textarea { width: 100%; box-sizing: border-box; }
 
