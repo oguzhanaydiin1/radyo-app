@@ -688,6 +688,16 @@ function discoverHTML() {
   let html = `<h1 class="page-title">${searching ? `“${esc(state.query)}” için sonuçlar` : 'Keşfet'}</h1>`;
   const f = featured();
   if (!searching && f && haveList) html += heroHTML(f);
+  // Telefon düzeni: son dinlenenler yatay şerit (bilgisayarda gizli, CSS)
+  if (!searching && state.recent.length) {
+    html += `<section class="recent-strip" aria-label="Son dinlenenler">
+      <div class="strip-head"><h2>Son dinlenenler</h2><button class="strip-all" type="button" data-action="section" data-section="recent">Tümü</button></div>
+      <div class="strip-row">${state.recent.slice(0, 12).map((e) => {
+        const s = e.station;
+        return `<button class="strip-item${isCurrent(s.id) ? ' current' : ''}" type="button" data-action="play" data-id="${esc(s.id)}" aria-label="${esc(s.name)} dinle">${logoHTML(s, 64, 16)}<span>${esc(s.name)}</span></button>`;
+      }).join('')}</div>
+    </section>`;
+  }
 
   html += `<div class="chips" role="group" aria-label="Kategoriler">${CATEGORIES.map((c, i) => {
     if (c.custom && !state.custom.length) return '';

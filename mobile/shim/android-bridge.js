@@ -694,7 +694,15 @@
     canFolder: false,
     get: async () => {
       if (Native && !nat.loaded) {
-        if (await nativeStatus()) await nativeScan(false).catch(noop);
+        if (await nativeStatus()) {
+          await nativeScan(false).catch(noop);
+        } else if (!localStorage.getItem('oa-music-asked')) {
+          // Müzik bölümü ilk açılışta: izni kendiliğinden iste, verilirse telefondaki bütün müzikleri tara.
+          localStorage.setItem('oa-music-asked', '1');
+          const r = await Native.requestAudio().catch(() => ({ granted: false }));
+          nat.granted = !!(r && r.granted);
+          if (nat.granted) await nativeScan(false).catch(noop);
+        }
       }
       return libState();
     },

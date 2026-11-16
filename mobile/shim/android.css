@@ -143,3 +143,55 @@
 @media (prefers-reduced-motion: reduce) {
   .is-android .more-panel { animation: none; }
 }
+
+/* ---------- Radyo sekmesi: telefon düzeni (taslak A) ----------
+   Bilgisayardaki 176 px'lik kartlar yerine kompakt satırlar; kategoriler tek satırda kayar;
+   öne çıkan büyük kart yerine "Son dinlenenler" şeridi. */
+@media (max-width: 860px) {
+  .is-android .page-title { font: 800 28px var(--font-display); letter-spacing: -0.02em; margin: 2px 0 12px; }
+  .is-android .hero-row { display: none; }
+
+  .is-android .chips {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    margin: 0 -16px 14px; padding: 0 16px 2px; scroll-padding: 0 16px;
+  }
+  .is-android .chips::-webkit-scrollbar { display: none; }
+  .is-android .chip { flex: none; height: 36px; border-radius: 18px; padding: 0 14px; font-size: 14px; }
+
+  .is-android .recent-strip { display: block; margin: 0 0 16px; }
+  .is-android .strip-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .is-android .strip-head h2 { margin: 0; font-size: 17px; font-weight: 700; }
+  .is-android .strip-all { border: 0; background: transparent; color: var(--accent); font: 600 14px var(--font-body); min-height: 44px; padding: 0 4px; }
+  .is-android .strip-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .is-android .strip-row::-webkit-scrollbar { display: none; }
+  .is-android .strip-item {
+    flex: none; width: 76px; border: 0; background: transparent; padding: 0; color: var(--text-soft);
+    display: flex; flex-direction: column; align-items: center; gap: 6px; font: 600 12px var(--font-body);
+  }
+  .is-android .strip-item > span:last-child { width: 76px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .is-android .strip-item.current .logo { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+
+  .is-android .list-bar { margin-bottom: 4px; }
+  .is-android .list-bar > :not(.count):not(.spacer):not(label) { display: none; }
+
+  .is-android .grid, .is-android .fav-grid { display: flex; flex-direction: column; gap: 2px; margin: 0 -8px; }
+  .is-android .station-card {
+    height: auto; min-height: 64px;
+    display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; align-items: center; column-gap: 12px;
+    padding: 8px 4px 8px 12px; border: 0; border-radius: 14px; background: transparent;
+  }
+  .is-android .station-card:hover { background: transparent; }
+  .is-android .station-card.current { background: var(--accent-deep); }
+  .is-android .station-card .card-top { display: contents; }
+  .is-android .station-card .logo-wrap { grid-column: 1; grid-row: 1; display: flex; }
+  .is-android .station-card .logo-wrap .logo { width: 48px !important; height: 48px !important; border-radius: 12px !important; }
+  .is-android .station-card .logo-overlay { border-radius: 12px; }
+  .is-android .station-card:hover .logo-overlay { display: none; }
+  .is-android .station-card.current.is-playing .logo-overlay { display: flex; }
+  .is-android .station-card .card-bottom { grid-column: 2; grid-row: 1; padding: 0; min-width: 0; }
+  .is-android .station-card .card-actions { grid-column: 3; grid-row: 1; position: relative; z-index: 2; justify-content: center; }
+  .is-android .station-card .card-name { font-size: 15px; }
+  .is-android .station-card .card-sub { font-size: 13px; margin-top: 2px; }
+  .is-android .station-card .card-q { display: none; }
+  .is-android .fav-grid .station-card { cursor: default; }
+}
