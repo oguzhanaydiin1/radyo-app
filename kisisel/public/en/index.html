@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Oğuzhan Aydın — OA Labs</title>
-<meta name="description" content="OA Labs is Oğuzhan Aydın’s software workshop. Free, ad-free apps: OA Radyo, Pusula Browser and more on the way.">
-<meta name="theme-color" content="#07080C">
+<title>Oğuzhan Aydın — AydPos and OA Labs software</title>
+<meta name="description" content="AydPos: barcode point-of-sale, stock and credit-account software. One-time licence, 7-day free trial. OA Labs’ free apps are on oalabs.dev.">
+<meta name="theme-color" content="#0B0E1A">
 <link rel="canonical" href="https://oguzhanaydin.com.tr/en/">
 <link rel="alternate" hreflang="tr" href="https://oguzhanaydin.com.tr/">
 <link rel="alternate" hreflang="en" href="https://oguzhanaydin.com.tr/en/">
 <link rel="alternate" hreflang="x-default" href="https://oguzhanaydin.com.tr/">
-<meta property="og:title" content="Oğuzhan Aydın — OA Labs">
-<meta property="og:description" content="Small apps, carefully made.">
+<meta property="og:title" content="Oğuzhan Aydın — AydPos and OA Labs">
+<meta property="og:description" content="Software that makes your work easier.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Oğuzhan Aydın · OA Labs">
 <meta property="og:image" content="https://oguzhanaydin.com.tr/paylas-en.png">
@@ -22,101 +22,127 @@
 <link rel="icon" href="/oa-labs.svg" type="image/svg+xml">
 <link rel="alternate icon" href="/favicon.png">
 <link rel="preload" href="/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="preload" href="/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>
-body{margin:0;background:#07080C}
-a{color:#F2A541}a:hover{color:#F7BF6E}
-html{scroll-behavior:smooth}
-.pg{background:#07080C;color:#EEEAE2;font-family:'DM Sans',system-ui,sans-serif;font-size:18px;line-height:1.6;overflow-x:clip}
-.dsp{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-0.035em}
-.top{position:sticky;top:0;z-index:20;background:rgba(7,8,12,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
-.hero{min-height:100vh;box-sizing:border-box;display:grid;place-items:center;text-align:center;padding:80px 24px}
-.hero h1{margin:0;font-size:clamp(88px,17vw,260px);line-height:.86}
-.hero h1 span{color:#F2A541}
-.hero-yapboz{display:block;width:clamp(110px,12vw,168px);height:auto;margin:0 auto 26px}
-.story{max-width:1000px;margin:0 auto;padding:120px 32px}
-.story p{margin:0 0 .35em;font-size:clamp(32px,4.6vw,64px);line-height:1.1}
-.cols{max-width:1200px;margin:0 auto;padding:40px 32px 120px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-.card{border-radius:28px;background:#11131C;border:1px solid #1E2232;padding:32px}
-.card .n{font-size:64px;line-height:1;color:#F2A541}
-.card h3{margin:20px 0 8px;font-size:26px;line-height:1.15}
-.card p{margin:0;color:#9EA2B3;font-size:16px}
-.apps{max-width:1200px;margin:0 auto;padding:0 32px 120px}
-.app-row{display:flex;align-items:center;gap:20px;padding:22px 0;border-top:1px solid #1E2232;flex-wrap:wrap}
-.app-row .ic{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;flex:none}
-.go{padding:120px 24px 160px;text-align:center}
-.cue{display:inline-flex;flex-direction:column;align-items:center;gap:6px;margin-top:48px;color:#7E8296;font-size:14px}
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-wrap{height:190vh;view-timeline:--h block}
-    .hero{position:sticky;top:0;height:100vh;min-height:0}
-    .hero-in{animation:shrink linear both;animation-timeline:--h;animation-range:contain 0% contain 80%}
-    @keyframes shrink{to{opacity:0;transform:scale(.6) translateY(-6vh);filter:blur(6px)}}
-    .story p{animation:lit linear both;animation-timeline:view();animation-range:entry 20% cover 45%}
-    @keyframes lit{from{opacity:.1;transform:translateY(40px)}to{opacity:1;transform:none}}
-    .card,.app-row{animation:up linear both;animation-timeline:view();animation-range:entry 5% cover 30%}
-    @keyframes up{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
-    .go h2{animation:pop linear both;animation-timeline:view();animation-range:entry 0% cover 45%}
-    @keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
-    .cue svg{animation:bob 1.6s ease-in-out infinite}
-    @keyframes bob{50%{transform:translateY(6px)}}
-  }
+body{margin:0;background:#0B0E1A}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+:root{--bg:#0B0E1A;--card:#141829;--line:#252A40;--tx:#F3F4F9;--mu:#A3AAC0;--ink:#D5D9E8;--in:#4F46E5;--inl:#A8A0FF;--wa:#16A34A}
+.pg{background:var(--bg);color:var(--tx);font-family:'DM Sans',system-ui,sans-serif;font-size:17px;line-height:1.6;overflow-x:clip}
+.pg a{color:inherit}
+.dsp{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;letter-spacing:-.03em}
+.top{position:sticky;top:0;z-index:20;background:rgba(11,14,26,.8);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.pill{display:inline-block;background:#24224D;color:var(--inl);font-size:12.5px;font-weight:700;letter-spacing:.12em;padding:8px 16px;border-radius:999px}
+.hero{background:linear-gradient(180deg,#1A1840 0%,#0B0E1A 100%);padding:72px 0 84px}
+.hero .wrap{display:flex;gap:56px;align-items:center}
+.hero-l{flex:1;min-width:0}
+.hero h1{margin:22px 0 0;font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.04em}
+.hero h1 em{font-style:normal;color:var(--inl)}
+.lead{font-size:19px;line-height:1.6;color:var(--mu);margin:22px 0 30px;max-width:560px}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;padding:15px 26px;border-radius:12px;text-decoration:none;white-space:nowrap;border:1.5px solid transparent;cursor:pointer}
+.btn.g{background:var(--wa);color:#fff;box-shadow:0 8px 22px rgba(22,163,74,.28)}
+.btn.i{background:var(--in);color:#fff;box-shadow:0 8px 22px rgba(79,70,229,.3)}
+.btn.o{background:#1A1F38;color:#B4AEFF;border-color:#3A3F6B}
+.btn.w{background:#fff;color:#4F46E5}
+.btn.s{padding:11px 18px;font-size:15px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:12px 28px;margin-top:34px;max-width:560px}
+.ck{display:flex;gap:10px;font-size:15px;line-height:1.45;color:var(--ink)}
+.ck b{color:var(--inl)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.sum{width:460px;flex:none;padding:30px 32px 28px;box-sizing:border-box}
+.badge{display:inline-block;background:#7C5CFF;color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.1em;padding:6px 12px;border-radius:8px}
+.sum h2{margin:18px 0 0;display:flex;align-items:center;gap:14px;font-size:30px;line-height:1}
+.price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:18px}
+.price strong{font-size:50px;line-height:1;letter-spacing:-.04em}
+.price span{font-size:14px;color:var(--mu)}
+.note{font-size:14px;line-height:1.5;color:var(--mu);margin:6px 0 18px}
+.li{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:18px;margin-bottom:20px}
+.li div{display:flex;gap:12px;align-items:center;font-size:15px;color:var(--ink)}
+.li i{width:30px;height:30px;border-radius:9px;background:#24224D;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px}
+.sec{padding:84px 0 20px}
+.sec-h{text-align:center;margin-bottom:44px}
+.sec-h h2{margin:20px 0 0;font-size:clamp(30px,4vw,46px);line-height:1.1;letter-spacing:-.035em}
+.sec-h p{font-size:18px;line-height:1.55;color:var(--mu);max-width:640px;margin:14px auto 0}
+.progs{display:flex;gap:28px}
+.prog{flex:1;min-width:0;padding:34px;display:flex;flex-direction:column}
+.prog-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.prog-n{display:flex;align-items:center;gap:16px;font-size:34px;line-height:1}
+.tag{font-size:11.5px;font-weight:700;letter-spacing:.1em;padding:6px 12px;border-radius:999px}
+.prog p{font-size:17px;line-height:1.55;color:var(--mu);margin:20px 0}
+.prog .ckl{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
+.prog-f{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px}
+.prog-f strong{font-size:30px}
+.soon{margin-top:24px;border:2px dashed #3A3F6B;border-radius:22px;padding:26px 34px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:#10132A}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.fc{padding:26px 24px 28px}
+.fc h3{margin:18px 0 8px;font-size:20px;line-height:1.2;letter-spacing:-.02em}
+.fc p{margin:0;font-size:14.5px;line-height:1.55;color:var(--mu)}
+.ic{width:50px;height:50px;border-radius:14px;background:#24224D;display:flex;align-items:center;justify-content:center;font-size:25px}
+.ic.gr{background:#12301F}
+.pr{max-width:560px;margin:0 auto;background:var(--card);border:2px solid var(--in);border-radius:26px;box-shadow:0 20px 50px rgba(79,70,229,.25);overflow:hidden}
+.pr-t{background:var(--in);color:#fff;text-align:center;font-size:13px;font-weight:700;letter-spacing:.12em;padding:10px}
+.pr-b{padding:38px 40px 36px;text-align:center}
+.pr-b .big{font-size:clamp(52px,8vw,74px);line-height:1;letter-spacing:-.05em}
+.pr-b .big small{font-size:.46em;letter-spacing:-.02em}
+.pr-s{font-size:15px;color:var(--mu);margin:10px 0 26px}
+.pr-l{display:flex;flex-direction:column;gap:12px;text-align:left;margin-bottom:28px}
+.pr-f{margin-top:22px;font-size:12.5px;line-height:1.5;color:#8a93a8;text-align:left}
+.faq{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.faq .card>div{padding:22px 28px}
+.faq b{display:block;font-size:18px;margin-bottom:6px}
+.faq p{margin:0;font-size:15.5px;line-height:1.55;color:var(--mu)}
+.free{background:linear-gradient(120deg,#4F46E5 0%,#7C5CFF 100%);border-radius:30px;padding:56px 64px;display:flex;align-items:center;gap:40px;color:#fff}
+.free>div{flex:1}
+.free small{font-size:13px;letter-spacing:.2em;font-weight:700;opacity:.8}
+.free h2{margin:12px 0 10px;font-size:clamp(28px,3.6vw,44px);line-height:1.08;letter-spacing:-.035em}
+.free p{margin:0;font-size:18px;line-height:1.55;opacity:.92}
+footer.ft{margin-top:84px;background:#0F1424;border-top:1px solid var(--line)}
+.ft .wrap{padding-top:44px;padding-bottom:48px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;color:#B7BED2;font-size:15px}
+.ft a{text-decoration:none;color:#C9CEE0}.ft a:hover{color:#fff}
+.ft .tel{font-weight:700;font-size:22px;color:#fff;display:block}
+.wafloat{font-family:'DM Sans',system-ui,sans-serif;position:fixed;right:24px;bottom:24px;z-index:30;background:var(--wa);color:#fff!important;font-weight:700;font-size:15px;padding:14px 22px;border-radius:999px;box-shadow:0 10px 26px rgba(22,163,74,.4);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+.nav-links a:hover{color:#fff!important}
+@media (max-width:980px){
+  .hero .wrap{flex-direction:column;align-items:stretch;gap:36px}
+  .sum{width:100%}
+  .progs{flex-direction:column}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .grid3{grid-template-columns:1fr}
+  .free{flex-direction:column;align-items:flex-start;padding:36px 28px;gap:22px}
 }
-@media (max-width: 760px){
+@media (max-width:760px){
   .nav-main{height:auto!important;flex-wrap:wrap;padding:10px 16px!important;gap:10px 12px!important}
   .nav-brand{flex:1;min-width:0;white-space:nowrap;font-size:18px!important}
   .nav-links{order:3;flex-basis:100%!important;justify-content:flex-start!important;gap:22px!important;overflow-x:auto;padding:2px 0 4px}
   .nav-links a{white-space:nowrap}
   .nav-login{padding:0 5px!important}
   .nav-login-txt{display:none!important}
+  .wrap{padding:0 20px}
+  .hero{padding:44px 0 56px}
+  .checks{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr}
+  .sec{padding:56px 0 10px}
+  .prog{padding:24px 22px}
+  .pr-b{padding:28px 22px}
+  .soon{padding:22px}
+  .faq .card>div{padding:18px 20px}
+  .wafloat{right:14px;bottom:14px;padding:12px 16px}
+  .sum{padding:24px 22px}
 }
-@media (max-width: 800px){ .cols{grid-template-columns:minmax(0,1fr)} .story{padding:90px 20px} }
-/* Yapboz: Uygulamalar başlığının yanındaki dört karo. Sayfada görününce bir kez oynar. */
-.apps-head { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 36px; margin-bottom: 40px; }
-.apps-head .lead-2 { margin-bottom: 0; }
-.yapboz { width: 148px; height: 148px; flex: none; overflow: visible; }
-.yapboz .yz-t { transform-box: fill-box; transform-origin: 50% 100%; }
-.yapboz.hazir .yz-t, .yapboz.hazir .yz-o, .yapboz.hazir .yz-a { opacity: 0; }
-.yapboz.oynat .yz-t { opacity: 1; animation: 2.7s cubic-bezier(.3,1.4,.5,1) both; }
-.yapboz.oynat .yz-1 { animation-name: yz1; }
-.yapboz.oynat .yz-2 { animation-name: yz2; }
-.yapboz.oynat .yz-3 { animation-name: yz3; }
-.yapboz.oynat .yz-4 { animation-name: yz4; animation-timing-function: ease-in; }
-.yapboz.oynat .yz-o { opacity: 1; stroke-dasharray: 160; animation: yzo 2.7s ease-out both; }
-.yapboz.oynat .yz-a { opacity: 1; stroke-dasharray: 125; animation: yza 2.7s ease-out both; }
-@keyframes yz1 { 0% { transform: translate(-260px,-160px) rotate(-18deg); opacity: 0 } 4% { opacity: 1 } 22% { transform: none } 25.6% { transform: scale(1.08,.92) } 28.9%,100% { transform: none } }
-@keyframes yz2 { 0%,8.9% { transform: translate(260px,-160px) rotate(16deg); opacity: 0 } 13.3% { opacity: 1 } 31.1% { transform: none } 34.4% { transform: scale(1.08,.92) } 37.8%,100% { transform: none } }
-@keyframes yz3 { 0%,17.8% { transform: translate(-260px,160px) rotate(14deg); opacity: 0 } 22.2% { opacity: 1 } 40% { transform: none } 43.3% { transform: scale(1.08,.92) } 46.7%,100% { transform: none } }
-@keyframes yz4 { 0%,48.9% { transform: translateY(-260px); opacity: 0 } 51.1% { opacity: 1 } 66.7% { transform: none } 71.1% { transform: scale(1.2,.8) } 77.8%,100% { transform: none } }
-@keyframes yzo { 0%,8.9% { stroke-dashoffset: 160 } 33.3%,100% { stroke-dashoffset: 0 } }
-@keyframes yza { 0%,75.6% { stroke-dashoffset: 125 } 97.8%,100% { stroke-dashoffset: 0 } }
-
-/* Mühür: alt bilgide, çevresindeki yazı çok yavaş döner. */
-.muhur { width: 96px; height: 96px; flex: none; }
-.muhur .muhur-yazi { transform-origin: 0 0; animation: muhur-don 40s linear infinite; }
-@keyframes muhur-don { to { transform: rotate(360deg) } }
-.foot-imza { display: flex; align-items: center; gap: 20px; }
-@media (prefers-reduced-motion: reduce) { .muhur .muhur-yazi { animation: none; } }
-.apps-head .dsp{margin:0!important}
-.story .muhur-buyuk{display:block;width:clamp(120px,14vw,170px);height:auto;margin-top:36px}
-@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) { .story .muhur-buyuk{animation:lit linear both;animation-timeline:view();animation-range:entry 20% cover 45%} } }
 </style>
 </head>
 <body>
 <div class="pg">
-
   <header class="top">
     <nav class="nav-main" aria-label="Site" style="max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 24px">
       <a class="nav-brand" href="/en/" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #EEEAE2; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 19px">
         <span aria-hidden="true" style="width: 28px; height: 28px; color: #EEEAE2; display: block; flex: none"><svg viewBox="2 0 100 100" width="100%" height="100%"><path d="M26 86 L52 14 L78 86" fill="none" style="stroke:#F2A541" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="58" r="28" fill="none" stroke="currentColor" stroke-width="10"/></svg></span>
         Oğuzhan Aydın
       </a>
-      <div class="nav-links" style="flex: 1; display: flex; justify-content: flex-end; gap: 24px; font-size: 15px">
-        <a href="#hakkimizda" style="color: #B7BACA; text-decoration: none">About</a>
-        <a href="#uygulamalar" style="color: #B7BACA; text-decoration: none">Apps</a>
-        <a href="#iletisim" style="color: #B7BACA; text-decoration: none">Contact</a>
-      </div>
+      <div class="nav-links" style="flex: 1; display: flex; justify-content: flex-end; gap: 24px; font-size: 15px"><a href="#programs" style="color: #B7BACA; text-decoration: none">Programs</a><a href="#features" style="color: #B7BACA; text-decoration: none">Features</a><a href="#faq" style="color: #B7BACA; text-decoration: none">FAQ</a><a href="https://oalabs.dev/en/" style="color: #B7BACA; text-decoration: none" target="_blank" rel="noopener">Free apps</a><a href="#contact" style="color: #B7BACA; text-decoration: none">Contact</a></div>
       <a href="/" lang="tr" hreflang="tr" aria-label="Türkçe" title="Türkçe" style="display: inline-grid; place-items: center; min-width: 44px; height: 36px; padding: 0 10px; border-radius: 18px; border: 1px solid #2A2F43; color: #B7BACA; text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: .06em">TR</a>
       <a class="nav-login" aria-label="Sign in or sign up" href="https://oalabs.dev/uye/?giris&amp;lang=en" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 6px; border-radius: 22px; border: 1px solid #2A2F43; background: #11131C; color: #EEEAE2; text-decoration: none">
         <span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: #1C2030; display: grid; place-items: center; color: #B7BACA">
@@ -126,128 +152,51 @@ html{scroll-behavior:smooth}
       </a>
     </nav>
   </header>
+  <main>
+  <section class="hero" aria-labelledby="h1"><div class="wrap">
+    <div class="hero-l"><span class="pill">OA LABS SOFTWARE</span>
+      <h1 id="h1" class="dsp">Software that makes your <em>work easier</em></h1>
+      <p class="lead">Simple, fast programs that work without internet. Try free for 7 days, and if you like it, pay once. No subscription.</p>
+      <div class="row"><a class="btn g" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20information%20about%20AydPos." target="_blank" rel="noopener">Ask on WhatsApp</a><a class="btn o" href="#programs">See programs</a></div>
+      <div class="checks"><div class="ck"><b>✓</b><span>One payment, lifetime licence</span></div><div class="ck"><b>✓</b><span>No internet needed</span></div><div class="ck"><b>✓</b><span>7-day free trial</span></div><div class="ck"><b>✓</b><span>Help with setup</span></div></div></div>
+    <aside class="card sum"><span class="badge">FEATURED PROGRAM</span>
+      <h2 class="dsp"><svg width="48" height="48" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="113" fill="#FF7A1A"/><path d="M126 424 L256 96 L386 424" fill="none" stroke="#0B1A3D" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/><g fill="#fff"><rect x="216" y="296" width="10" height="62"/><rect x="234" y="296" width="18" height="62"/><rect x="262" y="296" width="8" height="62"/><rect x="278" y="296" width="16" height="62"/></g></svg><span>Ayd<span style="color:#FF7A1A">Pos</span> Licence</span></h2>
+      <div class="price"><strong class="dsp">1,299 TRY</strong><span>one payment · lifetime licence</span></div>
+      <p class="note">No monthly or yearly fee. Try it free for 7 days first.</p>
+      <div class="li"><div><i>🛒</i>Fast barcode sales and checkout</div><div><i>📦</i>Stock, expiry dates and goods receipt</div><div><i>📒</i>Credit accounts + WhatsApp reminders</div><div><i>📊</i>Report centre · PDF · Excel</div><div><i>🏷️</i>Shelf label designer</div></div>
+      <a class="btn i" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20to%20try%20the%20AydPos%20demo." target="_blank" rel="noopener">Try free for 7 days</a></aside>
+  </div></section>
 
-  <!-- Açılış: dev "OA Labs." yazısı; kaydırınca küçülüp silinir -->
-  <div class="hero-wrap">
-    <section class="hero" aria-labelledby="h1">
-      <div class="hero-in">
-        <svg class="yapboz hemen hero-yapboz" width="148" height="148" viewBox="0 0 220 220" role="img" aria-label="OA Labs logo">
-          <g class="yz-t yz-1"><rect x="6" y="6" width="96" height="96" rx="25" fill="#0D0F16" stroke="#EEEAE2" stroke-width="8.4"/><circle class="yz-o" cx="54" cy="54" r="25.4" fill="none" stroke="#EEEAE2" stroke-width="11.3" transform="rotate(-90 54 54)"/></g>
-          <g class="yz-t yz-2"><rect x="118" y="6" width="96" height="96" rx="25" fill="#0D0F16" stroke="#5D606B" stroke-width="8.4"/></g>
-          <g class="yz-t yz-3"><rect x="6" y="118" width="96" height="96" rx="25" fill="#0D0F16" stroke="#5D606B" stroke-width="8.4"/></g>
-          <g class="yz-t yz-4"><rect x="118" y="118" width="96" height="96" rx="25" fill="#F2A541"/><path class="yz-a" d="M140.6 194.3 L166 137.7 L191.4 194.3" fill="none" stroke="#14110A" stroke-width="11.3" stroke-linecap="round" stroke-linejoin="round"/></g>
-        </svg>
-        <p style="margin: 0 0 20px; color: #9EA2B3; font-size: 20px">Oğuzhan Aydın’s software workshop</p>
-        <h1 id="h1" class="dsp">OA Labs<span>.</span></h1>
-        <p class="dsp" style="margin: 26px auto 0; max-width: 18em; font-size: clamp(24px, 3vw, 40px); line-height: 1.15; color: #B7BACA; letter-spacing: -0.02em">Small apps, carefully made.</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 40px">
-          <a href="https://oalabs.dev/en/" style="display: inline-flex; align-items: center; gap: 10px; height: 60px; padding: 0 32px; border-radius: 30px; background: #F2A541; color: #14110A; text-decoration: none; font-weight: 600; font-size: 19px">
-            Go to oalabs.dev
-            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-          </a>
-          <a href="#hakkimizda" style="display: inline-flex; align-items: center; height: 60px; padding: 0 28px; border-radius: 30px; border: 1px solid #2A2F43; color: #EEEAE2; text-decoration: none; font-weight: 600; font-size: 19px">About us</a>
-        </div>
-        <div class="cue" aria-hidden="true">Scroll<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></div>
-      </div>
-    </section>
-  </div>
+  <section class="sec" id="programs"><div class="wrap"><div class="sec-h"><span class="pill">OUR PROGRAMS</span><h2 class="dsp">Which program fits your business?</h2><p>Each program is built for a different need. Both are one-time licences and can be tried free for 7 days.</p></div>
+    <div class="progs">
+      <div class="card prog"><div class="prog-h"><div class="prog-n dsp"><svg width="64" height="64" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="113" fill="#FF7A1A"/><path d="M126 424 L256 96 L386 424" fill="none" stroke="#0B1A3D" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/><g fill="#fff"><rect x="216" y="296" width="10" height="62"/><rect x="234" y="296" width="18" height="62"/><rect x="262" y="296" width="8" height="62"/><rect x="278" y="296" width="16" height="62"/></g></svg><span>Ayd<span style="color:#FF7A1A">Pos</span></span></div><span class="tag" style="color:#4ADE80;background:#4ADE8022">AVAILABLE</span></div>
+        <p>Barcode sales, stock and credit-account software for shops such as grocers, greengrocers, butchers, nut shops and tobacconists.</p><div class="ckl"><div class="ck"><b style="color:#4ADE80">✓</b><span>Fast checkout: cash, card and credit</span></div><div class="ck"><b style="color:#4ADE80">✓</b><span>Stock tracking, expiry alerts, campaigns</span></div><div class="ck"><b style="color:#4ADE80">✓</b><span>Report centre, label designer, automatic backup</span></div></div>
+        <div class="prog-f"><strong class="dsp">1,299 TRY</strong><div class="row" style="gap:10px"><a class="btn o" href="#features">Learn more</a><a class="btn i" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20to%20try%20the%20AydPos%20demo." target="_blank" rel="noopener">Try</a></div></div></div>
+      <div class="card prog"><div class="prog-h"><div class="prog-n dsp"><svg width="64" height="64" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="113" fill="#1E6F5C"/><path d="M146 92h220v328l-27-20-28 20-28-20-28 20-28-20-28 20-27-20z" fill="#fff"/><g fill="#1E6F5C"><rect x="190" y="150" width="132" height="16" rx="8"/><rect x="190" y="200" width="132" height="16" rx="8"/><rect x="190" y="250" width="86" height="16" rx="8"/></g></svg><span>Ayd<span style="color:#3FD1A6">Adisyon</span></span></div><span class="tag" style="color:#3FD1A6;background:#3FD1A622">COMING SOON</span></div>
+        <p>Order-and-bill software for restaurants and cafés. Waiters take orders on their phones, orders appear on the kitchen screen, and tables, bills and QR menu live in one place.</p><div class="ckl"><div class="ck"><b style="color:#3FD1A6">✓</b><span>Table and bill tracking</span></div><div class="ck"><b style="color:#3FD1A6">✓</b><span>Orders from waiters’ phones, kitchen screen</span></div><div class="ck"><b style="color:#3FD1A6">✓</b><span>QR menu and reservations</span></div><div class="ck"><b style="color:#3FD1A6">✓</b><span>Shifts, stock and reports</span></div></div>
+        <div class="prog-f"><strong class="dsp">Price soon</strong><div class="row" style="gap:10px"><a class="btn o" href="https://wa.me/905300860996?text=Hello%2C%20please%20let%20me%20know%20when%20AydAdisyon%20is%20released." target="_blank" rel="noopener">Notify me</a><a class="btn i" href="https://wa.me/905300860996?text=Hello%2C%20please%20let%20me%20know%20when%20AydAdisyon%20is%20released." target="_blank" rel="noopener">Learn more</a></div></div></div>
+    </div>
+    <div class="soon"><div class="dsp" style="font-size:22px">More programs are on the way.</div><div style="font-size:15px;color:var(--mu)">Be the first to know when they arrive.</div><a class="btn g" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20to%20hear%20about%20your%20new%20programs." target="_blank" rel="noopener">Get notified on WhatsApp</a></div>
+  </div></section>
 
-  <!-- Hakkımızda: satırlar kaydırdıkça aydınlanır -->
-  <section class="story dsp" id="hakkimizda" aria-label="About us">
-    <p>OA Labs is a small software workshop founded by Oğuzhan Aydın.</p>
-    <p style="color: #B7BACA">We make simple apps you’ll use every day.</p>
-    <p>Each one built to do one thing well.</p>
-    <p style="color: #F2A541">All with the same signature: OA.</p>
-    <svg class="muhur muhur-buyuk" width="170" height="170" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs seal">
-          <defs><path id="muhur-yol-2" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
-          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
-          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="11" letter-spacing="2" fill="#EEEAE2"><textPath href="#muhur-yol-2" textLength="326" lengthAdjust="spacing">OA LABS · WORKSHOP · 2026 · OA LABS · WORKSHOP · 2026 ·</textPath></text></g>
-          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-  </section>
-
-  <section aria-labelledby="ilke-h">
-    <h2 id="ilke-h" class="dsp" style="max-width: 1200px; margin: 0 auto 32px; padding: 0 32px; font-size: clamp(36px, 4.4vw, 60px); line-height: 1">How we work</h2>
-    <div class="cols">
-      <div class="card"><span class="dsp n">0 ₺</span><h3 class="dsp">Free and ad-free</h3><p>All our apps are free. We don’t put ads in them.</p></div>
-      <div class="card"><span class="n" aria-hidden="true"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#F2A541" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span><h3 class="dsp">Your data stays yours</h3><p>The apps don’t need an account. We never sell your data or use it for ads.</p></div>
-      <div class="card"><span class="n" aria-hidden="true"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#F2A541" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"></path><path d="M20 4v5h-5"></path></svg></span><h3 class="dsp">Updates itself</h3><p>New versions arrive inside the app with one click.</p></div>
-    </div>
-  </section>
-
-  <section class="apps" id="uygulamalar" aria-labelledby="app-h">
-    <div class="apps-head">
-      <svg class="yapboz" width="148" height="148" viewBox="0 0 220 220" role="img" aria-label="Apps: the OA Labs grid of four tiles">
-          <g class="yz-t yz-1"><rect x="6" y="6" width="96" height="96" rx="25" fill="#0D0F16" stroke="#EEEAE2" stroke-width="8.4"/><circle class="yz-o" cx="54" cy="54" r="25.4" fill="none" stroke="#EEEAE2" stroke-width="11.3" transform="rotate(-90 54 54)"/></g>
-          <g class="yz-t yz-2"><rect x="118" y="6" width="96" height="96" rx="25" fill="#0D0F16" stroke="#5D606B" stroke-width="8.4"/></g>
-          <g class="yz-t yz-3"><rect x="6" y="118" width="96" height="96" rx="25" fill="#0D0F16" stroke="#5D606B" stroke-width="8.4"/></g>
-          <g class="yz-t yz-4"><rect x="118" y="118" width="96" height="96" rx="25" fill="#F2A541"/><path class="yz-a" d="M140.6 194.3 L166 137.7 L191.4 194.3" fill="none" stroke="#14110A" stroke-width="11.3" stroke-linecap="round" stroke-linejoin="round"/></g>
-        </svg>
-      <h2 id="app-h" class="dsp" style="margin: 0 0 24px; font-size: clamp(36px, 4.4vw, 60px); line-height: 1">Our apps</h2>
-    </div>
-    <div class="app-row">
-      <img class="ic" src="/tarayici.png" alt="">
-      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">Pusula Browser <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #F2A541; letter-spacing: 0">New · Available</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">A fast, clean, ad-free browser. Sign in with your OA Labs account and your PC and phone stay in sync. Windows and Android.</p></div>
-      <a href="https://oalabs.dev/en/tarayici/" style="display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 23px; border: 1px solid #2A2F43; color: #EEEAE2; text-decoration: none; font-weight: 600; font-size: 15px">Learn more</a>
-    </div>
-    <div class="app-row">
-      <img class="ic" src="/icon.png" alt="">
-      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Radyo <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #F2A541; letter-spacing: 0">Available</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Turkey’s and the world’s radio stations in one app. Windows and web.</p></div>
-      <a href="https://oalabs.dev/en/radyo/" style="display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 23px; border: 1px solid #2A2F43; color: #EEEAE2; text-decoration: none; font-weight: 600; font-size: 15px">Learn more</a>
-    </div>
-    <div class="app-row">
-      <img class="ic" src="/harrier.png" alt="">
-      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">Harrier Cleaner <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #8FB8FF; letter-spacing: 0">Beta</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Keeps your computer tidy and fast. Windows and Android.</p></div>
-      <a href="https://oalabs.dev/en/harrier/" style="display: inline-flex; align-items: center; height: 46px; padding: 0 20px; border-radius: 23px; border: 1px solid #2A2F43; color: #EEEAE2; text-decoration: none; font-weight: 600; font-size: 15px">Learn more</a>
-    </div>
-    <div class="app-row">
-      <span class="ic" aria-hidden="true" style="background: #5BC48C; color: #0F2A1C">S</span>
-      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Score <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #9EA2B3; letter-spacing: 0">Coming soon</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">Live scores, stats and match news.</p></div>
-    </div>
-    <div class="app-row" style="border-bottom: 1px solid #1E2232">
-      <span class="ic" aria-hidden="true" style="background: #6EA8FE; color: #0E1A30">B</span>
-      <div style="flex: 1 1 280px; min-width: 0"><h3 class="dsp" style="margin: 0; font-size: 28px">OA Barkod <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: #9EA2B3; letter-spacing: 0">Coming soon</span></h3><p style="margin: 4px 0 0; color: #9EA2B3">In the works.</p></div>
-    </div>
-  </section>
-
-  <!-- Kapanış: oalabs.dev'e yönlendiren büyük düğme -->
-  <section class="go" id="iletisim" aria-labelledby="go-h">
-    <h2 id="go-h" class="dsp" style="margin: 0; font-size: clamp(56px, 9vw, 140px); line-height: 0.92">Explore<br>the apps.</h2>
-    <a href="https://oalabs.dev/en/" style="display: inline-flex; align-items: center; gap: 12px; height: 68px; padding: 0 40px; margin-top: 44px; border-radius: 34px; background: #F2A541; color: #14110A; text-decoration: none; font-weight: 700; font-size: 21px">
-      Go to oalabs.dev
-      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-    </a>
-    <p style="margin: 28px 0 0; color: #9EA2B3">Questions, ideas or collaborations: <a href="mailto:info@oguzhanaydin.com.tr">info@oguzhanaydin.com.tr</a></p>
-    <p style="margin: 8px 0 0; color: #7E8296; font-size: 15px">App support: <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></p>
-  </section>
-
-  <footer style="border-top: 1px solid #1E2232">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 32px 32px 44px; display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; font-size: 14px; color: #7E8296">
-      <span class="foot-imza"><svg class="muhur" width="96" height="96" viewBox="-70 -70 140 140" role="img" aria-label="OA Labs seal">
-          <defs><path id="muhur-yol" d="M-53 0 a53 53 0 1 1 106 0 a53 53 0 1 1 -106 0"/></defs>
-          <circle r="64" fill="none" stroke="#EEEAE2" stroke-width="2.5"/><circle r="42" fill="none" stroke="#EEEAE2" stroke-width="2.5"/>
-          <g class="muhur-yazi"><text font-family="'DM Sans', sans-serif" font-weight="600" font-size="11" letter-spacing="2" fill="#EEEAE2"><textPath href="#muhur-yol" textLength="326" lengthAdjust="spacing">OA LABS · WORKSHOP · 2026 · OA LABS · WORKSHOP · 2026 ·</textPath></text></g>
-          <path d="M-15 18 L0 -20 L15 18" fill="none" stroke="#F2A541" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg><span>© 2026 Oğuzhan Aydın · OA Labs</span></span>
-      <span><a href="mailto:info@oguzhanaydin.com.tr">info@oguzhanaydin.com.tr</a> · <a href="https://oalabs.dev/en/">oalabs.dev</a> · <a href="https://oalabs.dev/gizlilik/#en" style="color: #9EA2B3">Privacy policy</a></span>
-    </div>
-  </footer>
+  <section class="sec" id="features"><div class="wrap"><div class="sec-h"><span class="pill">AYDPOS FEATURES</span><h2 class="dsp">What can you do with AydPos?</h2></div><div class="grid4"><div class="card fc"><div class="ic">🛒</div><h3 class="dsp">Fast barcode sales</h3><p>Scan a barcode and the item is in the basket. Scale labels, held baskets, returns and exchanges are ready.</p></div><div class="card fc"><div class="ic">📦</div><h3 class="dsp">Stock and expiry tracking</h3><p>Low-stock alerts, blocking sales of expired items, goods receipt, stocktake and waste records.</p></div><div class="card fc"><div class="ic">📒</div><h3 class="dsp">Credit accounts</h3><p>Customer limits, payments, debt ageing and ready-made WhatsApp reminders.</p></div><div class="card fc"><div class="ic">📊</div><h3 class="dsp">Report centre</h3><p>Turnover, profit and loss, cashier and till reports. Print, or export to PDF or Excel.</p></div><div class="card fc"><div class="ic">🏷️</div><h3 class="dsp">Shelf label designer</h3><p>Design barcode labels yourself with a drag-and-drop template and print in bulk.</p></div><div class="card fc"><div class="ic">🎁</div><h3 class="dsp">Campaigns and loyalty</h3><p>2-for-1, weekend discounts, automatic discounts for near-expiry items, points card.</p></div><div class="card fc"><div class="ic">💾</div><h3 class="dsp">Automatic backup</h3><p>You choose the backup folder. Your data stays on your computer, safe.</p></div><div class="card fc"><div class="ic">📥</div><h3 class="dsp">Switch with Excel</h3><p>Import your product list and start selling the same day.</p></div></div></div></section>
+  <section class="sec"><div class="wrap"><div class="sec-h"><span class="pill">WHY US?</span><h2 class="dsp">Why these programs?</h2></div><div class="grid3"><div class="card fc" style="padding:30px"><div class="ic gr">💳</div><h3 class="dsp" style="font-size:22px">Pay once</h3><p style="font-size:15.5px">No monthly or yearly subscription. Buy the licence and use it for good.</p></div><div class="card fc" style="padding:30px"><div class="ic gr">📶</div><h3 class="dsp" style="font-size:22px">Works offline</h3><p style="font-size:15.5px">Your data stays on your own computer. The till keeps working if the connection drops.</p></div><div class="card fc" style="padding:30px"><div class="ic gr">🤝</div><h3 class="dsp" style="font-size:22px">Direct support</h3><p style="font-size:15.5px">We set it up together. You ask the developer directly.</p></div></div></div></section>
+  <section class="sec"><div class="wrap"><div class="sec-h"><span class="pill">PRICE</span><h2 class="dsp">AydPos licence price</h2></div>
+    <div class="pr"><div class="pr-t">ONE-TIME LICENCE</div><div class="pr-b">
+      <div class="big dsp">1,299 <small>TRY</small></div>
+      <div class="pr-s">One payment · lifetime licence · no monthly or yearly fee</div><div class="pr-l"><div class="ck"><b>✓</b><span>All features included</span></div><div class="ck"><b>✓</b><span>Bug fixes and updates within the major version are free</span></div><div class="ck"><b>✓</b><span>7-day free trial</span></div><div class="ck"><b>✓</b><span>Remote help with setup</span></div></div>
+      <div class="row" style="justify-content:center"><a class="btn i" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20to%20buy%20an%20AydPos%20licence." target="_blank" rel="noopener">Buy now</a><a class="btn o" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20to%20try%20the%20AydPos%20demo." target="_blank" rel="noopener">Download demo</a></div>
+      <p class="pr-f">The program prints an information receipt with no fiscal value; it does not replace a cash register (ÖKC) where one is required in Türkiye.</p></div></div></div></section>
+  <section class="sec" id="faq"><div class="wrap"><div class="sec-h"><span class="pill">FREQUENTLY ASKED QUESTIONS</span><h2 class="dsp">Things you may wonder</h2></div><div class="faq"><div class="card"><div><b>Does it need the internet?</b><p>No. Your data stays on your computer and the licence key is verified on the computer. The till works without internet.</p></div></div><div class="card"><div><b>How many computers does a licence cover?</b><p>One licence covers one computer (it is tied to the computer’s machine code). If you change computers, write to us and we will move the licence.</p></div></div><div class="card"><div><b>Are updates paid?</b><p>Bug fixes are always free. New features within the same major version are included. For a big new version, existing customers get a discounted upgrade.</p></div></div><div class="card"><div><b>Does it replace a cash register (ÖKC)?</b><p>No. The program prints an information receipt with no fiscal value. If you are required to use a cash register, keep using it.</p></div></div><div class="card"><div><b>Is my data backed up?</b><p>Yes. You set up automatic backup and choose the backup folder.</p></div></div></div></div></section>
+  <section class="sec" id="contact" style="padding-bottom:0"><div class="wrap"><div class="free"><div><small>OA LABS</small><h2 class="dsp">Get to our free apps</h2><p>OA Radyo, Pusula Browser, Harrier Cleaner and more. All free and ad-free, all on oalabs.dev.</p></div><a class="btn w" style="font-size:17px;padding:17px 30px" href="https://oalabs.dev/en/">Go to oalabs.dev →</a></div></div></section>
+  </main>
+  <footer class="ft"><div class="wrap">
+    <div><span class="dsp" style="font-size:22px;color:#fff">Oğuzhan Aydın</span><div style="margin-top:8px;font-size:14px">© 2026 Oğuzhan Aydın · OA Labs<br>These programs are OA Labs products.</div></div>
+    <div style="text-align:right;line-height:1.8"><a class="tel" href="tel:+905300860996">0530 086 09 96</a>
+      <a href="mailto:info@oguzhanaydin.com.tr">info@oguzhanaydin.com.tr</a> · <a href="https://oalabs.dev/en/">oalabs.dev</a><br>
+      <span style="font-size:14px">App support: <a href="mailto:destek@oalabs.dev">destek@oalabs.dev</a></span> · <a href="https://oalabs.dev/gizlilik/#en" style="font-size:14px">Privacy policy</a></div>
+  </div></footer>
 </div>
-<script>
-/* Yapboz: açılıştaki sayfa yüklenince, Uygulamalar bölümündeki görününce bir kez oynar.
-   Hareketi azaltma açıksa ya da betik çalışmazsa karolar doğrudan yerinde görünür. */
-(function () {
-  if (!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  function oynat(el) { el.classList.remove('hazir'); void el.getBoundingClientRect(); el.classList.add('oynat'); }
-  document.querySelectorAll('.yapboz').forEach(function (el) {
-    el.classList.add('hazir');
-    if (el.classList.contains('hemen') || !('IntersectionObserver' in window)) { setTimeout(function () { oynat(el); }, 250); return; }
-    var io = new IntersectionObserver(function (es) {
-      if (es[0].isIntersecting) { oynat(el); io.disconnect(); }
-    }, { threshold: 0.6 });
-    io.observe(el);
-  });
-})();
-</script>
+<a class="wafloat" href="https://wa.me/905300860996?text=Hello%2C%20I%20would%20like%20some%20information." target="_blank" rel="noopener" aria-label="Message on WhatsApp">💬 WhatsApp</a>
 </body>
 </html>
