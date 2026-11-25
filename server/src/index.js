@@ -10,6 +10,7 @@
  *   GET  /indir/pusula/{windows|android|zip}  Pusula'nın son sürüm dosyası (GitHub'dan, önbellekli)
  *   GET  /v1/pusula/latest     Son sürüm numarası ve dosya boyutları
  *   GET  /indir/kopru/{windows|android|zip}, /v1/kopru/latest  Aynısı, Pusula Köprü için
+ *   GET  /indir/{aydpos|aydadisyon}/windows  AydPos ve AydAdisyon kurulum dosyası (aydpos-indir deposunun son sürümünden)
  *   GET  /indir/{terazi|center}/{windows|android|zip}, /v1/{terazi|center}/latest  Aynısı, Terazi ve OA Labs Center için
  *   GET  /v1/kopru/ws/:kutu    Pusula Köprü aktarımı (WebSocket): eşleşmiş iki cihaz farklı ağdayken
  *   PUT/GET/DELETE /v1/kopru/file/:kutu/:id   Aktarılan dosya (geçici, en fazla 100 MB, 24 saat)
@@ -146,6 +147,14 @@ const DL_APPS = {
   terazi: {
     repo: 'oguzhanaydiin1/oa-terazi',
     files: { windows: 'Terazi-Kurulum.exe', android: 'Terazi-Android.apk', zip: 'Terazi-Windows.zip' },
+  },
+  aydpos: {
+    repo: 'oguzhanaydiin1/aydpos-indir',
+    files: { windows: 'AydPos-Kurulum.exe' },
+  },
+  aydadisyon: {
+    repo: 'oguzhanaydiin1/aydpos-indir',
+    files: { windows: 'AydAdisyon-Kurulum.exe' },
   },
   center: {
     repo: 'oguzhanaydiin1/oa-labs-center',
@@ -428,12 +437,12 @@ export default {
         return new Response(r.body, { status: r.status, headers: { ...Object.fromEntries(r.headers), ...h } });
       }
 
-      const dl = url.pathname.match(/^\/indir\/(pusula|kopru|terazi|center)\/(windows|android|zip)$/);
+      const dl = url.pathname.match(/^\/indir\/(pusula|kopru|terazi|center|aydpos|aydadisyon)\/(windows|android|zip)$/);
       if (dl && (req.method === 'GET' || req.method === 'HEAD')) {
         if (req.method === 'GET') ctx.waitUntil(countDownload(req, env, dl[1], dl[2]).catch(() => {}));
         return await appDownload(dl[1], dl[2], ctx);
       }
-      const lt = url.pathname.match(/^\/v1\/(pusula|kopru|terazi|center)\/latest$/);
+      const lt = url.pathname.match(/^\/v1\/(pusula|kopru|terazi|center|aydpos|aydadisyon)\/latest$/);
       if (lt && req.method === 'GET') {
         const i = await appLatest(lt[1], ctx);
         return new Response(JSON.stringify({ ok: true, version: i.version, date: i.date,
